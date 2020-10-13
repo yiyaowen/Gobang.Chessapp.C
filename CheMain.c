@@ -1,29 +1,17 @@
-#include "display.h"
+#include "CheTUI.h"
+#include "CheGlobal.h"
 
-extern int Board[SIZE][SIZE];
-
-extern char y;
-extern int x;
-extern int scanResult;
+extern DEFAULT_FLAT_BOARD Board;
+extern DEFAULT_FLAT_POSITION Pos;
 
 int main()
 {
-	InitBoardArray();
-	DisplayBoard();
+    while (1) { 
 
-    while (1)
-    {
-        // 黑子
-        GetValidPosition(BLACK); 
-        Board[SIZE-x][y-'A'] = BLACKtem;
-        DisplayBoard();	
-        Board[SIZE-x][y-'A'] = BLACK;
+        DisplayHome();
+        GetValidHomeOption();
+        SwitchToSelectedOption();
 
-        // 白子
-        GetValidPosition(WHITE);
-        Board[SIZE-x][y-'A'] = WHITEtem;
-        DisplayBoard();
-        Board[SIZE-x][y-'A'] = WHITE;
     }
 
     return 0;
