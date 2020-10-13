@@ -15,18 +15,41 @@ extern DEFAULT_FLAT_POSITION Pos;
 //////////////
 void InitHomeOptionsArray()
 {
-    HomeOptions[0] = HOME_OPTION_1;
-    HomeOptions[1] = HOME_OPTION_2;
-    HomeOptions[2] = HOME_OPTION_3;
-    HomeOptions[3] = HOME_OPTION_4;
-    HomeOptions[4] = HOME_OPTION_5;
-    HomeOptions[5] = HOME_OPTION_6;
+    SelectedHomeOption = OPTION_PvP_NUM;
+
+    HomeOptions[0] = HOME_OPTION_PvP;
+    HomeOptions[1] = HOME_OPTION_PvC;
+    HomeOptions[2] = HOME_OPTION_PreAndSet;
+    HomeOptions[3] = HOME_OPTION_AboutChe;
+    HomeOptions[4] = HOME_OPTION_AboutPro;
+    HomeOptions[5] = HOME_OPTION_Exit;
 }
 
 void DisplayHomeOptions()
 {
     for (int i = 0; i < HOME_OPTION_NUM; ++i) {
-        printf("%s", HomeOptions[i]);
+
+        PrintSpaces(20);
+        
+        if (i+1 == SelectedHomeOption) {
+
+            printf(BLUE_TEXT(BLINK_TEXT(HIGHLIGHT_TEXT("%s"))), SELECT_ARROW);
+            PrintSpaces(2);
+
+            if (i == OPTION_Exit_NUM) {
+                printf(RED_TEXT(HIGHLIGHT_TEXT("%s")), HomeOptions[i]);
+            }
+            else {
+                printf(HIGHLIGHT_TEXT("%s"), HomeOptions[i]);
+            }
+        } 
+        else {
+
+            PrintSpaces(5);
+            printf("%s", HomeOptions[i]);
+        }
+
+        putchar('\n');
     }
 }
 
@@ -35,9 +58,11 @@ void DisplayHome()
     ClearScreen();
 
     printf("%s", HOME_ICON);
-    printf("%s", HOME_MESSAGE);
+    putchar('\n');
+
     InitHomeOptionsArray();
     DisplayHomeOptions();
+
     printf(PROMPT);
 }
 

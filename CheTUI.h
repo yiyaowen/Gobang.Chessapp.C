@@ -8,6 +8,7 @@
 // Globals of TUI //
 ////////////////////
 #define PROMPT "#==> "
+#define SELECT_ARROW "==>"
 
 #endif /* TUI_GLOBALS */
 
@@ -18,12 +19,14 @@
 // Utils of TUI //
 //////////////////
 
-#ifdef WIN /* WIN */
+/* WIN */
+#ifdef WIN
 #define ClearScreen() do { \
     system("cls"); \
 } while (0)
 
-#elif UNIX /* UNIX */
+/* UNIX */
+#elif UNIX
 #define ClearScreen() do { \
     system("clear"); \
 } while (0)
@@ -40,12 +43,18 @@
 #define DARK_GREEN_TEXT(originText)     "\033[36m" originText "\033[0m"
 #define WHITE_TEXT(originText)          "\033[37m" originText "\033[0m"
 
-#else /* Default WIN */
+/* Default WIN */
+#else
 #define ClearScreen() do { \
     system("cls"); \
 } while (0)
 
 #endif
+
+/* Universal Utils */
+#define PrintSpaces(spacesNum) do { \
+    printf("%" #spacesNum "s", ""); \
+} while (0)
 
 #endif /* TUI_UTILS */
 
@@ -56,32 +65,36 @@
 // Home TUI //
 //////////////
 #define HOME_ICON \
-    "                                                                        " "\n" \
-    "   ●●●●●●●●●●●             ●●●●●●●●●                                    " "\n" \
-    "  ●●●●●●●●●●●●●           ●●●●●●●●●●●●                                  " "\n" \
-    " ●●●                      ●●●       ●●●                                 " "\n" \
-    " ●●●    ●●●●●●●           ●●●●●●●●●●●●                                  " "\n" \
-    " ●●●    ●●●●●●●●  ○○○○○   ●●●●●●●●●●●●    ○○○○○○      ●●●●●     ○○○○○○  " "\n" \
-    " ●●●     ●●●●●●  ○○   ○○  ●●●       ●●●  ○○   ○○○    ●●   ●●   ○○    ○○ " "\n" \
-    "  ●●●●●●●●●●●●   ○○   ○○  ●●●●●●●●●●●●   ○○   ○○○○   ●●   ●●   ○○    ○○ " "\n" \
-    "   ●●●●●●●●●●     ○○○○○    ●●●●●●●●●●     ○○○○○  ○○  ●●   ●●    ○○○○○○○ " "\n" \
-    "                                                                     ○○ " "\n" \
-    "                                                                     ○○ " "\n" \
-    "                                                                ○○○○○○  " "\n" \
-    "                                                                        " "\n"
-
-#define HOME_MESSAGE \
-    "Play Gobang with cmd and terminal. Game core is based on `Chessplayer`.\n" \
-    "Download from github: " \
-    BLUE_TEXT(HIGHLIGHT_TEXT("https://github.com/yiyaowen/Gobang.Chessplayer.C\n"))
+    "//>>>>>>>>>>>>>>>>==>>>>>>>>>==>>>>>>>>>>>>>>>==>>>>>>>>>>>>>==>>>>>>>==>>>>>>>>>>>\\\\" "\n" \
+    "||   ●●●●●●●●●●●                ●●●●●●●●●●●●●                                      ||" "\n" \
+    "||  ●●●●●●●●●●●●●               ●●●●●●●●●●●●●●                                     ||" "\n" \
+    "|| ●●●                          ●●●         ●●●                                    ||" "\n" \
+    "|| ●●●                          ●●●         ●●●                                    ||" "\n" \
+    "|| ●●●    ●●●●●●●●              ●●●●●●●●●●●●●●                                     ||" "\n" \
+    "|| ●●●   ●●●●●●●●●●   ○○○○○○○   ●●●●●●●●●●●●●     ○○○○○○○○       ○○○○○○  ○○○○○○○○○ ||" "\n" \
+    "|| ●●●    ●●●●●●●●●  ○○○○○○○○○  ●●●●●●●●●●●●●●   ○○○○○○○○○○     ○○○○○○○  ○○○   ○○○ ||" "\n" \
+    "|| ●●●         ●●●●  ○○○   ○○○  ●●●         ●●●  ○○○   ○○○○     ○○   ○○  ○○○   ○○○ ||" "\n" \
+    "|| ●●●         ●●●●  ○○○   ○○○  ●●●         ●●●  ○○○   ○○○○○    ○○   ○○  ○○○○○○○○○ ||" "\n" \
+    "||  ●●●●●●●●●●●●●●   ○○○○○○○○○  ●●●●●●●●●●●●●●   ○○○○○○○○○○○○   ○○   ○○         ○○ ||" "\n" \
+    "||   ●●●●●●●●●●●●     ○○○○○○○   ●●●●●●●●●●●●●     ○○○○○○○  ○○○  ○○   ○○         ○○ ||" "\n" \
+    "||                                                                       ○○○○○○○○  ||" "\n" \
+  "\\\\<<<<<<<<<<<<<<<<<==<<<<<<<<<==<<<<<<<<<<<<<<<==<<<<<<<<<<<<<==<<<<<<<==<<<<<<<<<<//" "\n"
 
 #define HOME_OPTION_NUM     6
-#define HOME_OPTION_1           "<1> Player vs. Player\n"
-#define HOME_OPTION_2           "<2> Player vs. `Chessplayer`\n"
-#define HOME_OPTION_3           "<3> Preferences & Settings\n"
-#define HOME_OPTION_4           "<4> About `Chessplayer`\n"
-#define HOME_OPTION_5           "<5> About `Gobang.Chessplayer.C`\n"
-#define HOME_OPTION_6           "<6> Exit\n"
+
+#define OPTION_PvP_NUM          1
+#define OPTION_PvC_NUM          2
+#define OPTION_PreAndSet_NUM    3
+#define OPTION_AboutChe_NUM     4
+#define OPTION_AboutPro_NUM     5
+#define OPTION_Exit_NUM         6
+
+#define HOME_OPTION_PvP             "<1> Player vs. Player\n"
+#define HOME_OPTION_PvC             "<2> Player vs. `Chessplayer`\n"
+#define HOME_OPTION_PreAndSet       "<3> Preferences & Settings\n"
+#define HOME_OPTION_AboutChe        "<4> About `Chessplayer`\n"
+#define HOME_OPTION_AboutPro        "<5> About `Gobang.Chessplayer.C`\n"
+#define HOME_OPTION_Exit            "<6> Exit\n"
 
 typedef const char * HOME_OPTIONS[HOME_OPTION_NUM];
 
