@@ -13,18 +13,6 @@ extern DEFAULT_FLAT_POSITION Pos;
 //////////////
 // Home TUI //
 //////////////
-void InitHomeOptionsArray()
-{
-    SelectedHomeOption = OPTION_PvP_NUM;
-
-    HomeOptions[0] = HOME_OPTION_PvP;
-    HomeOptions[1] = HOME_OPTION_PvC;
-    HomeOptions[2] = HOME_OPTION_PreAndSet;
-    HomeOptions[3] = HOME_OPTION_AboutChe;
-    HomeOptions[4] = HOME_OPTION_AboutPro;
-    HomeOptions[5] = HOME_OPTION_Exit;
-}
-
 void DisplayHomeOptions()
 {
     for (int i = 0; i < HOME_OPTION_NUM; ++i) {
@@ -33,14 +21,14 @@ void DisplayHomeOptions()
         
         if (i+1 == SelectedHomeOption) {
 
-            printf(BLUE_TEXT(BLINK_TEXT(HIGHLIGHT_TEXT("%s"))), SELECT_ARROW);
+            printf(BLUE_TEXT(BLINK_TEXT(HIGHLIGHT_TEXT(SELECT_ARROW))));
             PrintSpaces(2);
 
-            if (i == OPTION_Exit_NUM) {
-                printf(RED_TEXT(HIGHLIGHT_TEXT("%s")), HomeOptions[i]);
+            if (i+1 == OPTION_Exit_NUM) {
+                printf(RED_TEXT(HIGHLIGHT_TEXT(UNDERLINE_TEXT("%s"))), HomeOptions[i]);
             }
             else {
-                printf(HIGHLIGHT_TEXT("%s"), HomeOptions[i]);
+                printf(HIGHLIGHT_TEXT(UNDERLINE_TEXT("%s")), HomeOptions[i]);
             }
         } 
         else {
@@ -57,10 +45,9 @@ void DisplayHome()
 {
     ClearScreen();
 
-    printf("%s", HOME_ICON);
+    printf(HOME_ICON);
     putchar('\n');
 
-    InitHomeOptionsArray();
     DisplayHomeOptions();
 
     printf(PROMPT);
@@ -68,22 +55,43 @@ void DisplayHome()
 
 void GetValidHomeOption()
 {
-    scanf("%d", &SelectedHomeOption);
-    ClearInputBuffer('\n');
+    char c;
+    int iOption;
+    
+    c = getchar();
+    if (c == '\n') {
+        SelectedHomeOption = -SelectedHomeOption;
+        return;
+    }
+    else {
+        iOption = (int) (c - '0');
+        SelectedHomeOption = (iOption > 0 && iOption <= HOME_OPTION_NUM) ? 
+                              iOption : SelectedHomeOption;
+    }
+    ClearInputBuffer();
 
-    while (!IsHomeOptionValid()) {
+    while (!IsOptionValid(iOption)) {
 
-        printf("没有这个选项. 请从 1~%d 中选择.\n", HOME_OPTION_NUM);
+        printf("没有这个选项. 请从 1~%d 中选择, 或者按下回车键确认.\n", HOME_OPTION_NUM);
         printf(PROMPT);
 
-        scanf("%d", &SelectedHomeOption);
-        ClearInputBuffer('\n');
+        c = getchar();
+        if (c == '\n') {
+            SelectedHomeOption = -SelectedHomeOption;
+            return;
+        }
+        else {
+            iOption = (int) (c - '0');
+            SelectedHomeOption = (iOption > 0 && iOption <= HOME_OPTION_NUM) ? 
+                                  iOption : SelectedHomeOption;
+        }
+        ClearInputBuffer();
     }
 }
 
-int IsHomeOptionValid()
+int IsOptionValid(int iOption)
 {
-    if (SelectedHomeOption > 0 && SelectedHomeOption <= HOME_OPTION_NUM) {
+    if (iOption > 0 && iOption <= HOME_OPTION_NUM) {
         return 1;
     }
     else {
@@ -95,78 +103,54 @@ void SwitchToSelectedOption()
 {
     int iOptionResult;
 
-    switch (SelectedHomeOption)
-    {
-    case 1:
-        iOptionResult = StartPvP();
-        break;
-        
-    case 2:
-        DisplayHome();
-        // TODO
-        break;
+    if (SelectedHomeOption < 0) {
 
-    case 3:
-        DisplayHome();
-        // TODO
-        break;
+        SelectedHomeOption = -SelectedHomeOption;
 
-    case 4:
-        DisplayHome();
-        // TODO
-        break;
+        switch (SelectedHomeOption)
+        {
+        case OPTION_PvP_NUM:
+            iOptionResult = StartPvP();
+            break;
+            
+        case OPTION_PvC_NUM:
+            DisplayHome();
+            // TODO
+            break;
 
-    case 5:
-        DisplayHome();
-        // TODO
-        break;
+        case OPTION_PreAndSet_NUM:
+            DisplayHome();
+            // TODO
+            break;
 
-    case 6:
-        DisplayHome();
-        // TODO
-        break;
+        case OPTION_AboutChe_NUM:
+            DisplayHome();
+            // TODO
+            break;
 
-    default:
+        case OPTION_AboutPro_NUM:
+            DisplayHome();
+            // TODO
+            break;
+
+        case OPTION_Exit_NUM:
+            ClearScreen();
+            exit(0);
+            break;
+
+        default:
+            DisplayHome();
+            break;
+        }
+    }
+    else {
         DisplayHome();
-        break;
     }
 }
 
 ///////////////
 // Board TUI //
 ///////////////
-void InitBoardArray()
-{
-    int i, j;
-	
-	Board[0][0] = 1;
-	Board[0][BOARD_SIZE-1] = 2;
-	Board[BOARD_SIZE-1][BOARD_SIZE-1] = 3;
-	Board[BOARD_SIZE-1][0] = 4;
-	
-	for (j = 1; j <= BOARD_SIZE - 2; ++j) {
-		Board[j][0] = 5;
-	}
-	
-	for (i = 1; i <= BOARD_SIZE - 2; ++i) {
-		Board[0][i] = 6;
-	}
-	
-	for (j = 1; j <= BOARD_SIZE - 2; ++j) {
-		Board[j][BOARD_SIZE - 1] = 7;
-	}
-	
-	for (i = 1; i <= BOARD_SIZE - 2; ++i) {
-		Board[BOARD_SIZE - 1][i] = 8;
-	}
-	
-	for (j = 1; j <= BOARD_SIZE - 2; ++j) {
-		for (i = 1; i <= BOARD_SIZE - 2; ++i) {
-			Board[j][i] = 9;
-		}
-	}
-}
-
 void DisplayBoard() 
 {	
 	int i, j;
@@ -177,7 +161,12 @@ void DisplayBoard()
 	
 	for(j = 0,row = 15; j <= BOARD_SIZE - 1; j++) {
 
-		printf("%2d ",row);
+        if (row == Pos.x) {
+            printf(RED_TEXT(HIGHLIGHT_TEXT("%2d ")),row);
+        }
+        else {
+            printf("%2d ", row);
+        }
 		row -= 1;
 
 		for(i = 0; i <= BOARD_SIZE - 1; i++) {
@@ -185,39 +174,84 @@ void DisplayBoard()
 			switch(Board[j][i])
 			{
 			case 1:
-				printf("┏ ");
+                if (j == (BOARD_SIZE - Pos.x) && i == (Pos.y - 'A')) {
+                    printf(RED_TEXT(HIGHLIGHT_TEXT("┏ ")));
+                }
+                else {
+                    printf("┏ ");
+                }
 				break;
 				
 			case 2:
-				printf("┓ ");
+                if (j == (BOARD_SIZE - Pos.x) && i == (Pos.y - 'A')) {
+                    printf(RED_TEXT(HIGHLIGHT_TEXT("┓ ")));
+                }
+                else {
+                    printf("┓ ");
+                }
 				break;
 				
 			case 3:
-				printf("┛ ");
+                if (j == (BOARD_SIZE - Pos.x) && i == (Pos.y - 'A')) {
+                    printf(RED_TEXT(HIGHLIGHT_TEXT("┛ ")));
+                }
+                else {
+                    printf("┛ ");
+                }
 				break;
 				
 			case 4:
-				printf("┗ ");
+                if (j == (BOARD_SIZE - Pos.x) && i == (Pos.y - 'A')) {
+                    printf(RED_TEXT(HIGHLIGHT_TEXT("┗ ")));
+                }
+                else {
+                    printf("┗ ");
+                }
 				break;
 				
 			case 5:
-				printf("┠ ");
+                if (j == (BOARD_SIZE - Pos.x) && i == (Pos.y - 'A')) {
+                    printf(RED_TEXT(HIGHLIGHT_TEXT("┠ ")));
+                }
+                else {
+                    printf("┠ ");
+                }
 				break;
 				
 			case 6:
-				printf("┯ ");
+                if (j == (BOARD_SIZE - Pos.x) && i == (Pos.y - 'A')) {
+                    printf(RED_TEXT(HIGHLIGHT_TEXT("┯ ")));
+                }
+                else {
+                    printf("┯ ");
+                }
 				break;
 				
 			case 7:
-				printf("┨ ");
+                if (j == (BOARD_SIZE - Pos.x) && i == (Pos.y - 'A')) {
+                    printf(RED_TEXT(HIGHLIGHT_TEXT("┨ ")));
+                }
+                else {
+                    printf("┨ ");
+                }
 				break;
 				
 			case 8:
-				printf("┷ ");
+                if (j == (BOARD_SIZE - Pos.x) && i == (Pos.y - 'A')) {
+                    printf(RED_TEXT(HIGHLIGHT_TEXT("┷ ")));
+                }
+                else {
+                    printf("┷ ");
+                }
 				break;
 				
 			case 9:
-				printf("┼ ");
+                if (j == (BOARD_SIZE - Pos.x) && i == (Pos.y - 'A')) {
+                    printf(RED_TEXT(HIGHLIGHT_TEXT("┼ ")));
+                }
+                else {
+                    printf("┼ ");
+                }
 				break;
 				
 			case BLACK_TRI:      
@@ -246,7 +280,12 @@ void DisplayBoard()
 	
 	printf("   ");
 	for (col = 'A'; col < 'A' + BOARD_SIZE ; col++) {
-		printf("%c ",col);
+        if (col == Pos.y) {
+            printf(RED_TEXT(HIGHLIGHT_TEXT("%c ")),col);
+        }
+        else {
+            printf("%c ", col);
+        }
     }
 	
 	printf("\n");
@@ -262,47 +301,70 @@ void DisplayHint(int iRound)
     }
 
     printf("请输入棋子的坐标, 例如: 'A4'.\n");
-    printf("坐标: ");
+    printf(PROMPT);
 }
 
 void GetValidPosition(int iRound)
 {
+    char c;
+    POSITION tmpPos;
+    int iErrorType;
     int iScanResult;
 
     DisplayHint(iRound);
-    iScanResult = scanf("%c%d", &Pos.y, &Pos.x);
-    ClearInputBuffer('\n');
+    c = getchar();
+    if (c == '\n') {
+        if (IsPositionValid(Pos) != POS_OVERLAPPED) {
+            Pos.status = POS_VERIFIED;
+            return;
+        }
+        tmpPos = Pos;
+        iScanResult = 1;
+    }
+    else {
+        tmpPos.y = (c & 0x5f);
+        iScanResult = scanf("%d", &tmpPos.x);
+        tmpPos.status = POS_PENDING;
+    }
+    ClearInputBuffer();
 
-    while (1) {
+    while ((iErrorType = IsPositionValid(tmpPos)) != POS_VALID || iScanResult != 1) {
 
-        int iErrorType;
-        if (iScanResult != 2) {
+        if (iScanResult != 1) {
             iErrorType = POS_BAD_FORMAT;
         }
-        else {
-            iErrorType = IsPositionValid();
-        }
 
-        if (iErrorType != POS_VALID) {
-            DisplayErrorHint(iErrorType);
-            iScanResult = scanf("%c%d", &Pos.y, &Pos.x); 
-            ClearInputBuffer('\n');
+        DisplayErrorHint(iErrorType);
+        c = getchar();
+        if (c == '\n') {
+            if (IsPositionValid(Pos) != POS_OVERLAPPED) {
+                Pos.status = POS_VERIFIED;
+                return;
+            }
+            tmpPos = Pos;
+            iScanResult = 1;
         }
         else {
-            break;
+            tmpPos.y = (c & 0x5f);
+            iScanResult = scanf("%d", &tmpPos.x);
+            tmpPos.status = POS_PENDING;
         }
+        ClearInputBuffer();
     }
+    
+    /* [tmpPos] here must be valid */
+    Pos = tmpPos;
 }
 
-int IsPositionValid()
+int IsPositionValid(POSITION pos)
 {
-    if (!('A' <= (Pos.y &= 0x5f)  && Pos.y <= 'O' && 1 <= Pos.x && Pos.x <= 15)) {
+    if (!('A' <= pos.y && pos.y <= 'O' && 1 <= pos.x && pos.x <= 15)) {
         return POS_OUT_OF_BOARD;
     }
-    else if (Board[BOARD_SIZE-Pos.x][Pos.y-'A'] == BLACK_CIR ||
-             Board[BOARD_SIZE-Pos.x][Pos.y-'A'] == BLACK_TRI ||
-             Board[BOARD_SIZE-Pos.x][Pos.y-'A'] == WHITE_CIR ||
-             Board[BOARD_SIZE-Pos.x][Pos.y-'A'] == WHITE_TRI) {
+    else if (Board[BOARD_SIZE-pos.x][pos.y-'A'] == BLACK_CIR ||
+             Board[BOARD_SIZE-pos.x][pos.y-'A'] == BLACK_TRI ||
+             Board[BOARD_SIZE-pos.x][pos.y-'A'] == WHITE_CIR ||
+             Board[BOARD_SIZE-pos.x][pos.y-'A'] == WHITE_TRI) {
         return POS_OVERLAPPED;
     } 
     else {
@@ -330,25 +392,46 @@ void DisplayErrorHint(int iErrorType)
         printf("发生未知类型的错误.\n");
         break;
     }
-    printf("坐标: ");
+    printf(PROMPT);
 }
 
 int StartPvP()
 {
+    int iTotalRound = 0;
+    POSITION lastPos;
+
     InitBoardArray();
+    InitGlobalPos();
+
     DisplayBoard();
 
     while (1) 
     {   
-        GetValidPosition(ROUND_BLACK); 
-        Board[BOARD_SIZE-Pos.x][Pos.y-'A'] = BLACK_TRI;
-        DisplayBoard(); 
-        Board[BOARD_SIZE-Pos.x][Pos.y-'A'] = BLACK_CIR;
+        /* Round of Black */
+        do {
+            GetValidPosition(ROUND_BLACK); 
+            DisplayBoard();
+        } while (Pos.status == POS_PENDING);
 
-        GetValidPosition(ROUND_WHITE);
+        Board[BOARD_SIZE-Pos.x][Pos.y-'A'] = BLACK_TRI;
+        if (iTotalRound) Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = WHITE_CIR;
+        lastPos = Pos;
+        DisplayBoard(); 
+
+        ++iTotalRound;
+
+        /* Round of White */
+        do {
+            GetValidPosition(ROUND_WHITE);
+            DisplayBoard();
+        } while (Pos.status == POS_PENDING);
+
         Board[BOARD_SIZE-Pos.x][Pos.y-'A'] = WHITE_TRI;
+        Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = BLACK_CIR;
+        lastPos = Pos;
         DisplayBoard();
-        Board[BOARD_SIZE-Pos.x][Pos.y-'A'] = WHITE_CIR;
+
+        ++iTotalRound;
     }   
 
     return 0;

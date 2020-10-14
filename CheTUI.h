@@ -1,3 +1,5 @@
+#include <stdio.h>
+
 #ifndef CHE_TUI_H
 #define CHE_TUI_H
 
@@ -7,8 +9,8 @@
 ////////////////////
 // Globals of TUI //
 ////////////////////
-#define PROMPT "#==> "
-#define SELECT_ARROW "==>"
+#define PROMPT "==○●>> "
+#define SELECT_ARROW "++○●>>"
 
 #endif /* TUI_GLOBALS */
 
@@ -56,6 +58,12 @@
     printf("%" #spacesNum "s", ""); \
 } while (0)
 
+#define ClearInputBuffer() do { \
+    fflush(stdin); \
+} while (0) 
+// Don't use [getchar() != '\n';]
+// That doesn't work well when [stdin] is empty
+
 #endif /* TUI_UTILS */
 
 
@@ -98,15 +106,13 @@
 
 typedef const char * HOME_OPTIONS[HOME_OPTION_NUM];
 
-void InitHomeOptionsArray();
-
 void DisplayHomeOptions();
 
 void DisplayHome();
 
 void GetValidHomeOption();
 
-int IsHomeOptionValid();
+int IsOptionValid(int iOption);
 
 void SwitchToSelectedOption();
 
@@ -135,18 +141,17 @@ void SwitchToSelectedOption();
 #define POS_OVERLAPPED          2
 #define POS_BAD_FORMAT          3
 
-#define ClearInputBuffer(endChar) do { \
-    while (getchar() != endChar) ; \
-} while (0)
+/* POSITION.status */
+#define POS_PENDING 100
+#define POS_VERIFIED 200
 
 typedef int DEFAULT_FLAT_BOARD[BOARD_SIZE][BOARD_SIZE];
 
 typedef struct {
     int x;
     char y;
+    int status;
 } DEFAULT_FLAT_POSITION, POSITION;
-
-void InitBoardArray();
 
 void DisplayBoard();
 
@@ -154,7 +159,7 @@ void DisplayHint(int iRound);
 
 void GetValidPosition(int iRound);
 
-int IsPositionValid();
+int IsPositionValid(POSITION pos);
 
 void DisplayErrorHint(int iErrorType);
 

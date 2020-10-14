@@ -3,9 +3,10 @@
 
 int main()
 {
-    while (1) { 
+    InitGlobalVariables();
+    DisplayHome();
 
-        DisplayHome();
+    while (1) { 
 
         GetValidHomeOption();
 
