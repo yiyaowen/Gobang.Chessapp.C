@@ -1,11 +1,11 @@
+#include "CheDef.h"
 #include "CheTUI.h"
 #include "CheGlobal.h"
 
 extern HOME_OPTIONS HomeOptions;
-extern int SelectedHomeOption;
+extern int CurrentOptionNum;
 
 extern DEFAULT_FLAT_BOARD Board;
-extern DEFAULT_FLAT_POSITION Pos;
 
 void InitHomeOptionsArray()
 {
@@ -49,20 +49,12 @@ void InitBoardArray()
     }
 }
 
-void InitGlobalPos()
-{
-    Pos.x = 1;
-    Pos.y = 'A';
-    Pos.status = POS_PENDING;
-}
-
 void InitGlobalVariables()
 {
     /* Home TUI */
     InitHomeOptionsArray();
-    SelectedHomeOption = OPTION_PvP_NUM;
+    CurrentOptionNum = OPTION_PvP_NUM;
 
     /* Board TUI */
     InitBoardArray();
-    InitGlobalPos();
 }

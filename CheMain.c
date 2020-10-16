@@ -1,12 +1,12 @@
-#include "CheTUI.h"
-#include "CheGlobal.h"
+#include "Che.h"
 
 int main()
 {
     InitGlobalVariables();
-    DisplayHome();
 
     while (1) { 
+
+        DisplayHome();
 
         GetValidHomeOption();
 
@@ -14,5 +14,5 @@ int main()
 
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
