@@ -1,4 +1,4 @@
-#include <stdio.h>
+﻿#include <stdio.h>
 
 #include "CheDef.h"
 #include "CheTUI.h"
@@ -36,7 +36,7 @@ void DisplayHomeOptions()
             PrintSpaces(5);
             printf("%s", HomeOptions[i]);
         }
-
+        putchar('\n');
         putchar('\n');
     }
 }
@@ -45,12 +45,8 @@ void DisplayHome()
 {
     ClearScreen();
 
-    BEGIN_ATTR(WHITE_B_ATTR);
-    BEGIN_ATTR(HIGHLIGHT_ATTR);
-
     printf(HOME_ICON);
 
-    END_ATTR();
     putchar('\n');
 
     DisplayHomeOptions();
@@ -65,7 +61,9 @@ void GetValidHomeOption()
     
     c = getchar();
     if (c == '\n') {
+        PutCharBack(c);
         CurrentOptionNum = -CurrentOptionNum;
+        ClearInputBuffer();
         return;
     }
     else {
@@ -77,12 +75,15 @@ void GetValidHomeOption()
 
     while (!IsOptionValid(iOption)) {
 
-        printf("没有这个选项. 请从 1~%d 中选择, 或者按下回车键确认.\n", HOME_OPTION_NUM);
+        printf("没有这个选项. 请从 1~%d 中选择, 或者按下回车键确认.", HOME_OPTION_NUM);
+        putchar('\n');
         printf(PROMPT);
 
         c = getchar();
         if (c == '\n') {
+            PutCharBack(c);
             CurrentOptionNum = -CurrentOptionNum;
+            ClearInputBuffer();
             return;
         }
         else {
@@ -145,12 +146,14 @@ void SwitchToSelectedOption()
             break;
 
         case OPTION_Exit_NUM:
-            printf(GREEN_TEXT(HIGHLIGHT_TEXT("Bye ")) HIGHLIGHT_TEXT("EXIT_SUCCESS\n"));
+            printf(GREEN_TEXT(HIGHLIGHT_TEXT("Bye ")) HIGHLIGHT_TEXT("EXIT_SUCCESS"));
+            putchar('\n');
             exit(EXIT_SUCCESS);
             break;
 
         default:
-            printf(RED_TEXT(HIGHLIGHT_TEXT("Error ")) HIGHLIGHT_TEXT("EXIT_FAILURE\n"));
+            printf(RED_TEXT(HIGHLIGHT_TEXT("Error ")) HIGHLIGHT_TEXT("EXIT_FAILURE"));
+            putchar('\n');
             exit(EXIT_FAILURE);
             break;
         }
@@ -177,122 +180,120 @@ void DisplayBoard(POSITION pos)
         }
 		row -= 1;
 
-        BEGIN_ATTR(WHITE_B_ATTR);
 		for(i = 0; i <= BOARD_SIZE - 1; i++) {
 
 			switch(Board[j][i])
 			{
 			case 1:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
-                    printf(RED_TEXT(HIGHLIGHT_TEXT("┏ ")));
+                    printf(RED_TEXT(HIGHLIGHT_TEXT(LEFT_TOP_ICON)));
                 }
                 else {
-                    printf("┏ ");
+                    printf(LEFT_TOP_ICON);
                 }
 				break;
 				
 			case 2:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
-                    printf(RED_TEXT(HIGHLIGHT_TEXT("┓")));
+                    printf(RED_TEXT(HIGHLIGHT_TEXT(RIGHT_TOP_ICON)));
                 }
                 else {
-                    printf("┓");
+                    printf(RIGHT_TOP_ICON);
                 }
 				break;
 				
 			case 3:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
-                    printf(RED_TEXT(HIGHLIGHT_TEXT("┛")));
+                    printf(RED_TEXT(HIGHLIGHT_TEXT(RIGHT_BOTTOM_ICON)));
                 }
                 else {
-                    printf("┛");
+                    printf(RIGHT_BOTTOM_ICON);
                 }
 				break;
 				
 			case 4:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
-                    printf(RED_TEXT(HIGHLIGHT_TEXT("┗ ")));
+                    printf(RED_TEXT(HIGHLIGHT_TEXT(LEFT_BOTTOM_ICON)));
                 }
                 else {
-                    printf("┗ ");
+                    printf(LEFT_BOTTOM_ICON);
                 }
 				break;
 				
 			case 5:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
-                    printf(RED_TEXT(HIGHLIGHT_TEXT("┠ ")));
+                    printf(RED_TEXT(HIGHLIGHT_TEXT(LEFT_ICON)));
                 }
                 else {
-                    printf("┠ ");
+                    printf(LEFT_ICON);
                 }
 				break;
 				
 			case 6:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
-                    printf(RED_TEXT(HIGHLIGHT_TEXT("┯ ")));
+                    printf(RED_TEXT(HIGHLIGHT_TEXT(TOP_ICON)));
                 }
                 else {
-                    printf("┯ ");
+                    printf(TOP_ICON);
                 }
 				break;
 				
 			case 7:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
-                    printf(RED_TEXT(HIGHLIGHT_TEXT("┨")));
+                    printf(RED_TEXT(HIGHLIGHT_TEXT(RIGHT_ICON)));
                 }
                 else {
-                    printf("┨");
+                    printf(RIGHT_ICON);
                 }
 				break;
 				
 			case 8:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
-                    printf(RED_TEXT(HIGHLIGHT_TEXT("┷ ")));
+                    printf(RED_TEXT(HIGHLIGHT_TEXT(BOTTOM_ICON)));
                 }
                 else {
-                    printf("┷ ");
+                    printf(BOTTOM_ICON);
                 }
 				break;
 				
 			case 9:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
-                    printf(RED_TEXT(HIGHLIGHT_TEXT("┼ ")));
+                    printf(RED_TEXT(HIGHLIGHT_TEXT(MIDDLE_ICON)));
                 }
                 else if ((j == (BOARD_SIZE - 4) && i == ('D' - 'A')) ||
                          (j == (BOARD_SIZE - 4) && i == ('L' - 'A')) ||
                          (j == (BOARD_SIZE - 12) && i == ('D' - 'A')) ||
                          (j == (BOARD_SIZE - 12) && i == ('L' - 'A')) ||
                          (j == (BOARD_SIZE - 8) && i == ('H' - 'A'))) {
-                    printf(HIGHLIGHT_TEXT("┼ "));
+                    printf(HIGHLIGHT_TEXT(MIDDLE_ICON));
                 }
                 else {
-                    printf("┼ ");
+                    printf(MIDDLE_ICON);
                 }
 				break;
 				
 			case BLACK_TRI:      
-				printf("▲ ");
+				printf(BLACK_TRI_ICON);
 				break;
 				
 			case WHITE_TRI:      
-				printf("△ ");
+				printf(WHITE_TRI_ICON);
 				break;
 				
 			case BLACK_CIR:      
-				printf("● ");
+				printf(BLACK_CIR_ICON);
 				break;
             
 			case WHITE_CIR:
-				printf("○ ");
+				printf(WHITE_CIR_ICON);
 				break;
 			}
 
 			if(i == BOARD_SIZE - 1) {
-				printf("\n");
+                putchar('\n');
 			}
 		}
 
-        END_ATTR();
 	}
 	
 	printf("   ");
@@ -305,19 +306,20 @@ void DisplayBoard(POSITION pos)
         }
     }
 	
-	printf("\n");
+    putchar('\n');
 }
 
 void DisplayHint(int iRound)
 {
     if (iRound == ROUND_BLACK) {
-        printf("黑棋● 的回合. ");
+        printf("黑棋●的回合. ");
     }
     else if (iRound == ROUND_WHITE) {
-        printf("白棋○ 的回合. ");
+        printf("白棋○的回合. ");
     }
 
-    printf("请输入棋子的坐标, 例如: 'A4'.\n");
+    printf("请输入棋子的坐标, 例如: 'A4'.");
+    putchar('\n');
     printf(PROMPT);
 }
 
@@ -335,6 +337,7 @@ POSITION GetValidPosition(int iRound, POSITION pos)
         return pos;
     }
     else if (c == '\n') {
+        PutCharBack(c);
         if (IsPositionValid(pos) != POS_OVERLAPPED) {
             pos.status = POS_VERIFIED;
             ClearInputBuffer();
@@ -363,6 +366,7 @@ POSITION GetValidPosition(int iRound, POSITION pos)
             return pos;
         }
         else if (c == '\n') {
+            PutCharBack(c);
             if (IsPositionValid(pos) != POS_OVERLAPPED) {
                 pos.status = POS_VERIFIED;
                 ClearInputBuffer();

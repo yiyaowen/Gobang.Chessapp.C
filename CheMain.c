@@ -1,7 +1,8 @@
-#include "Che.h"
+﻿#include "Che.h"
 
 int main()
 {
+    EnableVirtualTerminalSequences();
     InitGlobalVariables();
 
     while (1) { 
