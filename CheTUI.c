@@ -46,7 +46,7 @@ void DisplayHome()
     ClearScreen();
 
     printf(HOME_ICON);
-
+    putchar('\n');
     putchar('\n');
 
     DisplayHomeOptions();
@@ -75,7 +75,8 @@ void GetValidHomeOption()
 
     while (!IsOptionValid(iOption)) {
 
-        printf("没有这个选项. 请从 1~%d 中选择, 或者按下回车键确认.", HOME_OPTION_NUM);
+        //printf("没有这个选项. 请从 1~%d 中选择, 或者按下回车键确认.", HOME_OPTION_NUM);
+        printf("No such option. Please choose from 1~%d, or press Enter.", HOME_OPTION_NUM);
         putchar('\n');
         printf(PROMPT);
 
@@ -126,22 +127,18 @@ void SwitchToSelectedOption()
             break;
             
         case OPTION_PvC_NUM:
-            DisplayHome();
             // TODO
             break;
 
         case OPTION_PreAndSet_NUM:
-            DisplayHome();
             // TODO
             break;
 
         case OPTION_AboutChe_NUM:
-            DisplayHome();
             // TODO
             break;
 
         case OPTION_AboutPro_NUM:
-            DisplayHome();
             // TODO
             break;
 
@@ -172,6 +169,18 @@ void DisplayBoard(POSITION pos)
 
 	for(j = 0,row = 15; j <= BOARD_SIZE - 1; j++) {
 
+    // Display infoboard
+    
+        if (j == 0) {
+            printf(GAME_INFO_FRAME_TOP);
+        }
+        else {
+            printf(GAME_INFO_FRAME_MIDDLE);
+        }
+        PrintSpaces(2);
+
+    // Display chessboard
+    
         if (row == pos.x) {
             printf(RED_TEXT(HIGHLIGHT_TEXT("%2d ")), row);
         }
@@ -180,7 +189,7 @@ void DisplayBoard(POSITION pos)
         }
 		row -= 1;
 
-		for(i = 0; i <= BOARD_SIZE - 1; i++) {
+		for (i = 0; i <= BOARD_SIZE - 1; i++) {
 
 			switch(Board[j][i])
 			{
@@ -288,13 +297,26 @@ void DisplayBoard(POSITION pos)
 				printf(WHITE_CIR_ICON);
 				break;
 			}
-
-			if(i == BOARD_SIZE - 1) {
-                putchar('\n');
-			}
 		}
 
+    // Display infoboard
+    
+        PrintSpaces(2);
+        if (j == 0) {
+            printf(GAME_INFO_FRAME_TOP);
+        }
+        else {
+            printf(GAME_INFO_FRAME_MIDDLE);
+        }
+
+        putchar('\n');
+
 	}
+
+    // Display last row
+
+    printf(GAME_INFO_FRAME_BOTTOM);
+    PrintSpaces(2);
 	
 	printf("   ");
 	for (col = 'A'; col < 'A' + BOARD_SIZE ; col++) {
@@ -305,6 +327,11 @@ void DisplayBoard(POSITION pos)
             printf("%c ", col);
         }
     }
+
+    PrintSpaces(1);
+    printf(GAME_INFO_FRAME_BOTTOM);
+
+    // Go to new line
 	
     putchar('\n');
 }
@@ -312,13 +339,16 @@ void DisplayBoard(POSITION pos)
 void DisplayHint(int iRound)
 {
     if (iRound == ROUND_BLACK) {
-        printf("黑棋●的回合. ");
+        //printf("黑棋 " BLACK_CIR_ICON "的回合. ");
+        printf("Black " BLACK_CIR_ICON "'s turn. ");
     }
     else if (iRound == ROUND_WHITE) {
-        printf("白棋○的回合. ");
+        //printf("白棋 " WHITE_CIR_ICON "的回合. ");
+        printf("White " WHITE_CIR_ICON "'s turn. ");
     }
 
-    printf("请输入棋子的坐标, 例如: 'A4'.");
+    //printf("请输入棋子的坐标, 例如: 'A4'.");
+    printf("Please input the position, e.g. 'A4'.");
     putchar('\n');
     printf(PROMPT);
 }
@@ -406,19 +436,27 @@ void DisplayErrorHint(int iErrorType)
     switch (iErrorType)
     {
     case POS_OUT_OF_BOARD:
-        printf("坐标超出棋盘边界. 合法的坐标: A~O 和 1~15\n");
+        //printf("坐标超出棋盘边界. 合法的坐标: A~O 和 1~15");
+        printf("Position is out of the chessboard. Valid range: A~O & 1~15");
+        putchar('\n');
         break;
 
     case POS_OVERLAPPED:
-        printf("该位置已有棋子. 请选择空位置落子.\n");
+        //printf("该位置已有棋子. 请选择空位置落子.");
+        printf("The position is occupied. Please choose another position.");
+        putchar('\n');
         break;
 
     case POS_BAD_FORMAT:
-        printf("坐标格式错误. 请先输入一个字母，紧接着再输入一个数字.\n");
+        //printf("坐标格式错误. 请先输入一个字母，紧接着再输入一个数字.");
+        printf("Bad position format. Please input a letter followed by a number.");
+        putchar('\n');
         break;
 
     default:
-        printf("发生未知类型的错误.\n");
+        //printf("发生未知类型的错误.");
+        printf("An unknown error occurred.");
+        putchar('\n');
         break;
     }
     printf(PROMPT);

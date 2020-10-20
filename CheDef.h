@@ -148,6 +148,25 @@
 //////////////
 
 #define HOME_ICON \
+    "//========>>========>>========>>========>>========>>========>>========>>========>>\\\\" "\n" \
+    "||  [Gobang News] Last Update: 2020-12-20 16:30                                   ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+    "||                                                                                ||" "\n" \
+  "\\\\<<========<<========<<========<<========<<========<<========<<========<<========//"
+
+/* DEPRECATED */
+/*
+#define DEPRECATED_HOME_ICON \
     "//>>>>>>>>>>>>>>>>==>>>>>>>>>==>>>>>>>>>>>>>>>==>>>>>>>>>>>>>==>>>>>>>==>>>>>>>>>>>\\\\" "\n" \
     "||   ●●●●●●●●●●●                ●●●●●●●●●●●●●                                      ||" "\n" \
     "||  ●●●●●●●●●●●●●               ●●●●●●●●●●●●●●                                     ||" "\n" \
@@ -162,6 +181,7 @@
     "||   ●●●●●●●●●●●●     ○○○○○○○   ●●●●●●●●●●●●●     ○○○○○○○  ○○○  ○○   ○○         ○○ ||" "\n" \
     "||                                                                       ○○○○○○○○  ||" "\n" \
   "\\\\<<<<<<<<<<<<<<<<<==<<<<<<<<<==<<<<<<<<<<<<<<<==<<<<<<<<<<<<<==<<<<<<<==<<<<<<<<<<//"
+*/
 
 #define HOME_OPTION_NUM     6
 
@@ -194,20 +214,31 @@ typedef const char * HOME_OPTIONS[HOME_OPTION_NUM];
 #define BLACK_CIR           20
 #define WHITE_CIR           21
 
-#define BLACK_TRI_ICON      "▲"
+#ifdef WIN
+#define BLACK_TRI_ICON  "▲"
 #define BLACK_CIR_ICON      "●"
-#define WHITE_TRI_ICON      "△"
+#define WHITE_TRI_ICON  "△"
 #define WHITE_CIR_ICON      "○"
+#elif UNIX
+#define BLACK_TRI_ICON  "▲ "
+#define BLACK_CIR_ICON      "● "
+#define WHITE_TRI_ICON  "△ "
+#define WHITE_CIR_ICON      "○ "
+#endif
 
-#define LEFT_TOP_ICON           "┏ "
+#define LEFT_TOP_ICON       "┏ "
 #define TOP_ICON                "┯ "
-#define RIGHT_TOP_ICON          "┓"
+#define RIGHT_TOP_ICON      "┓"
 #define LEFT_ICON               "┠ "
-#define MIDDLE_ICON             "┼ "
+#define MIDDLE_ICON         "┼ "
 #define RIGHT_ICON              "┨"
-#define LEFT_BOTTOM_ICON        "┗ "
+#define LEFT_BOTTOM_ICON    "┗ "
 #define BOTTOM_ICON             "┷ "
-#define RIGHT_BOTTOM_ICON       "┛"
+#define RIGHT_BOTTOM_ICON   "┛"
+
+#define GAME_INFO_FRAME_TOP         "//===>===>===>===>===>\\\\"
+#define GAME_INFO_FRAME_MIDDLE      "||                    ||"
+#define GAME_INFO_FRAME_BOTTOM    "\\\\<===<===<===<===<===//"
 
 typedef int DEFAULT_FLAT_BOARD[BOARD_SIZE][BOARD_SIZE];
 
