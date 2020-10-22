@@ -1,6 +1,6 @@
 ﻿#include "Che.h"
 
-int main()
+int main(int argc, char * argv[])
 {
     EnableVirtualTerminalSequences();
     InitGlobalVariables();

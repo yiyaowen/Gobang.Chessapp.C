@@ -1,4 +1,7 @@
-﻿#include <stdio.h> // fflush, printf, stdin
+﻿#ifndef _INCLUDE_CHE_DEF_H
+#define _INCLUDE_CHE_DEF_H
+
+#include <stdio.h> // fflush, printf, stdin
 #include <stdlib.h> // system, exit
 
 /* Default WIN */
@@ -12,9 +15,6 @@
 #include <windows.h>
 #pragma warning(disable:4996) // Enable scanf in VS
 #endif
-
-#ifndef _INCLUDE_CHE_DEF_H
-#define _INCLUDE_CHE_DEF_H
 
 ////////////////////
 // Globals of TUI //
@@ -132,8 +132,9 @@
     printf("%" #spacesNum "s", ""); \
 } while (0)
 
-// Before using this you must make sure [stdin] is not empty
-// Otherwise there will be a unthought stop
+// Before using this you must make sure [stdin] is not empty,
+// otherwise there will be a unthought stop. A solution is that
+// after getting '\n' use PutCharBack() to put it back.
 #define ClearInputBuffer() do { \
     char tmp; \
     while ((tmp = getchar()) != '\n' && tmp != EOF) ; \
@@ -214,11 +215,13 @@ typedef const char * HOME_OPTIONS[HOME_OPTION_NUM];
 #define BLACK_CIR           20
 #define WHITE_CIR           21
 
+/* WIN */
 #ifdef WIN
 #define BLACK_TRI_ICON  "▲"
 #define BLACK_CIR_ICON      "●"
 #define WHITE_TRI_ICON  "△"
 #define WHITE_CIR_ICON      "○"
+/* UNIX */
 #elif UNIX
 #define BLACK_TRI_ICON  "▲ "
 #define BLACK_CIR_ICON      "● "

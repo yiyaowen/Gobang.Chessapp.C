@@ -117,13 +117,10 @@ void SwitchToSelectedOption()
         switch (CurrentOptionNum)
         {
         case OPTION_PvP_NUM:
-
             iOptionResult = StartPvP();
-
             if (iOptionResult == OPT_QUIT) {
                 return;
             }
-
             break;
             
         case OPTION_PvC_NUM:
@@ -358,6 +355,7 @@ POSITION GetValidPosition(int iRound, POSITION pos)
     char c;
     int iErrorType;
     int iScanResult;
+    POSITION validPos = pos;
 
     DisplayHint(iRound);
     c = getchar();
@@ -368,14 +366,15 @@ POSITION GetValidPosition(int iRound, POSITION pos)
     }
     else if (c == '\n') {
         PutCharBack(c);
-        if (IsPositionValid(pos) != POS_OVERLAPPED) {
-            pos.status = POS_VERIFIED;
+        if (IsPositionValid(validPos) != POS_OVERLAPPED) {
+            validPos.status = POS_VERIFIED;
             ClearInputBuffer();
-            return pos;
+            return validPos;
         }
         iScanResult = 1;
     }
     else {
+        validPos = pos;
         pos.y = (c & 0x5f);
         iScanResult = scanf("%d", &pos.x);
         pos.status = POS_PENDING;
@@ -397,14 +396,15 @@ POSITION GetValidPosition(int iRound, POSITION pos)
         }
         else if (c == '\n') {
             PutCharBack(c);
-            if (IsPositionValid(pos) != POS_OVERLAPPED) {
-                pos.status = POS_VERIFIED;
+            if (IsPositionValid(validPos) != POS_OVERLAPPED) {
+                validPos.status = POS_VERIFIED;
                 ClearInputBuffer();
-                return pos;
+                return validPos;
             }
             iScanResult = 1;
         }
         else {
+            validPos = pos;
             pos.y = (c & 0x5f);
             iScanResult = scanf("%d", &pos.x);
             pos.status = POS_PENDING;
