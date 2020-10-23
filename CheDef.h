@@ -54,8 +54,37 @@
 } while (0)
 
 #define ClearScreen() do { \
+    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE); \
+    COORD coordScreen = { 0, 0 }; \
+    DWORD cCharsWritten; \
+    CONSOLE_SCREEN_BUFFER_INFO csbi; \
+    DWORD dwConSize; \
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) { \
+        printf("Error - GetConsoleScreenBufferInfo(hConsole, &csbi);\n"); \
+        exit(EXIT_FAILURE); \
+    } \
+    dwConSize = csbi.dwSize.X * csbi.dwSize.Y; \
+    if (!FillConsoleOutputCharacter(hConsole, (TCHAR) ' ', dwConSize, coordScreen, &cCharsWritten)) { \
+        printf("Error - FillConsoleOutputCharacter(...);\n"); \
+        exit(EXIT_FAILURE); \
+    } \
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) { \
+        printf("Error - GetConsoleScreenBufferInfo(hConsole, &csbi);\n"); \
+        exit(EXIT_FAILURE); \
+    } \
+    if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten)) { \
+        printf("Error - FillConsoleOutputAttribute(...);\n"); \
+        exit(EXIT_FAILURE); \
+    } \
+    SetConsoleCursorPosition(hConsole, coordScreen); \
+} while (0)
+
+/* DEPRECATED */
+/*
+#define ClearScreen() do { \
     system("cls"); \
 } while (0)
+*/
 
 /* UNIX */
 #elif UNIX
