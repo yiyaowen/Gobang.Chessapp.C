@@ -4,6 +4,10 @@
 
 extern GAME_RECORD_BOARD RecordBoard;
 
+//////////////////////////////////
+// Data analysis and conversion //
+//////////////////////////////////
+
 int GetGameResult(int iRecordType)
 {
     SIDE_WIN_INFO side_win_info;
@@ -194,4 +198,26 @@ void IdxToPos(const INDEXER * ptIdx, POSITION * ptPos)
 {
     ptPos->x = BOARD_SIZE - ptIdx->i;
     ptPos->y = ptIdx->j + 'A';
+}
+
+////////////////////////////
+// Data import and export //
+////////////////////////////
+
+int ExportBoardToFile(int board[][BOARD_SIZE], const char * path)
+{
+    FILE * fp = fopen(path, "w");
+    if (fp == NULL) {
+        return 0;
+    }
+
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE-1; ++j) {
+            fprintf(fp, "%d ", board[i][j]);
+        }
+        fprintf(fp, "%d\n", board[i][BOARD_SIZE-1]);
+    }
+
+    fclose(fp);
+    return 1;
 }

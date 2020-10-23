@@ -3,6 +3,10 @@
 
 #include "CheDef.h"
 
+//////////////////////////////////
+// Data analysis and conversion //
+//////////////////////////////////
+
 /* [Check if game is over and decide the winner]
  * @param iRecordType (RECORD_BLACK or RECORD_WHITE)
  * @return iGameResult (Go on, win or tied)
@@ -56,5 +60,16 @@ void PosToIdx(const POSITION * ptPos, INDEXER * ptIdx);
  * @return
  */
 void IdxToPos(const INDEXER * ptIdx, POSITION * ptPos);
+
+////////////////////////////
+// Data import and export //
+////////////////////////////
+
+/* [Export specific board array]
+ * @param board (The board to be exported)
+ * @param path (Target file path)
+ * @return (If success return 1, otherwise return 0)
+ */
+int ExportBoardToFile(int board[][BOARD_SIZE], const char * path);
 
 #endif /* _INCLUDE_CHE_DATA */
