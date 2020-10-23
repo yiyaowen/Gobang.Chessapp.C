@@ -1,13 +1,15 @@
 ﻿#include <stdio.h>
 
+#include "CheData.h"
 #include "CheDef.h"
-#include "CheTUI.h"
 #include "CheGlobal.h"
+#include "CheTUI.h"
 
 extern HOME_OPTIONS HomeOptions;
 extern int CurrentOptionNum;
 
 extern DEFAULT_FLAT_BOARD Board;
+extern GAME_RECORD_BOARD RecordBoard;
 
 //////////////
 // Home TUI //
@@ -298,7 +300,7 @@ void DisplayBoard(POSITION pos)
 
     // Display infoboard
     
-        PrintSpaces(2);
+        PrintSpaces(1);
         if (j == 0) {
             printf(GAME_INFO_FRAME_TOP);
         }
@@ -465,10 +467,12 @@ void DisplayErrorHint(int iErrorType)
 int StartPvP()
 {
     int iTotalRound = 0;
+    int iGameResult;
     POSITION pos;
     POSITION lastPos;
 
     InitBoardArray();
+    InitRecordBoardArray();
     InitPos(pos);
 
     ClearScreen();
@@ -476,7 +480,7 @@ int StartPvP()
 
     while (1) 
     {   
-        // Round of Black
+        /* Round of Black */
         do {
 
             pos = GetValidPosition(ROUND_BLACK, pos); 
@@ -490,15 +494,22 @@ int StartPvP()
         } while (pos.status == POS_PENDING);
 
         Board[BOARD_SIZE-pos.x][pos.y-'A'] = BLACK_TRI;
-        // Skip first round
-        if (iTotalRound) Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = WHITE_CIR;
+        if (iTotalRound) /* Skip 1st */Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = WHITE_CIR;
         lastPos = pos;
         ClearScreen();
         DisplayBoard(pos); 
 
         ++iTotalRound;
+        RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_BLACK * iTotalRound;
 
-        // Round of White
+        iGameResult = GetGameResult(RECORD_BLACK);
+        if (iGameResult == GR_WIN) {
+            // TODO
+            printf("BLACK WIN\n");
+            exit(0);
+        }
+
+        /* Round of White */
         do {
         
             pos = GetValidPosition(ROUND_WHITE, pos);
@@ -518,6 +529,14 @@ int StartPvP()
         DisplayBoard(pos);
 
         ++iTotalRound;
+        RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_WHITE * iTotalRound;
+
+        iGameResult = GetGameResult(RECORD_WHITE);
+        if (iGameResult == GR_WIN) {
+            // TODO
+            printf("WHITE WIN\n");
+            exit(0);
+        }
     }   
 
     return OPT_ABORT;

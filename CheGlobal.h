@@ -2,7 +2,6 @@
 #define _INCLUDE_CHE_GLOBAL_H
 
 #include "CheDef.h"
-#include "CheTUI.h"
 
 //////////////
 // Home TUI //
@@ -34,5 +33,17 @@ void InitBoardArray();
  * @return
  */
 void InitGlobalVariables();
+
+///////////////
+// Game data //
+///////////////
+
+GAME_RECORD_BOARD RecordBoard;
+
+/* [Initialize Record Chessboard]
+ * @param
+ * @return
+ */
+void InitRecordBoardArray();
 
 #endif /* _INCLUDE_CHE_GLOBAL_H */

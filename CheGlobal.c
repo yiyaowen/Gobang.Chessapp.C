@@ -6,6 +6,20 @@ extern HOME_OPTIONS HomeOptions;
 extern int CurrentOptionNum;
 
 extern DEFAULT_FLAT_BOARD Board;
+extern GAME_RECORD_BOARD RecordBoard;
+
+void InitGlobalVariables()
+{
+    /* Home TUI */
+    InitHomeOptionsArray();
+    CurrentOptionNum = OPTION_PvP_NUM;
+
+    /* Board TUI */
+    InitBoardArray();
+    
+    /* Game data */
+    InitRecordBoardArray();
+}
 
 void InitHomeOptionsArray()
 {
@@ -49,12 +63,13 @@ void InitBoardArray()
     }
 }
 
-void InitGlobalVariables()
+void InitRecordBoardArray()
 {
-    /* Home TUI */
-    InitHomeOptionsArray();
-    CurrentOptionNum = OPTION_PvP_NUM;
-
-    /* Board TUI */
-    InitBoardArray();
+    int i, j;
+    
+    for (i = 0; i < BOARD_SIZE; ++i) {
+        for (j = 0; j < BOARD_SIZE; ++j) {
+            RecordBoard[i][j] = 0;
+        }
+    }
 }

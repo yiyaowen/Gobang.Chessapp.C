@@ -165,7 +165,7 @@
     "||                                                                                ||" "\n" \
   "\\\\<<========<<========<<========<<========<<========<<========<<========<<========//"
 
-/* DEPRECATED */
+/* DEPRECATED !!! */
 /*
 #define DEPRECATED_HOME_ICON \
     "//>>>>>>>>>>>>>>>>==>>>>>>>>>==>>>>>>>>>>>>>>>==>>>>>>>>>>>>>==>>>>>>>==>>>>>>>>>>>\\\\" "\n" \
@@ -231,13 +231,13 @@ typedef const char * HOME_OPTIONS[HOME_OPTION_NUM];
 
 #define LEFT_TOP_ICON       "┏ "
 #define TOP_ICON                "┯ "
-#define RIGHT_TOP_ICON      "┓"
+#define RIGHT_TOP_ICON      "┓ "
 #define LEFT_ICON               "┠ "
 #define MIDDLE_ICON         "┼ "
-#define RIGHT_ICON              "┨"
+#define RIGHT_ICON              "┨ "
 #define LEFT_BOTTOM_ICON    "┗ "
 #define BOTTOM_ICON             "┷ "
-#define RIGHT_BOTTOM_ICON   "┛"
+#define RIGHT_BOTTOM_ICON   "┛ "
 
 #define GAME_INFO_FRAME_TOP         "//===>===>===>===>===>\\\\"
 #define GAME_INFO_FRAME_MIDDLE      "||                    ||"
@@ -261,5 +261,22 @@ typedef struct {
     pos.y = 'A'; \
     pos.status = POS_PENDING; \
 } while (0)
+
+typedef struct {
+    int i;
+    int j;
+} DEFAULT_ARRAY_POSITION, INDEXER;
+
+///////////////
+// Game data //
+///////////////
+
+typedef int GAME_RECORD_BOARD[BOARD_SIZE][BOARD_SIZE];
+
+/* iRecordType */
+/* GAME_RECORD_BOARD element type */
+#define RECORD_BLACK    -1
+#define RECORD_WHITE     1
+
 
 #endif /* _INCLUDE_CHE_DEF_H */

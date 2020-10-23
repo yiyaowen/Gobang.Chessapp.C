@@ -1,4 +1,4 @@
-﻿#ifndef _INCLUDE_CHE_TUI_H
+#ifndef _INCLUDE_CHE_TUI_H
 #define _INCLUDE_CHE_TUI_H
 
 #include "CheDef.h"
