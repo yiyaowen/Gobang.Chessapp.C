@@ -441,19 +441,22 @@ POSITION HandleControlOption(char key, POSITION inPos)
         // Save
     case 's':
     case 'S':
-    { // Need brace here, otherwise compile failed
+    { // Need brace here, otherwise compile failed with gnu11
         char path[80];
         int iReadPathResult;
 
-        printf("Save game record to file. Please input target file path:");
+        inPos.status = POS_PENDING;
+
+        printf("Save game record to file. Please input target file path.");
         putchar('\n');
-        printf(PROMPT);
+        printf("File path: ");
 
         iReadPathResult = scanf("%s", path); 
         ClearInputBuffer();
         if (iReadPathResult != 1) {
-            printf("Can't read target file path. Back to game.");
-            putchar('\n');
+            printf(HIGHLIGHT_TEXT(RED_TEXT("Can't read target file path.")) 
+                   " Press enter to back to game. " HIGHLIGHT_TEXT("[Enter]"));
+            ClearInputBuffer();
             return inPos;
         }
 
@@ -462,14 +465,15 @@ POSITION HandleControlOption(char key, POSITION inPos)
             putchar('\n');
             printf("Target file will be created if not exists. Try to check related permissions.");
             putchar('\n');
-            printf("Can't write target file. Back to game.");
-            putchar('\n');
+            printf(HIGHLIGHT_TEXT(RED_TEXT("Can't write target file.")) 
+                   " Press enter to back to game." HIGHLIGHT_TEXT("[Enter]"));
+            ClearInputBuffer();
             return inPos;
         }
 
-        printf("Target file %s saved successfully. Press enter to continue. [Enter]", path);
+        printf("Target file %s saved successfully. Press enter to continue. " 
+               HIGHLIGHT_TEXT("[Enter]"), path);
         ClearInputBuffer();
-        inPos.status = POS_PENDING;
         return inPos;
         break;
     }
