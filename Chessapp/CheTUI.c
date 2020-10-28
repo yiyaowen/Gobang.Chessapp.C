@@ -360,9 +360,8 @@ POSITION GetValidPosition(int iRound, POSITION pos)
 
     autoprint(DisplayHint(iRound));
     c = getchar();
-    if (c == 'q' || c == 'Q') {
-        pos.status = POS_QUIT;
-        ClearInputBuffer();
+    if (IsSpecialControlOption(c)) {
+        pos = HandleControlOption(c, pos);
         return pos;
     }
     else if (c == '\n') {
@@ -390,9 +389,8 @@ POSITION GetValidPosition(int iRound, POSITION pos)
 
         autoprint(DisplayErrorHint(iErrorType));
         c = getchar();
-        if (c == 'q' || c == 'Q') {
-            pos.status = POS_QUIT;
-            ClearInputBuffer();
+        if (IsSpecialControlOption(c)) {
+            pos = HandleControlOption(c, pos);
             return pos;
         }
         else if (c == '\n') {
@@ -415,6 +413,78 @@ POSITION GetValidPosition(int iRound, POSITION pos)
 
     return pos;
 }
+
+int IsSpecialControlOption(char key)
+{
+    if (key == 'q' || key == 'Q' ||
+        key == 's' || key == 'S') {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+POSITION HandleControlOption(char key, POSITION inPos)
+{
+    switch (key)
+    {
+        // Quit
+    case 'q':
+    case 'Q':
+        inPos.status = POS_QUIT;
+        ClearInputBuffer();
+        return inPos;
+        break;
+
+        // Save
+    case 's':
+    case 'S':
+    { // Need brace here, otherwise compile failed with gnu11
+        char path[80];
+        int iReadPathResult;
+
+        inPos.status = POS_PENDING;
+
+        printf("Save game record to file. Please input target file path.");
+        putchar('\n');
+        printf("File path: ");
+
+        iReadPathResult = scanf("%s", path); 
+        ClearInputBuffer();
+        if (iReadPathResult != 1) {
+            printf(HIGHLIGHT_TEXT(RED_TEXT("Can't read target file path.")) 
+                   " Press enter to back to game. " HIGHLIGHT_TEXT("[Enter]"));
+            ClearInputBuffer();
+            return inPos;
+        }
+
+        if (!ExportBoardToFile(RecordBoard, path)) {
+            printf("Invalid target file path. Please make sure recursive directories exist.");
+            putchar('\n');
+            printf("Target file will be created if not exists. Try to check related permissions.");
+            putchar('\n');
+            printf(HIGHLIGHT_TEXT(RED_TEXT("Can't write target file.")) 
+                   " Press enter to back to game." HIGHLIGHT_TEXT("[Enter]"));
+            ClearInputBuffer();
+            return inPos;
+        }
+
+        printf("Target file %s saved successfully. Press enter to continue. " 
+               HIGHLIGHT_TEXT("[Enter]"), path);
+        ClearInputBuffer();
+        return inPos;
+        break;
+    }
+
+    default:
+        return inPos;
+        break;
+    }
+
+    return inPos;
+}
+        
 
 int IsPositionValid(POSITION pos)
 {

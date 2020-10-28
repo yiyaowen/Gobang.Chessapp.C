@@ -60,6 +60,19 @@ void DisplayHint(int iRound);
  */
 POSITION GetValidPosition(int iRound, POSITION pos);
 
+/* [Check if the option is a special control option]
+ * @param key (The option to be checked)
+ * @return (If it is a special control option return 1, otherwise return 0)
+ */
+int IsSpecialControlOption(char key);
+
+/* [Handle special control options when playing]
+ * @param key (The special control option)
+ * @param inPos (The origin position before handling)
+ * @return outPos (The modified position after handling)
+ */
+POSITION HandleControlOption(char key, POSITION inPos);
+
 /* iRound */
 #define ROUND_BLACK         1
 #define ROUND_WHITE         2
