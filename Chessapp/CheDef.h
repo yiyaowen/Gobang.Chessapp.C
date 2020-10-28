@@ -13,7 +13,27 @@
 
 #ifdef WIN
 #include <windows.h>
+#ifndef UNICODE
+#define UNICODE // Enable utf-8
+#endif
 #pragma warning(disable:4996) // Enable scanf in VS
+
+#ifndef CHE_DOUBLE_BUFFER_VARIABLE
+#define CHE_DOUBLE_BUFFER_VARIABLE
+HANDLE hForeward;
+HANDLE hBackward;
+int CHE_DOUBLE_BUFFER_STATE;
+#endif
+
+// Include double buffer
+#define INCLUDE_DOUBLE_BUFFER \
+extern HANDLE hForeward; \
+extern HANDLE hBackward; \
+extern int CHE_DOUBLE_BUFFER_STATE;
+
+#elif UNIX
+#define INCLUDE_DOUBLE_BUFFER ;
+
 #endif
 
 ////////////////////
@@ -29,69 +49,147 @@
 
 /* WIN */
 #ifdef WIN
+#define EnableConsoleDoubleBuffer() do { \
+    hForeward = CreateConsoleScreenBuffer( \
+        GENERIC_READ | GENERIC_WRITE, \
+        FILE_SHARE_READ | FILE_SHARE_WRITE, \
+        NULL, \
+        CONSOLE_TEXTMODE_BUFFER, \
+        NULL \
+    ); \
+    hBackward = CreateConsoleScreenBuffer( \
+        GENERIC_READ | GENERIC_WRITE, \
+        FILE_SHARE_READ | FILE_SHARE_WRITE, \
+        NULL, \
+        CONSOLE_TEXTMODE_BUFFER, \
+        NULL \
+    ); \
+    CHE_DOUBLE_BUFFER_STATE = 1; \
+    SetConsoleActiveScreenBuffer(hForeward); \
+} while (0)
+
+#define printVTSErrorMessage() do { \
+    printf("Can't enable Virtual Terminal Sequences on your Windows.\n"); \
+    printf("Please make sure you are using the new cmd.exe.\n"); \
+} while (0)
+
 #define EnableVirtualTerminalSequences() do { \
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE); \
     if (hOut == INVALID_HANDLE_VALUE) { \
-        printf("Can't enable Virtual Terminal Sequences on your Windows.\n"); \
-        printf("Please make sure you are using the cmd of new type.\n"); \
+        printVTSErrorMessage(); \
         printf("Error - GetStdHandle(STD_OUTPUT_HANDLE);\n"); \
         exit(EXIT_FAILURE); \
     } \
     DWORD dwMode = 0; \
     if (!GetConsoleMode(hOut, &dwMode)) { \
-        printf("Can't enable Virtual Terminal Sequences on your Windows.\n"); \
-        printf("Please make sure you are using the cmd of new type.\n"); \
+        printVTSErrorMessage(); \
         printf("Error - GetConsoleMode(hOut, &dwMode);\n"); \
         exit(EXIT_FAILURE); \
     } \
     dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING; \
     if (!SetConsoleMode(hOut, dwMode)) { \
-        printf("Can't enable Virtual Terminal Sequences on your Windows.\n"); \
-        printf("Please make sure you are using the cmd of new type.\n"); \
+        printVTSErrorMessage(); \
         printf("Error - SetConsoleMode(hOut, dwMode);\n"); \
         exit(EXIT_FAILURE); \
     } \
 } while (0)
 
-#define ClearScreen() do { \
-    HANDLE hStdout = GetStdHandle(STD_OUTPUT_HANDLE); \
-    COORD coordScreen = { 0, 0 }; \
+#define printClsErrorMessage() do { \
+    printf("Error occurred while clearing console screen.\n"); \
+    printf("Please find help in the build-help flie to solve this problem.\n"); \
+} while (0)
+
+#define cls(hConsole) do { \
+    COORD coordScreen = { 0, 0 }; /* Original caret position */ \
     DWORD cCharsWritten; \
     CONSOLE_SCREEN_BUFFER_INFO csbi; \
     DWORD dwConSize; \
-    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) { \
-        printf("Error - GetConsoleScreenBufferInfo(hConsole, &csbi);\n"); \
+    /* Get number of characters of current buffer */ \
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) \
+    { \
+        printClsErrorMessage(); \
         exit(EXIT_FAILURE); \
     } \
     dwConSize = csbi.dwSize.X * csbi.dwSize.Y; \
-    if (!FillConsoleOutputCharacter(hConsole, (TCHAR) ' ', dwConSize, coordScreen, &cCharsWritten)) { \
-        printf("Error - FillConsoleOutputCharacter(...);\n"); \
+    /* Fill screen with white-spaces */ \
+    if (!FillConsoleOutputCharacter(hConsole, \
+        (TCHAR)' ', \
+        dwConSize, \
+        coordScreen, \
+        &cCharsWritten)) \
+    { \
+        printClsErrorMessage(); \
         exit(EXIT_FAILURE); \
     } \
-    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) { \
-        printf("Error - GetConsoleScreenBufferInfo(hConsole, &csbi);\n"); \
+    /* Get current buffer's attributes */ \
+    if (!GetConsoleScreenBufferInfo(hConsole, &csbi)) \
+    { \
+        printClsErrorMessage(); \
         exit(EXIT_FAILURE); \
     } \
-    if (!FillConsoleOutputAttribute(hConsole, csbi.wAttributes, dwConSize, coordScreen, &cCharsWritten)) { \
-        printf("Error - FillConsoleOutputAttribute(...);\n"); \
+    /* Reset current buffer's attributes */ \
+    if (!FillConsoleOutputAttribute(hConsole, \
+        csbi.wAttributes, \
+        dwConSize, \
+        coordScreen, \
+        &cCharsWritten)) \
+    { \
+        printClsErrorMessage(); \
         exit(EXIT_FAILURE); \
     } \
+    /* Put caret to original position */ \
     SetConsoleCursorPosition(hConsole, coordScreen); \
+} while (0)
+
+#define ClearScreen() do { \
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); \
+    cls(hStdOut); \
+} while (0)
+
+#define autoprint(PRINT_PROCESS) do { \
+    DWORD cChars = 0; \
+    DWORD cAttrs = 0; \
+    TCHAR data[4000]; \
+    WORD attr[4000]; \
+	PRINT_PROCESS; \
+    CONSOLE_SCREEN_BUFFER_INFO csbi; \
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); \
+    GetConsoleScreenBufferInfo(hStdOut, &csbi); \
+	ReadConsoleOutputCharacter(hStdOut, data, 4000, (COORD) { 0, 0 }, &cChars); \
+    ReadConsoleOutputAttribute(hStdOut, attr, 4000, (COORD) { 0, 0 }, &cAttrs); \
+	WriteConsoleOutputCharacter(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, data, 4000, (COORD) { 0, 0 }, &cChars); \
+    WriteConsoleOutputAttribute(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, attr, 4000, (COORD) { 0, 0 }, &cAttrs); \
+    SetConsoleCursorPosition(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, csbi.dwCursorPosition); \
+	SetConsoleActiveScreenBuffer(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward); \
+	CHE_DOUBLE_BUFFER_STATE = -CHE_DOUBLE_BUFFER_STATE; \
+} while (0)
+
+#define autoclear(DISPLAY_PROCESS) do { \
+	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); \
+	cls(hStdOut); \
+    autoprint(DISPLAY_PROCESS); \
 } while (0)
 
 /* DEPRECATED */
 /*
 #define ClearScreen() do { \
     system("cls"); \
-} while (0)
+} while (0
 */
 
 /* UNIX */
 #elif UNIX
+#define EnableConsoleDoubleBuffer() ;
+
 #define EnableVirtualTerminalSequences() ;
 
 #define ClearScreen() do { \
     system("clear"); \
+} while (0)
+
+#define autoclear(x) do { \
+    ClearScreen();
+    x; \
 } while (0)
 
 #endif
@@ -127,7 +225,7 @@
 #define WHITE_B_ATTR            "\033[47m"
 
 #define END_ATTR() do { \
-    printf("\033[00m"); \
+    printf("\033[37m"); \
 } while (0)
 
 #define HIGHLIGHT_TEXT(originText)      "\033[01m" originText "\033[22m"
@@ -135,16 +233,16 @@
 // BLINK_ATTR of VT is deprecated on Windows
 #define BLINK_TEXT(originText)          "\033[05m" originText "\033[25m"
 
-#define BLACK_TEXT(originText)          "\033[30m" originText "\033[39m"
-#define RED_TEXT(originText)            "\033[31m" originText "\033[39m"
-#define GREEN_TEXT(originText)          "\033[32m" originText "\033[39m"
-#define YELLOW_TEXT(originText)         "\033[33m" originText "\033[39m"
-#define BLUE_TEXT(originText)           "\033[34m" originText "\033[39m"
-#define PURPLE_TEXT(originText)         "\033[35m" originText "\033[39m"
-#define MAGENTA_TEXT(originText)        "\033[35m" originText "\033[39m"
-#define DARK_GREEN_TEXT(originText)     "\033[36m" originText "\033[39m"
-#define CYAN_TEXT(originText)           "\033[36m" originText "\033[39m"
-#define WHITE_TEXT(originText)          "\033[37m" originText "\033[39m"
+#define BLACK_TEXT(originText)          "\033[30m" originText "\033[37m"
+#define RED_TEXT(originText)            "\033[31m" originText "\033[37m"
+#define GREEN_TEXT(originText)          "\033[32m" originText "\033[37m"
+#define YELLOW_TEXT(originText)         "\033[33m" originText "\033[37m"
+#define BLUE_TEXT(originText)           "\033[34m" originText "\033[37m"
+#define PURPLE_TEXT(originText)         "\033[35m" originText "\033[37m"
+#define MAGENTA_TEXT(originText)        "\033[35m" originText "\033[37m"
+#define DARK_GREEN_TEXT(originText)     "\033[36m" originText "\033[37m"
+#define CYAN_TEXT(originText)           "\033[36m" originText "\033[37m"
+#define WHITE_TEXT(originText)          "\033[37m" originText "\033[37m"
 
 #define BLACK_BACK(originText)          "\033[40m" originText "\033[49m"
 #define RED_BACK(originText)            "\033[41m" originText "\033[49m"
@@ -162,7 +260,7 @@
 } while (0)
 
 // Before using this you must make sure [stdin] is not empty,
-// otherwise there will be a unthought stop. A solution is that
+// otherwise there will be a unthought stop. One solution is that
 // after getting '\n' use PutCharBack() to put it back.
 #define ClearInputBuffer() do { \
     char tmp; \

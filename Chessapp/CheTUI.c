@@ -4,6 +4,7 @@
 #include "CheDef.h"
 #include "CheGlobal.h"
 #include "CheTUI.h"
+INCLUDE_DOUBLE_BUFFER
 
 extern HOME_OPTIONS HomeOptions;
 extern int CurrentOptionNum;
@@ -45,8 +46,6 @@ void DisplayHomeOptions()
 
 void DisplayHome()
 {
-    ClearScreen();
-
     printf(HOME_ICON);
     putchar('\n');
     putchar('\n');
@@ -78,9 +77,11 @@ void GetValidHomeOption()
     while (!IsOptionValid(iOption)) {
 
         //printf("没有这个选项. 请从 1~%d 中选择, 或者按下回车键确认.", HOME_OPTION_NUM);
-        printf("No such option. Please choose from 1~%d, or press Enter.", HOME_OPTION_NUM);
-        putchar('\n');
-        printf(PROMPT);
+        autoprint(
+            printf("No such option. Please choose from 1~%d, or press Enter.", HOME_OPTION_NUM);
+            putchar('\n');
+            printf(PROMPT);
+        );
 
         c = getchar();
         if (c == '\n') {
@@ -145,13 +146,11 @@ void SwitchToSelectedOption()
             printf(GREEN_TEXT(HIGHLIGHT_TEXT("Bye ")) HIGHLIGHT_TEXT("EXIT_SUCCESS"));
             putchar('\n');
             exit(EXIT_SUCCESS);
-            break;
 
         default:
             printf(RED_TEXT(HIGHLIGHT_TEXT("Error ")) HIGHLIGHT_TEXT("EXIT_FAILURE"));
             putchar('\n');
             exit(EXIT_FAILURE);
-            break;
         }
     }
 }
@@ -359,7 +358,7 @@ POSITION GetValidPosition(int iRound, POSITION pos)
     int iScanResult;
     POSITION validPos = pos;
 
-    DisplayHint(iRound);
+    autoprint(DisplayHint(iRound));
     c = getchar();
     if (IsSpecialControlOption(c)) {
         pos = HandleControlOption(c, pos);
@@ -388,7 +387,7 @@ POSITION GetValidPosition(int iRound, POSITION pos)
             iErrorType = POS_BAD_FORMAT;
         }
 
-        DisplayErrorHint(iErrorType);
+        autoprint(DisplayErrorHint(iErrorType));
         c = getchar();
         if (IsSpecialControlOption(c)) {
             pos = HandleControlOption(c, pos);
@@ -545,8 +544,7 @@ int StartPvP()
     InitRecordBoardArray();
     InitPos(pos);
 
-    ClearScreen();
-    DisplayBoard(pos);
+    autoclear(DisplayBoard(pos));
 
     while (1) 
     {   
@@ -558,16 +556,14 @@ int StartPvP()
                 return OPT_QUIT;
             }
 
-            ClearScreen();
-            DisplayBoard(pos);
+            autoclear(DisplayBoard(pos));
 
         } while (pos.status == POS_PENDING);
 
         Board[BOARD_SIZE-pos.x][pos.y-'A'] = BLACK_TRI;
         if (iTotalRound) /* Skip 1st */Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = WHITE_CIR;
         lastPos = pos;
-        ClearScreen();
-        DisplayBoard(pos); 
+        autoclear(DisplayBoard(pos));
 
         ++iTotalRound;
         RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_BLACK * iTotalRound;
@@ -587,16 +583,14 @@ int StartPvP()
                 return OPT_QUIT;
             }
 
-            ClearScreen();
-            DisplayBoard(pos);
+            autoclear(DisplayBoard(pos));
 
         } while (pos.status == POS_PENDING);
 
         Board[BOARD_SIZE-pos.x][pos.y-'A'] = WHITE_TRI;
         Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = BLACK_CIR;
         lastPos = pos;
-        ClearScreen();
-        DisplayBoard(pos);
+        autoclear(DisplayBoard(pos));
 
         ++iTotalRound;
         RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_WHITE * iTotalRound;
