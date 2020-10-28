@@ -16,7 +16,7 @@ extern GAME_RECORD_BOARD RecordBoard;
 // Home TUI //
 //////////////
 
-void DisplayHomeOptions()
+void PrintHomeOptions()
 {
     for (int i = 0; i < HOME_OPTION_NUM; ++i) {
 
@@ -50,7 +50,7 @@ void DisplayHome()
     putchar('\n');
     putchar('\n');
 
-    DisplayHomeOptions();
+    PrintHomeOptions();
 
     printf(PROMPT);
 }
@@ -119,15 +119,33 @@ void SwitchToSelectedOption()
         switch (CurrentOptionNum)
         {
         case OPTION_PvP_NUM:
-            iOptionResult = StartPvP();
+        {
+            GAME_PREFAB_CONFIG game_prefab_config = {
+                GPC_MODE_PVP,   // mode
+                GPC_NULL,       // order
+                GPC_NULL        // level
+            };
+            iOptionResult = StartPvP(game_prefab_config);
             if (iOptionResult == OPT_QUIT) {
                 return;
             }
             break;
+        }
             
         case OPTION_PvC_NUM:
+        {
             // TODO
+            GAME_PREFAB_CONFIG game_prefab_config = {
+                GPC_MODE_PVC,   // mode
+                GPC_NULL,       // order
+                GPC_NULL        // level
+            };
+            iOptionResult = StartPvC(game_prefab_config);
+            if (iOptionResult == OPT_QUIT) {
+                return;
+            }
             break;
+        }
 
         case OPTION_PreAndSet_NUM:
             // TODO
@@ -333,7 +351,7 @@ void DisplayBoard(POSITION pos)
     putchar('\n');
 }
 
-void DisplayHint(int iRound)
+void PrintHint(int iRound)
 {
     if (iRound == ROUND_BLACK) {
         printf("Black " BLACK_CIR_ICON "'s turn. ");
@@ -353,7 +371,7 @@ POSITION GetValidPosition(int iRound, POSITION pos)
     int iScanResult;
     POSITION validPos = pos;
 
-    autoprint(DisplayHint(iRound));
+    autoprint(PrintHint(iRound));
     c = getchar();
     if (IsSpecialControlOption(c)) {
         pos = HandleControlOption(c, pos);
@@ -382,7 +400,7 @@ POSITION GetValidPosition(int iRound, POSITION pos)
             iErrorType = POS_BAD_FORMAT;
         }
 
-        autoprint(DisplayErrorHint(iErrorType));
+        autoprint(PrintErrorHint(iErrorType));
         c = getchar();
         if (IsSpecialControlOption(c)) {
             pos = HandleControlOption(c, pos);
@@ -441,32 +459,40 @@ POSITION HandleControlOption(char key, POSITION inPos)
 
         inPos.status = POS_PENDING;
 
-        printf("Save game record to file. Please input target file path.");
-        putchar('\n');
-        printf("File path: ");
+        autoprint(
+            printf("Save game record to file. Please input target file path.");
+            putchar('\n');
+            printf("File path: ");
+        );
 
         iReadPathResult = scanf("%s", path); 
         ClearInputBuffer();
         if (iReadPathResult != 1) {
-            printf(HIGHLIGHT_TEXT(RED_TEXT("Can't read target file path.")) 
-                   " Press enter to back to game. " HIGHLIGHT_TEXT("[Enter]"));
+            autoprint(
+                printf(HIGHLIGHT_TEXT(RED_TEXT("Can't read target file path."))
+                    " Press enter to back to game. " HIGHLIGHT_TEXT("[Enter]"));
+            );
             ClearInputBuffer();
             return inPos;
         }
 
         if (!ExportBoardToFile(RecordBoard, path)) {
-            printf("Invalid target file path. Please make sure recursive directories exist.");
-            putchar('\n');
-            printf("Target file will be created if not exists. Try to check related permissions.");
-            putchar('\n');
-            printf(HIGHLIGHT_TEXT(RED_TEXT("Can't write target file.")) 
-                   " Press enter to back to game." HIGHLIGHT_TEXT("[Enter]"));
+            autoprint(
+                printf("Invalid target file path. Please make sure recursive directories exist.");
+                putchar('\n');
+                printf("Target file will be created if not exists. Try to check related permissions.");
+                putchar('\n');
+                printf(HIGHLIGHT_TEXT(RED_TEXT("Can't write target file."))
+                       " Press enter to back to game." HIGHLIGHT_TEXT("[Enter]"));
+            );
             ClearInputBuffer();
             return inPos;
         }
 
-        printf("Target file %s saved successfully. Press enter to continue. " 
+        autoprint(
+            printf("Target file %s saved successfully. Press enter to continue. "
                HIGHLIGHT_TEXT("[Enter]"), path);
+        );
         ClearInputBuffer();
         return inPos;
         break;
@@ -497,7 +523,7 @@ int IsPositionValid(POSITION pos)
     }
 }
     
-void DisplayErrorHint(int iErrorType)
+void PrintErrorHint(int iErrorType)
 {
     switch (iErrorType)
     {
@@ -524,7 +550,7 @@ void DisplayErrorHint(int iErrorType)
     printf(PROMPT);
 }
 
-int StartPvP()
+int StartPvP(GAME_PREFAB_CONFIG game_prefab_config)
 {
     int iTotalRound = 0;
     int iGameResult;
@@ -535,11 +561,13 @@ int StartPvP()
     InitRecordBoardArray();
     InitPos(pos);
 
-    autoclear(DisplayBoard(pos));
+    autodisplay(DisplayBoard(pos));
 
     while (1) 
-    {   
+    {
+        ////////////////////
         /* Round of Black */
+        ////////////////////
         do {
 
             pos = GetValidPosition(ROUND_BLACK, pos); 
@@ -547,14 +575,14 @@ int StartPvP()
                 return OPT_QUIT;
             }
 
-            autoclear(DisplayBoard(pos));
+            autodisplay(DisplayBoard(pos));
 
         } while (pos.status == POS_PENDING);
 
         Board[BOARD_SIZE-pos.x][pos.y-'A'] = BLACK_TRI;
         if (iTotalRound) /* Skip 1st */Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = WHITE_CIR;
         lastPos = pos;
-        autoclear(DisplayBoard(pos));
+        autodisplay(DisplayBoard(pos));
 
         ++iTotalRound;
         RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_BLACK * iTotalRound;
@@ -566,7 +594,9 @@ int StartPvP()
             exit(0);
         }
 
+        ////////////////////
         /* Round of White */
+        ////////////////////
         do {
         
             pos = GetValidPosition(ROUND_WHITE, pos);
@@ -574,14 +604,14 @@ int StartPvP()
                 return OPT_QUIT;
             }
 
-            autoclear(DisplayBoard(pos));
+            autodisplay(DisplayBoard(pos));
 
         } while (pos.status == POS_PENDING);
 
         Board[BOARD_SIZE-pos.x][pos.y-'A'] = WHITE_TRI;
         Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = BLACK_CIR;
         lastPos = pos;
-        autoclear(DisplayBoard(pos));
+        autodisplay(DisplayBoard(pos));
 
         ++iTotalRound;
         RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_WHITE * iTotalRound;
@@ -593,6 +623,83 @@ int StartPvP()
             exit(0);
         }
     }   
+
+    return OPT_ABORT;
+}
+
+int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
+{
+    int iTotalRound = 0;
+    int iGameResult;
+    POSITION pos;
+    POSITION lastPos;
+
+    InitBoardArray();
+    InitRecordBoardArray();
+    InitPos(pos);
+
+    autodisplay(DisplayBoard(pos));
+
+    while (1)
+    {
+        ////////////////////
+        /* Round of Black */
+        ////////////////////
+        do {
+
+            pos = GetValidPosition(ROUND_BLACK, pos);
+            if (pos.status == POS_QUIT) {
+                return OPT_QUIT;
+            }
+
+            autodisplay(DisplayBoard(pos));
+
+        } while (pos.status == POS_PENDING);
+
+        Board[BOARD_SIZE-pos.x][pos.y-'A'] = BLACK_TRI;
+        if (iTotalRound) /* Skip 1st */Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = WHITE_CIR;
+        lastPos = pos;
+        autodisplay(DisplayBoard(pos));
+
+        ++iTotalRound;
+        RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_BLACK * iTotalRound;
+
+        iGameResult = GetGameResult(RECORD_BLACK);
+        if (iGameResult == GR_WIN) {
+            // TODO
+            printf("BLACK WIN\n");
+            exit(0);
+        }
+
+        ////////////////////
+        /* Round of White */
+        ////////////////////
+        do {
+        
+            pos = GetValidPosition(ROUND_WHITE, pos);
+            if (pos.status == POS_QUIT) {
+                return OPT_QUIT;
+            }
+
+            autodisplay(DisplayBoard(pos));
+
+        } while (pos.status == POS_PENDING);
+
+        Board[BOARD_SIZE-pos.x][pos.y-'A'] = WHITE_TRI;
+        Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = BLACK_CIR;
+        lastPos = pos;
+        autodisplay(DisplayBoard(pos));
+
+        ++iTotalRound;
+        RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_WHITE * iTotalRound;
+
+        iGameResult = GetGameResult(RECORD_WHITE);
+        if (iGameResult == GR_WIN) {
+            // TODO
+            printf("WHITE WIN\n");
+            exit(0);
+        }
+    }
 
     return OPT_ABORT;
 }

@@ -1,4 +1,4 @@
-﻿#include "Che.h"
+#include "Che.h"
 
 int main(int argc, char * argv[])
 {
@@ -8,7 +8,7 @@ int main(int argc, char * argv[])
 
     while (1) { 
 
-        autoclear(DisplayHome());
+        autodisplay(DisplayHome());
 
         GetValidHomeOption();
 

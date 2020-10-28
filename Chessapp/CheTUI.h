@@ -8,12 +8,12 @@
 //////////////
 
 /**
- * Display Homepage options
+ * Print Homepage options
  *
  * @param
  * @return
  */
-void DisplayHomeOptions();
+void PrintHomeOptions();
 
 /**
  * Display Total Homepage
@@ -65,7 +65,7 @@ void DisplayBoard();
  * @param iRound (ROUND_WHITE or ROUND_BLACK)
  * @return
  */
-void DisplayHint(int iRound);
+void PrintHint(int iRound);
 
 /**
  * Loop until get a valid input for Chessboard position
@@ -111,7 +111,7 @@ int IsPositionValid(POSITION pos);
  * @param iErrorType (The type of input error)
  * @return
  */
-void DisplayErrorHint(int iErrorType);
+void PrintErrorHint(int iErrorType);
 
 /* iErrorType */
 #define POS_VALID           0
@@ -122,10 +122,18 @@ void DisplayErrorHint(int iErrorType);
 /**
  * Start handle PvP game. Loop until the game is over
  *
- * @param
+ * @param game_prefab_config (Prefab configuration of game)
  * @return iOptionResult (The handle result of subroutine)
  */
-int StartPvP();
+int StartPvP(GAME_PREFAB_CONFIG game_prefab_config);
+
+/**
+ * Start handle PvC game. Loop until the game is over
+ *
+ * @param game_prefab_config (Prefab configuration of game)
+ * @return iOptionResult (The handle result of subroutine)
+ */
+int StartPvC(GAME_PREFAB_CONFIG game_prefab_config);
 
 /* iOptionResult */
 #define OPT_ABORT  -1

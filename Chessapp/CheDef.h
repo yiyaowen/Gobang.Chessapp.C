@@ -47,7 +47,9 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 // Utils of TUI //
 //////////////////
 
+/////////
 /* WIN */
+/////////
 #ifdef WIN
 #define EnableConsoleDoubleBuffer() do { \
     hForeward = CreateConsoleScreenBuffer( \
@@ -96,7 +98,7 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 
 #define printClsErrorMessage() do { \
     printf("Error occurred while clearing console screen.\n"); \
-    printf("Please find help in the build-help flie to solve this problem.\n"); \
+    printf("Please find help in the BUILD-HELP flie to solve this problem.\n"); \
 } while (0)
 
 #define cls(hConsole) do { \
@@ -155,16 +157,18 @@ extern int CHE_DOUBLE_BUFFER_STATE;
     CONSOLE_SCREEN_BUFFER_INFO csbi; \
 	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); \
     GetConsoleScreenBufferInfo(hStdOut, &csbi); \
+    /* Copy chars and attrs from [stdout] to [double_buffer] */ \
 	ReadConsoleOutputCharacter(hStdOut, data, 4000, (COORD) { 0, 0 }, &cChars); \
     ReadConsoleOutputAttribute(hStdOut, attr, 4000, (COORD) { 0, 0 }, &cAttrs); \
 	WriteConsoleOutputCharacter(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, data, 4000, (COORD) { 0, 0 }, &cChars); \
     WriteConsoleOutputAttribute(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, attr, 4000, (COORD) { 0, 0 }, &cAttrs); \
     SetConsoleCursorPosition(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, csbi.dwCursorPosition); \
+    /* Change display buffer */ \
 	SetConsoleActiveScreenBuffer(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward); \
 	CHE_DOUBLE_BUFFER_STATE = -CHE_DOUBLE_BUFFER_STATE; \
 } while (0)
 
-#define autoclear(DISPLAY_PROCESS) do { \
+#define autodisplay(DISPLAY_PROCESS) do { \
 	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); \
 	cls(hStdOut); \
     autoprint(DISPLAY_PROCESS); \
@@ -177,7 +181,9 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 } while (0
 */
 
+//////////
 /* UNIX */
+//////////
 #elif UNIX
 #define EnableConsoleDoubleBuffer() ;
 
@@ -191,7 +197,7 @@ extern int CHE_DOUBLE_BUFFER_STATE;
     PRINT_PROCESS; \
 } while (0)
 
-#define autoclear(DISPLAY_PROCESS) do { \
+#define autodisplay(DISPLAY_PROCESS) do { \
     ClearScreen(); \
     DISPLAY_PROCESS; \
 } while (0)
@@ -420,5 +426,71 @@ typedef int GAME_RECORD_BOARD[BOARD_SIZE][BOARD_SIZE];
 #define RECORD_BLACK    -1
 #define RECORD_WHITE     1
 
+/////////////////////////
+// Game prefab configs //
+/////////////////////////
+
+typedef struct {
+    int mode;
+    int order;
+    int level;
+} GAME_PREFAB_CONFIG;
+
+#define GPC_NULL    2002
+
+/* iMode */
+#define GPC_MODE_PVP    0
+#define GPC_MODE_PVC    1
+
+/* iOrder */
+#define GPC_ORDER_PLAYER        10
+#define GPC_ORDER_CHESSPLAYER   20
+
+/* iLevel */
+/* PvC game difficulty level */
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+/* Oops! Chessplayer is drunk. You win for sure. */
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+#define GPC_LEVEL_DRUNK  -100
+
+#define GPC_LEVEL_LOW      0
+#define GPC_LEVEL_MIDDLE   1
+#define GPC_LEVEL_HIGH     2
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+/* You lose for sure. Be happy. :-) */
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+#define GPC_LEVEL_INVINCIBLE   100
+/*
+[米津玄师(よねづけんし) -《Loser / ナンバーナイン》]
+アイムアルーザー
+(a i mu a ru u za a)
+我是个loser
+
+どうせだったら远吠えだっていいだろう
+(do u se da tta ra to o bo e da tte i i da ro u)
+所以就算虚张声势也无所谓吧
+
+もう一回もう一回行こうぜ仆らの声
+(mo u i kka i mo u i kka i i ko u ze bo ku ra no ko e)
+再一次再一次前行吧我们的声音
+
+アイムアルーザー
+(a i mu a ru u za a)
+我是个loser
+
+ずっと前から闻こえてた
+(zu tto ma e ka ra ki ko e te ta)
+很久以前就已经听到
+
+いつかポケットに隠した声が
+(i tsu ka po ke tto ni ka ku shi ta ko e ga)
+那不知何时被深藏于口袋之中的声音
+*/
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>//
+/* The answer to life, the universe, and everything */
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
+#define GPC_LEVEL_RANDOM   42
 
 #endif /* INCLUDE_CHE_DEF_H */
