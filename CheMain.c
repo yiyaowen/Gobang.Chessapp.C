@@ -3,11 +3,12 @@
 int main(int argc, char * argv[])
 {
     EnableVirtualTerminalSequences();
+    EnableConsoleDoubleBuffer();
     InitGlobalVariables();
 
     while (1) { 
 
-        DisplayHome();
+        autoclear(DisplayHome());
 
         GetValidHomeOption();
 
