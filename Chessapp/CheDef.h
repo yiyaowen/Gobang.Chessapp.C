@@ -1,5 +1,5 @@
-﻿#ifndef _INCLUDE_CHE_DEF_H
-#define _INCLUDE_CHE_DEF_H
+#ifndef INCLUDE_CHE_DEF_H
+#define INCLUDE_CHE_DEF_H
 
 #include <stdio.h> // fflush, printf, stdin
 #include <stdlib.h> // system, exit
@@ -187,9 +187,13 @@ extern int CHE_DOUBLE_BUFFER_STATE;
     system("clear"); \
 } while (0)
 
-#define autoclear(x) do { \
-    ClearScreen();
-    x; \
+#define autoprint(PRINT_PROCESS) do { \
+    PRINT_PROCESS; \
+} while (0)
+
+#define autoclear(DISPLAY_PROCESS) do { \
+    ClearScreen(); \
+    DISPLAY_PROCESS; \
 } while (0)
 
 #endif
@@ -200,6 +204,17 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 } while (0)
 
 #define NONE_ATTR       "\033[00m"
+
+#ifdef WIN
+// Default VTS attributes are deprecated on Windows.
+// Use white-foreground with black-background instead.
+#define DEFAULT_F_ATTR  "\033[37m"
+#define DEFAULT_B_ATTR  "\033[40m"
+#elif UNIX
+#define DEFAULT_F_ATTR  "\033[39m"
+#define DEFAULT_B_ATTR  "\033[49m"
+#endif
+#define DEFAULT_ATTR    DEFAULT_F_ATTR DEFAULT_B_ATTR
 
 #define HIGHLIGHT_ATTR          "\033[01m"
 #define UNDERLINE_ATTR          "\033[04m"
@@ -225,7 +240,7 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 #define WHITE_B_ATTR            "\033[47m"
 
 #define END_ATTR() do { \
-    printf("\033[37m"); \
+    printf(DEFAULT_ATTR); \
 } while (0)
 
 #define HIGHLIGHT_TEXT(originText)      "\033[01m" originText "\033[22m"
@@ -233,27 +248,27 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 // BLINK_ATTR of VT is deprecated on Windows
 #define BLINK_TEXT(originText)          "\033[05m" originText "\033[25m"
 
-#define BLACK_TEXT(originText)          "\033[30m" originText "\033[37m"
-#define RED_TEXT(originText)            "\033[31m" originText "\033[37m"
-#define GREEN_TEXT(originText)          "\033[32m" originText "\033[37m"
-#define YELLOW_TEXT(originText)         "\033[33m" originText "\033[37m"
-#define BLUE_TEXT(originText)           "\033[34m" originText "\033[37m"
-#define PURPLE_TEXT(originText)         "\033[35m" originText "\033[37m"
-#define MAGENTA_TEXT(originText)        "\033[35m" originText "\033[37m"
-#define DARK_GREEN_TEXT(originText)     "\033[36m" originText "\033[37m"
-#define CYAN_TEXT(originText)           "\033[36m" originText "\033[37m"
-#define WHITE_TEXT(originText)          "\033[37m" originText "\033[37m"
+#define BLACK_TEXT(originText)          "\033[30m" originText DEFAULT_F_ATTR
+#define RED_TEXT(originText)            "\033[31m" originText DEFAULT_F_ATTR
+#define GREEN_TEXT(originText)          "\033[32m" originText DEFAULT_F_ATTR
+#define YELLOW_TEXT(originText)         "\033[33m" originText DEFAULT_F_ATTR
+#define BLUE_TEXT(originText)           "\033[34m" originText DEFAULT_F_ATTR
+#define PURPLE_TEXT(originText)         "\033[35m" originText DEFAULT_F_ATTR
+#define MAGENTA_TEXT(originText)        "\033[35m" originText DEFAULT_F_ATTR
+#define DARK_GREEN_TEXT(originText)     "\033[36m" originText DEFAULT_F_ATTR
+#define CYAN_TEXT(originText)           "\033[36m" originText DEFAULT_F_ATTR
+#define WHITE_TEXT(originText)          "\033[37m" originText DEFAULT_F_ATTR
 
-#define BLACK_BACK(originText)          "\033[40m" originText "\033[49m"
-#define RED_BACK(originText)            "\033[41m" originText "\033[49m"
-#define GREEN_BACK(originText)          "\033[42m" originText "\033[49m"
-#define YELLOW_BACK(originText)         "\033[43m" originText "\033[49m"
-#define BLUE_BACK(originText)           "\033[44m" originText "\033[49m"
-#define PURPLE_BACK(originText)         "\033[45m" originText "\033[49m"
-#define MAGENTA_BACK(originText)        "\033[45m" originText "\033[49m"
-#define DARK_GREEN_BACK(originText)     "\033[46m" originText "\033[49m"
-#define CYAN_BACK(originText)           "\033[46m" originText "\033[49m"
-#define WHITE_BACK(originText)          "\033[47m" originText "\033[49m"
+#define BLACK_BACK(originText)          "\033[40m" originText DEFAULT_B_ATTR
+#define RED_BACK(originText)            "\033[41m" originText DEFAULT_B_ATTR
+#define GREEN_BACK(originText)          "\033[42m" originText DEFAULT_B_ATTR
+#define YELLOW_BACK(originText)         "\033[43m" originText DEFAULT_B_ATTR
+#define BLUE_BACK(originText)           "\033[44m" originText DEFAULT_B_ATTR
+#define PURPLE_BACK(originText)         "\033[45m" originText DEFAULT_B_ATTR
+#define MAGENTA_BACK(originText)        "\033[45m" originText DEFAULT_B_ATTR
+#define DARK_GREEN_BACK(originText)     "\033[46m" originText DEFAULT_B_ATTR
+#define CYAN_BACK(originText)           "\033[46m" originText DEFAULT_B_ATTR
+#define WHITE_BACK(originText)          "\033[47m" originText DEFAULT_B_ATTR
 
 #define PrintSpaces(spacesNum) do { \
     printf("%" #spacesNum "s", ""); \
@@ -406,4 +421,4 @@ typedef int GAME_RECORD_BOARD[BOARD_SIZE][BOARD_SIZE];
 #define RECORD_WHITE     1
 
 
-#endif /* _INCLUDE_CHE_DEF_H */
+#endif /* INCLUDE_CHE_DEF_H */

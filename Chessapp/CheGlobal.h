@@ -1,5 +1,5 @@
-﻿#ifndef _INCLUDE_CHE_GLOBAL_H
-#define _INCLUDE_CHE_GLOBAL_H
+#ifndef INCLUDE_CHE_GLOBAL_H
+#define INCLUDE_CHE_GLOBAL_H
 
 #include "CheDef.h"
 
@@ -16,19 +16,25 @@ int CurrentOptionNum;
 
 DEFAULT_FLAT_BOARD Board;
 
-/* [Initialize home options]
+/**
+ * Initialize home options
+ *
  * @param
  * @return
  */
 void InitHomeOptionsArray();
 
-/* [Initialize Chessboard]
+/**
+ * Initialize Chessboard
+ *
  * @param
  * @return
  */
 void InitBoardArray();
 
-/* [Initialize all gobal variables]
+/**
+ * Initialize all gobal variables
+ *
  * @param
  * @return
  */
@@ -40,10 +46,12 @@ void InitGlobalVariables();
 
 GAME_RECORD_BOARD RecordBoard;
 
-/* [Initialize Record Chessboard]
+/**
+ * Initialize Record Chessboard
+ * 
  * @param
  * @return
  */
 void InitRecordBoardArray();
 
-#endif /* _INCLUDE_CHE_GLOBAL_H */
+#endif /* INCLUDE_CHE_GLOBAL_H */
