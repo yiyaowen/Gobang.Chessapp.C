@@ -1,10 +1,13 @@
 #include <stdio.h>
+#include <stdbool.h> // bool
 
 #include "CheData.h"
 #include "CheDef.h"
 #include "CheGlobal.h"
 #include "CheTUI.h"
 INCLUDE_DOUBLE_BUFFER
+
+#include "Core/Cor.h" // GetCoreAnalysisResult
 
 extern HOME_OPTIONS HomeOptions;
 extern int CurrentOptionNum;
@@ -633,6 +636,7 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
     int iGameResult;
     POSITION pos;
     POSITION lastPos;
+    bool fIsPLayerFirst = (game_prefab_config.order == GPC_ORDER_PLAYER) ? true : false;
 
     InitBoardArray();
     InitRecordBoardArray();
@@ -647,7 +651,19 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
         ////////////////////
         do {
 
-            pos = GetValidPosition(ROUND_BLACK, pos);
+            if (fIsPLayerFirst) {
+                pos = GetValidPosition(ROUND_BLACK, pos);
+            }
+            else {
+                ANALYSIS_PREFAB_CONFIG analysis_prefb_config = {
+                    APC_SIDE_BLACK, // iSide
+                    APC_LEVEL_DRUNK // iLevel
+                };
+                COR_POSITION cor_pos = GetCoreAnalysisResultP(RecordBoard, analysis_prefb_config);
+                pos.x = cor_pos.x;
+                pos.y = cor_pos.y;
+                pos.status = POS_VERIFIED;
+            }
             if (pos.status == POS_QUIT) {
                 return OPT_QUIT;
             }
@@ -676,7 +692,19 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
         ////////////////////
         do {
         
-            pos = GetValidPosition(ROUND_WHITE, pos);
+            if (!fIsPLayerFirst) {
+                pos = GetValidPosition(ROUND_WHITE, pos);
+            }
+            else {
+                ANALYSIS_PREFAB_CONFIG analysis_prefb_config = {
+                    APC_SIDE_WHITE, // iSide
+                    APC_LEVEL_DRUNK // iLevel
+                };
+                COR_POSITION cor_pos = GetCoreAnalysisResultP(RecordBoard, analysis_prefb_config);
+                pos.x = cor_pos.x;
+                pos.y = cor_pos.y;
+                pos.status = POS_VERIFIED;
+            }
             if (pos.status == POS_QUIT) {
                 return OPT_QUIT;
             }
