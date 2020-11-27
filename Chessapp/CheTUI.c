@@ -7,7 +7,7 @@
 #include "CheTUI.h"
 INCLUDE_DOUBLE_BUFFER
 
-#include "Core/Cor.h" // GetCoreAnalysisResult
+#include "Core/Interface/Cor.h" // GetCoreAnalysisResultP
 
 extern HOME_OPTIONS HomeOptions;
 extern int CurrentOptionNum;
@@ -181,13 +181,13 @@ void SwitchToSelectedOption()
 
 void DisplayBoard(POSITION pos) 
 {	
-	int i, j;
-	char row;
-	char col;
+    int i, j;
+    char row;
+    char col;
 
-	for(j = 0,row = 15; j <= BOARD_SIZE - 1; j++) {
+    for(j = 0, row = 15; j <= BOARD_SIZE - 1; j++) {
 
-    // Display infoboard
+        // Display left infoboard
     
         if (j == 0) {
             printf(GAME_INFO_FRAME_TOP);
@@ -197,7 +197,7 @@ void DisplayBoard(POSITION pos)
         }
         PrintSpaces(2);
 
-    // Display chessboard
+        // Display chessboard
     
         if (row == pos.x) {
             printf(RED_TEXT(HIGHLIGHT_TEXT("%2d ")), row);
@@ -205,31 +205,31 @@ void DisplayBoard(POSITION pos)
         else {
             printf("%2d ", row);
         }
-		row -= 1;
+        row -= 1;
 
-		for (i = 0; i <= BOARD_SIZE - 1; i++) {
+        for (i = 0; i <= BOARD_SIZE - 1; i++) {
 
-			switch(Board[j][i])
-			{
-			case 1:
+            switch(Board[j][i])
+            {
+            case GRID_LEFT_TOP:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
                     printf(RED_TEXT(HIGHLIGHT_TEXT(LEFT_TOP_ICON)));
                 }
                 else {
                     printf(LEFT_TOP_ICON);
                 }
-				break;
+                break;
 				
-			case 2:
+            case GRID_RIGHT_TOP:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
                     printf(RED_TEXT(HIGHLIGHT_TEXT(RIGHT_TOP_ICON)));
                 }
                 else {
                     printf(RIGHT_TOP_ICON);
                 }
-				break;
+                break;
 				
-			case 3:
+            case GRID_RIGHT_BOTTOM:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
                     printf(RED_TEXT(HIGHLIGHT_TEXT(RIGHT_BOTTOM_ICON)));
                 }
@@ -238,52 +238,52 @@ void DisplayBoard(POSITION pos)
                 }
 				break;
 				
-			case 4:
+            case GRID_LEFT_BOTTOM:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
                     printf(RED_TEXT(HIGHLIGHT_TEXT(LEFT_BOTTOM_ICON)));
                 }
                 else {
                     printf(LEFT_BOTTOM_ICON);
                 }
-				break;
+                break;
 				
-			case 5:
+            case GRID_LEFT:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
                     printf(RED_TEXT(HIGHLIGHT_TEXT(LEFT_ICON)));
                 }
                 else {
                     printf(LEFT_ICON);
                 }
-				break;
-				
-			case 6:
+                break;
+				    
+                case GRID_TOP:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
                     printf(RED_TEXT(HIGHLIGHT_TEXT(TOP_ICON)));
                 }
                 else {
                     printf(TOP_ICON);
                 }
-				break;
+                break;
 				
-			case 7:
+			case GRID_RIGHT:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
                     printf(RED_TEXT(HIGHLIGHT_TEXT(RIGHT_ICON)));
                 }
                 else {
                     printf(RIGHT_ICON);
                 }
-				break;
+                break;
 				
-			case 8:
+            case GRID_BOTTOM:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
                     printf(RED_TEXT(HIGHLIGHT_TEXT(BOTTOM_ICON)));
                 }
                 else {
                     printf(BOTTOM_ICON);
                 }
-				break;
+                break;
 				
-			case 9:
+            case GRID_MIDDLE:
                 if (j == (BOARD_SIZE - pos.x) && i == (pos.y - 'A')) {
                     printf(RED_TEXT(HIGHLIGHT_TEXT(MIDDLE_ICON)));
                 }
@@ -291,33 +291,34 @@ void DisplayBoard(POSITION pos)
                          (j == (BOARD_SIZE - 4) && i == ('L' - 'A')) ||
                          (j == (BOARD_SIZE - 12) && i == ('D' - 'A')) ||
                          (j == (BOARD_SIZE - 12) && i == ('L' - 'A')) ||
-                         (j == (BOARD_SIZE - 8) && i == ('H' - 'A'))) {
+                         (j == (BOARD_SIZE - 8) && i == ('H' - 'A')))
+                {
                     printf(HIGHLIGHT_TEXT(MIDDLE_ICON));
                 }
                 else {
                     printf(MIDDLE_ICON);
                 }
-				break;
+                break;
 				
-			case BLACK_TRI:      
-				printf(BLACK_TRI_ICON);
-				break;
+            case BLACK_TRI:      
+                printf(BLACK_TRI_ICON);
+                break;
 				
-			case WHITE_TRI:      
-				printf(WHITE_TRI_ICON);
-				break;
+            case WHITE_TRI:      
+                printf(WHITE_TRI_ICON);
+                break;
 				
-			case BLACK_CIR:      
-				printf(BLACK_CIR_ICON);
-				break;
+            case BLACK_CIR:      
+                printf(BLACK_CIR_ICON);
+                break;
             
-			case WHITE_CIR:
-				printf(WHITE_CIR_ICON);
-				break;
-			}
-		}
+            case WHITE_CIR:
+                printf(WHITE_CIR_ICON);
+                break;
+            }
+        }
 
-    // Display infoboard
+        // Display right infoboard
     
         PrintSpaces(1);
         if (j == 0) {
@@ -329,15 +330,15 @@ void DisplayBoard(POSITION pos)
 
         putchar('\n');
 
-	}
+    }
 
     // Display last row
 
     printf(GAME_INFO_FRAME_BOTTOM);
     PrintSpaces(2);
 	
-	printf("   ");
-	for (col = 'A'; col < 'A' + BOARD_SIZE ; col++) {
+    printf("   ");
+    for (col = 'A'; col < 'A' + BOARD_SIZE ; col++) {
         if (col == pos.y) {
             printf(RED_TEXT(HIGHLIGHT_TEXT("%c ")),col);
         }
@@ -372,62 +373,45 @@ POSITION GetValidPosition(int iRound, POSITION pos)
     char c;
     int iErrorType;
     int iScanResult;
-    POSITION validPos = pos;
+    POSITION valid_pos = pos;
 
     autoprint(PrintHint(iRound));
+
+get_user_input:
     c = getchar();
     if (IsSpecialControlOption(c)) {
-        pos = HandleControlOption(c, pos);
-        return pos;
+        HandleControlOption(c, &valid_pos);
+        return valid_pos;
     }
     else if (c == '\n') {
         PutCharBack(c);
-        if (IsPositionValid(validPos) != POS_OVERLAPPED) {
-            validPos.status = POS_VERIFIED;
+        if (IsPositionValid(valid_pos) != POS_OVERLAPPED) {
+            valid_pos.status = POS_VERIFIED;
             ClearInputBuffer();
-            return validPos;
+            return valid_pos;
         }
+        pos = valid_pos;
         iScanResult = 1;
     }
     else {
-        validPos = pos;
         pos.y = (c & 0x5f);
         iScanResult = scanf("%d", &pos.x);
         pos.status = POS_PENDING;
     }
     ClearInputBuffer();
 
-    while ((iErrorType = IsPositionValid(pos)) != POS_VALID || iScanResult != 1) {
-
+    if ((iErrorType = IsPositionValid(pos)) != POS_VALID || iScanResult != 1) {
         if (iScanResult != 1) {
             iErrorType = POS_BAD_FORMAT;
         }
-
         autoprint(PrintErrorHint(iErrorType));
-        c = getchar();
-        if (IsSpecialControlOption(c)) {
-            pos = HandleControlOption(c, pos);
-            return pos;
-        }
-        else if (c == '\n') {
-            PutCharBack(c);
-            if (IsPositionValid(validPos) != POS_OVERLAPPED) {
-                validPos.status = POS_VERIFIED;
-                ClearInputBuffer();
-                return validPos;
-            }
-            iScanResult = 1;
-        }
-        else {
-            validPos = pos;
-            pos.y = (c & 0x5f);
-            iScanResult = scanf("%d", &pos.x);
-            pos.status = POS_PENDING;
-        }
-        ClearInputBuffer();
+        goto get_user_input;
+    }
+    else {
+        valid_pos = pos;
     }
 
-    return pos;
+    return valid_pos;
 }
 
 int IsSpecialControlOption(char key)
@@ -441,26 +425,25 @@ int IsSpecialControlOption(char key)
     }
 }
 
-POSITION HandleControlOption(char key, POSITION inPos)
+void HandleControlOption(char key, POSITION *inPos)
 {
     switch (key)
     {
-        // Quit
+    // Quit
     case 'q':
     case 'Q':
-        inPos.status = POS_QUIT;
+        inPos->status = POS_QUIT;
         ClearInputBuffer();
-        return inPos;
-        break;
+        return;
 
-        // Save
+    // Save
     case 's':
     case 'S':
-    { // Need brace here, otherwise compile failed with [gnu11]
+    { // Need brace here, otherwise compile failed with [clang-1200.0.32.27]
         char path[80];
         int iReadPathResult;
 
-        inPos.status = POS_PENDING;
+        inPos->status = POS_PENDING;
 
         autoprint(
             printf("Save game record to file. Please input target file path.");
@@ -476,7 +459,7 @@ POSITION HandleControlOption(char key, POSITION inPos)
                     " Press enter to back to game. " HIGHLIGHT_TEXT("[Enter]"));
             );
             ClearInputBuffer();
-            return inPos;
+            return;
         }
 
         if (!ExportBoardToFile(RecordBoard, path)) {
@@ -489,7 +472,7 @@ POSITION HandleControlOption(char key, POSITION inPos)
                        " Press enter to back to game." HIGHLIGHT_TEXT("[Enter]"));
             );
             ClearInputBuffer();
-            return inPos;
+            return;
         }
 
         autoprint(
@@ -497,16 +480,12 @@ POSITION HandleControlOption(char key, POSITION inPos)
                HIGHLIGHT_TEXT("[Enter]"), path);
         );
         ClearInputBuffer();
-        return inPos;
-        break;
+        return;
     }
 
     default:
-        return inPos;
-        break;
+        return;
     }
-
-    return inPos;
 }
         
 
@@ -582,13 +561,10 @@ int StartPvP(GAME_PREFAB_CONFIG game_prefab_config)
 
         } while (pos.status == POS_PENDING);
 
-        Board[BOARD_SIZE-pos.x][pos.y-'A'] = BLACK_TRI;
-        if (iTotalRound) /* Skip 1st */Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = WHITE_CIR;
+        ++iTotalRound;
+        UpdateGlobalBoardArrays(iTotalRound, ROUND_BLACK, lastPos, pos);
         lastPos = pos;
         autodisplay(DisplayBoard(pos));
-
-        ++iTotalRound;
-        RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_BLACK * iTotalRound;
 
         iGameResult = GetGameResult(RECORD_BLACK);
         if (iGameResult == GR_WIN) {
@@ -611,13 +587,10 @@ int StartPvP(GAME_PREFAB_CONFIG game_prefab_config)
 
         } while (pos.status == POS_PENDING);
 
-        Board[BOARD_SIZE-pos.x][pos.y-'A'] = WHITE_TRI;
-        Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = BLACK_CIR;
+        ++iTotalRound;
+        UpdateGlobalBoardArrays(iTotalRound, ROUND_WHITE, lastPos, pos);
         lastPos = pos;
         autodisplay(DisplayBoard(pos));
-
-        ++iTotalRound;
-        RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_WHITE * iTotalRound;
 
         iGameResult = GetGameResult(RECORD_WHITE);
         if (iGameResult == GR_WIN) {
@@ -636,7 +609,7 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
     int iGameResult;
     POSITION pos;
     POSITION lastPos;
-    bool fIsPLayerFirst = (game_prefab_config.order == GPC_ORDER_PLAYER) ? true : false;
+    bool fPlayerFirst = (game_prefab_config.order == GPC_ORDER_PLAYER) ? true : false;
 
     InitBoardArray();
     InitRecordBoardArray();
@@ -651,7 +624,7 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
         ////////////////////
         do {
 
-            if (fIsPLayerFirst) {
+            if (fPlayerFirst) {
                 pos = GetValidPosition(ROUND_BLACK, pos);
             }
             else {
@@ -672,13 +645,10 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
 
         } while (pos.status == POS_PENDING);
 
-        Board[BOARD_SIZE-pos.x][pos.y-'A'] = BLACK_TRI;
-        if (iTotalRound) /* Skip 1st */Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = WHITE_CIR;
+        ++iTotalRound;
+        UpdateGlobalBoardArrays(iTotalRound, ROUND_BLACK, lastPos, pos);
         lastPos = pos;
         autodisplay(DisplayBoard(pos));
-
-        ++iTotalRound;
-        RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_BLACK * iTotalRound;
 
         iGameResult = GetGameResult(RECORD_BLACK);
         if (iGameResult == GR_WIN) {
@@ -692,7 +662,7 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
         ////////////////////
         do {
         
-            if (!fIsPLayerFirst) {
+            if (!fPlayerFirst) {
                 pos = GetValidPosition(ROUND_WHITE, pos);
             }
             else {
@@ -713,13 +683,10 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
 
         } while (pos.status == POS_PENDING);
 
-        Board[BOARD_SIZE-pos.x][pos.y-'A'] = WHITE_TRI;
-        Board[BOARD_SIZE-lastPos.x][lastPos.y-'A'] = BLACK_CIR;
+        ++iTotalRound;
+        UpdateGlobalBoardArrays(iTotalRound, ROUND_WHITE, lastPos, pos);
         lastPos = pos;
         autodisplay(DisplayBoard(pos));
-
-        ++iTotalRound;
-        RecordBoard[BOARD_SIZE-pos.x][pos.y-'A'] = RECORD_WHITE * iTotalRound;
 
         iGameResult = GetGameResult(RECORD_WHITE);
         if (iGameResult == GR_WIN) {

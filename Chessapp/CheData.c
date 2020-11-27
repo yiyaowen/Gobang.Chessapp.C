@@ -1,7 +1,9 @@
 #include "CheDef.h"
 #include "CheData.h"
 #include "CheGlobal.h"
+#include "CheTUI.h"
 
+extern DEFAULT_FLAT_BOARD Board;
 extern GAME_RECORD_BOARD RecordBoard;
 
 //////////////////////////////////
@@ -194,10 +196,30 @@ void PosToIdx(const POSITION * ptPos, INDEXER * ptIdx)
     ptIdx->j = ptPos->y - 'A';
 }
 
+int Pos_xToIdx_i(int x)
+{
+    return BOARD_SIZE - x;
+}
+
+int Pos_yToIdx_j(char y)
+{
+    return y - 'A';
+}
+
 void IdxToPos(const INDEXER * ptIdx, POSITION * ptPos)
 {
     ptPos->x = BOARD_SIZE - ptIdx->i;
     ptPos->y = ptIdx->j + 'A';
+}
+
+int Idx_iToPos_x(int i)
+{
+    return BOARD_SIZE - i;
+}
+
+char Idx_jToPos_y(int j)
+{
+    return j + 'A';
 }
 
 ////////////////////////////
@@ -220,4 +242,27 @@ int ExportBoardToFile(int board[][BOARD_SIZE], const char * path)
 
     fclose(fp);
     return 1;
+}
+
+/////////////////
+// Data update //
+/////////////////
+
+void UpdateGlobalBoardArrays(int iTotalRound, int iRound, POSITION lastPos, POSITION pos)
+{
+    INDEXER lastIdx, idx;
+    PosToIdx(&lastPos, &lastIdx);
+    PosToIdx(&pos, &idx);
+
+    if (iRound == ROUND_BLACK) {
+        Board[idx.i][idx.j] = BLACK_TRI;
+        /* Skip 1st round */
+        if (iTotalRound-1) Board[lastIdx.i][lastIdx.j] = WHITE_CIR;
+        RecordBoard[idx.i][idx.j] = RECORD_BLACK * iTotalRound;
+    }
+    else {
+        Board[idx.i][idx.j] = WHITE_TRI;
+        Board[lastIdx.i][lastIdx.j] = BLACK_CIR;
+        RecordBoard[idx.i][idx.j] = RECORD_WHITE * iTotalRound;
+    }
 }

@@ -1,7 +1,7 @@
 #ifndef INCLUDE_CHE_DEF_H
 #define INCLUDE_CHE_DEF_H
 
-#include <stdio.h> // fflush, printf, stdin
+#include <stdio.h> // printf, stdin
 #include <stdlib.h> // system, exit
 
 /* Default WIN */
@@ -16,7 +16,7 @@
 #ifndef UNICODE
 #define UNICODE // Enable utf-8
 #endif
-#pragma warning(disable:4996) // Enable scanf in VS
+#pragma warning(disable:4996) // Enable scanf of MSVC
 
 #ifndef CHE_DOUBLE_BUFFER_VARIABLE
 #define CHE_DOUBLE_BUFFER_VARIABLE
@@ -153,33 +153,25 @@ extern int CHE_DOUBLE_BUFFER_STATE;
     DWORD cAttrs = 0; \
     TCHAR data[4000]; \
     WORD attr[4000]; \
-	PRINT_PROCESS; \
+    PRINT_PROCESS; \
     CONSOLE_SCREEN_BUFFER_INFO csbi; \
-	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); \
+    HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); \
     GetConsoleScreenBufferInfo(hStdOut, &csbi); \
     /* Copy chars and attrs from [stdout] to [double_buffer] */ \
-	ReadConsoleOutputCharacter(hStdOut, data, 4000, (COORD) { 0, 0 }, &cChars); \
+    ReadConsoleOutputCharacter(hStdOut, data, 4000, (COORD) { 0, 0 }, &cChars); \
     ReadConsoleOutputAttribute(hStdOut, attr, 4000, (COORD) { 0, 0 }, &cAttrs); \
-	WriteConsoleOutputCharacter(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, data, 4000, (COORD) { 0, 0 }, &cChars); \
+    WriteConsoleOutputCharacter(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, data, 4000, (COORD) { 0, 0 }, &cChars); \
     WriteConsoleOutputAttribute(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, attr, 4000, (COORD) { 0, 0 }, &cAttrs); \
     SetConsoleCursorPosition(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward, csbi.dwCursorPosition); \
     /* Change display buffer */ \
-	SetConsoleActiveScreenBuffer(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward); \
-	CHE_DOUBLE_BUFFER_STATE = -CHE_DOUBLE_BUFFER_STATE; \
+    SetConsoleActiveScreenBuffer(CHE_DOUBLE_BUFFER_STATE > 0 ? hBackward : hForeward); \
+    CHE_DOUBLE_BUFFER_STATE = -CHE_DOUBLE_BUFFER_STATE; \
 } while (0)
 
 #define autodisplay(DISPLAY_PROCESS) do { \
-	HANDLE hStdOut = GetStdHandle(STD_OUTPUT_HANDLE); \
-	cls(hStdOut); \
+    ClearScreen(); \
     autoprint(DISPLAY_PROCESS); \
 } while (0)
-
-/* DEPRECATED */
-/*
-#define ClearScreen() do { \
-    system("cls"); \
-} while (0
-*/
 
 //////////
 /* UNIX */
@@ -251,7 +243,7 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 
 #define HIGHLIGHT_TEXT(originText)      "\033[01m" originText "\033[22m"
 #define UNDERLINE_TEXT(originText)      "\033[04m" originText "\033[24m"
-// BLINK_ATTR of VT is deprecated on Windows
+// BLINK_TEXT of VT is deprecated on Windows
 #define BLINK_TEXT(originText)          "\033[05m" originText "\033[25m"
 
 #define BLACK_TEXT(originText)          "\033[30m" originText DEFAULT_F_ATTR
@@ -313,25 +305,6 @@ extern int CHE_DOUBLE_BUFFER_STATE;
     "||                                                                                ||" "\n" \
   "\\\\<<========<<========<<========<<========<<========<<========<<========<<========//"
 
-/* DEPRECATED !!! */
-/*
-#define DEPRECATED_HOME_ICON \
-    "//>>>>>>>>>>>>>>>>==>>>>>>>>>==>>>>>>>>>>>>>>>==>>>>>>>>>>>>>==>>>>>>>==>>>>>>>>>>>\\\\" "\n" \
-    "||   ●●●●●●●●●●●                ●●●●●●●●●●●●●                                      ||" "\n" \
-    "||  ●●●●●●●●●●●●●               ●●●●●●●●●●●●●●                                     ||" "\n" \
-    "|| ●●●                          ●●●         ●●●                                    ||" "\n" \
-    "|| ●●●                          ●●●         ●●●                                    ||" "\n" \
-    "|| ●●●    ●●●●●●●●              ●●●●●●●●●●●●●●                                     ||" "\n" \
-    "|| ●●●   ●●●●●●●●●●   ○○○○○○○   ●●●●●●●●●●●●●     ○○○○○○○○       ○○○○○○  ○○○○○○○○○ ||" "\n" \
-    "|| ●●●    ●●●●●●●●●  ○○○○○○○○○  ●●●●●●●●●●●●●●   ○○○○○○○○○○     ○○○○○○○  ○○○   ○○○ ||" "\n" \
-    "|| ●●●         ●●●●  ○○○   ○○○  ●●●         ●●●  ○○○   ○○○○     ○○   ○○  ○○○   ○○○ ||" "\n" \
-    "|| ●●●         ●●●●  ○○○   ○○○  ●●●         ●●●  ○○○   ○○○○○    ○○   ○○  ○○○○○○○○○ ||" "\n" \
-    "||  ●●●●●●●●●●●●●●   ○○○○○○○○○  ●●●●●●●●●●●●●●   ○○○○○○○○○○○○   ○○   ○○         ○○ ||" "\n" \
-    "||   ●●●●●●●●●●●●     ○○○○○○○   ●●●●●●●●●●●●●     ○○○○○○○  ○○○  ○○   ○○         ○○ ||" "\n" \
-    "||                                                                       ○○○○○○○○  ||" "\n" \
-  "\\\\<<<<<<<<<<<<<<<<<==<<<<<<<<<==<<<<<<<<<<<<<<<==<<<<<<<<<<<<<==<<<<<<<==<<<<<<<<<<//"
-*/
-
 #define HOME_OPTION_NUM     6
 
 #define OPTION_HOME_NUM     0
@@ -342,7 +315,7 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 #define OPTION_AboutPro_NUM     5
 #define OPTION_Exit_NUM         6
 
-#define HOME_OPTION_HOME    "<0> Home"
+#define HOME_OPTION_Home    "<0> Home"
 #define HOME_OPTION_PvP             "<1> Player vs. Player"
 #define HOME_OPTION_PvC             "<2> Player vs. `Chessplayer`"
 #define HOME_OPTION_PreAndSet       "<3> Preferences & Settings"
@@ -357,6 +330,16 @@ typedef const char * HOME_OPTIONS[HOME_OPTION_NUM];
 ///////////////
 
 #define BOARD_SIZE      15
+
+#define GRID_LEFT_TOP       1
+#define GRID_RIGHT_TOP      2
+#define GRID_RIGHT_BOTTOM   3
+#define GRID_LEFT_BOTTOM    4
+#define GRID_LEFT           5
+#define GRID_TOP            6
+#define GRID_RIGHT          7
+#define GRID_BOTTOM         8
+#define GRID_MIDDLE         9
 
 #define BLACK_TRI       10
 #define WHITE_TRI       11
@@ -464,27 +447,21 @@ typedef struct {
 /*
 [米津玄师(よねづけんし) -《Loser / ナンバーナイン》]
 アイムアルーザー
-(a i mu a ru u za a)
 我是个loser
 
 どうせだったら远吠えだっていいだろう
-(do u se da tta ra to o bo e da tte i i da ro u)
 所以就算虚张声势也无所谓吧
 
 もう一回もう一回行こうぜ仆らの声
-(mo u i kka i mo u i kka i i ko u ze bo ku ra no ko e)
 再一次再一次前行吧我们的声音
 
 アイムアルーザー
-(a i mu a ru u za a)
 我是个loser
 
 ずっと前から闻こえてた
-(zu tto ma e ka ra ki ko e te ta)
 很久以前就已经听到
 
 いつかポケットに隠した声が
-(i tsu ka po ke tto ni ka ku shi ta ko e ga)
 那不知何时被深藏于口袋之中的声音
 */
 

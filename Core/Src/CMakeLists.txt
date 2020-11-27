@@ -12,5 +12,3 @@ install(TARGETS core_shared core_static
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
-
-install(FILES ${c_header_files} DESTINATION include)

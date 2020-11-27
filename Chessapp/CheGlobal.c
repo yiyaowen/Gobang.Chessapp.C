@@ -35,30 +35,30 @@ void InitBoardArray()
 {
     int i, j;
     
-    Board[0][0] = 1;
-    Board[0][BOARD_SIZE-1] = 2;
-    Board[BOARD_SIZE-1][BOARD_SIZE-1] = 3;
-    Board[BOARD_SIZE-1][0] = 4;
+    Board[0][0] = GRID_LEFT_TOP;
+    Board[0][BOARD_SIZE-1] = GRID_RIGHT_TOP;
+    Board[BOARD_SIZE-1][BOARD_SIZE-1] = GRID_RIGHT_BOTTOM;
+    Board[BOARD_SIZE-1][0] = GRID_LEFT_BOTTOM;
     
     for (j = 1; j <= BOARD_SIZE - 2; ++j) {
-        Board[j][0] = 5;
+        Board[j][0] = GRID_LEFT;
     }
     
     for (i = 1; i <= BOARD_SIZE - 2; ++i) {
-        Board[0][i] = 6;
+        Board[0][i] = GRID_TOP;
     }
     
     for (j = 1; j <= BOARD_SIZE - 2; ++j) {
-        Board[j][BOARD_SIZE - 1] = 7;
+        Board[j][BOARD_SIZE - 1] = GRID_RIGHT;
     }
     
     for (i = 1; i <= BOARD_SIZE - 2; ++i) {
-        Board[BOARD_SIZE - 1][i] = 8;
+        Board[BOARD_SIZE - 1][i] = GRID_BOTTOM;
     }
     
     for (j = 1; j <= BOARD_SIZE - 2; ++j) {
         for (i = 1; i <= BOARD_SIZE - 2; ++i) {
-            Board[j][i] = 9;
+            Board[j][i] = GRID_MIDDLE;
         }
     }
 }

@@ -40,7 +40,7 @@ void GetValidHomeOption();
 int IsOptionValid(int iOption);
 
 /**
- * Display page of global variable CurrentOptionNum
+ * Display page [CurrentOptionNum]
  *
  * @param
  * @return
@@ -58,6 +58,10 @@ void SwitchToSelectedOption();
  * @return
  */
 void DisplayBoard();
+
+/* iRound */
+#define ROUND_BLACK         1
+#define ROUND_WHITE         2
 
 /**
  * Display input hint for the specific side
@@ -88,14 +92,10 @@ int IsSpecialControlOption(char key);
  * Handle special control options when playing
  *
  * @param key (The special control option)
- * @param inPos (The origin position before handling)
- * @return outPos (The modified position after handling)
+ * @param inPos (The position that will be modified)
+ * @return
  */
-POSITION HandleControlOption(char key, POSITION inPos);
-
-/* iRound */
-#define ROUND_BLACK         1
-#define ROUND_WHITE         2
+void HandleControlOption(char key, POSITION * inPos);
 
 /**
  * Check if pos is a valid Chessboard position
@@ -105,6 +105,12 @@ POSITION HandleControlOption(char key, POSITION inPos);
  */
 int IsPositionValid(POSITION pos);
 
+/* iErrorType */
+#define POS_VALID           0
+#define POS_OUT_OF_BOARD        1
+#define POS_OVERLAPPED          2
+#define POS_BAD_FORMAT          3
+
 /**
  * Display error hint of the specific error type
  *
@@ -112,12 +118,6 @@ int IsPositionValid(POSITION pos);
  * @return
  */
 void PrintErrorHint(int iErrorType);
-
-/* iErrorType */
-#define POS_VALID           0
-#define POS_OUT_OF_BOARD        1
-#define POS_OVERLAPPED          2
-#define POS_BAD_FORMAT          3
 
 /**
  * Start handle PvP game. Loop until the game is over
