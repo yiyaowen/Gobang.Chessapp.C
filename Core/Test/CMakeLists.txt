@@ -1,11 +1,5 @@
-include_directories(${PROJECT_SOURCE_DIR}/Interface)
-
-link_directories(${PROJECT_BINARY_DIR}/lib)
+include_directories(${CORE_PATH}/Interface)
 
 add_executable(CoreTest CoreTest.c)
 
 target_link_libraries(CoreTest core)
-
-install(TARGETS CoreTest
-    RUNTIME DESTINATION bin
-)

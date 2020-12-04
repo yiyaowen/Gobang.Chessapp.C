@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdbool.h> // bool
 
 #include "CheData.h"
@@ -7,7 +8,7 @@
 #include "CheTUI.h"
 INCLUDE_DOUBLE_BUFFER
 
-#include "Core/Interface/Cor.h" // GetCoreAnalysisResultP
+#include "Cor.h" // GetCoreAnalysisResultP
 
 extern HOME_OPTIONS HomeOptions;
 extern int CurrentOptionNum;
@@ -417,7 +418,8 @@ get_user_input:
 int IsSpecialControlOption(char key)
 {
     if (key == 'q' || key == 'Q' ||
-        key == 's' || key == 'S') {
+        key == 's' || key == 'S' ||
+        key == 'v' || key == 'V') {
         return 1;
     }
     else {
@@ -482,7 +484,7 @@ void HandleControlOption(char key, POSITION *inPos)
         ClearInputBuffer();
         return;
     }
-
+        
     default:
         return;
     }
