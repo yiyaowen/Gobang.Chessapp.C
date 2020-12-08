@@ -8,20 +8,20 @@
 //////////////
 
 /**
+ * Display total Homepage
+ *
+ * @param
+ * @return
+ */
+void DisplayHome();
+
+/**
  * Print Homepage options
  *
  * @param
  * @return
  */
 void PrintHomeOptions();
-
-/**
- * Display Total Homepage
- *
- * @param
- * @return
- */
-void DisplayHome();
 
 /**
  * Loop until get a valid input for homepage option
@@ -37,7 +37,7 @@ void GetValidHomeOption();
  * @param iOption (The option to be checked)
  * @return (If iOption is valid return 1, otherwise return 0)
  */
-int IsOptionValid(int iOption);
+int IsHomeOptionValid(int iOption);
 
 /**
  * Display page [CurrentOptionNum]
@@ -134,6 +134,64 @@ int StartPvP(GAME_PREFAB_CONFIG game_prefab_config);
  * @return iOptionResult (The handle result of subroutine)
  */
 int StartPvC(GAME_PREFAB_CONFIG game_prefab_config);
+
+/**
+ * Display total "About Project" page with specific content.
+ *
+ * @param iOption (Different options correspond to different contents)
+ * @return
+ */
+void DisplayAboutProPage(int iOption);
+
+/**
+ * Print content of "About Project" page.
+ *
+ * @param
+ * @return
+ */
+void PrintAboutProContent();
+void PrintAboutProEasterEgg1Content();
+void PrintAboutProEasterEgg2Content();
+
+/**
+ * Get valid option for "About Project" page.
+ *
+ * @param
+ * @return iOption (The valid option for "About Project" page)
+ */
+int GetValidAboutProOption();
+
+/**
+ * Start handle "About Project" page.
+ *
+ * @param
+ * @return iOptionResult (The handle result of subroutine)
+ */
+int StartAboutPro();
+
+/**
+ * Display total "About Chessplayer" page.
+ *
+ * @param
+ * @return
+ */
+void DisplayAboutChePage();
+
+/**
+ * Print content of "About Chessplayer" page.
+ *
+ * @param
+ * @return
+ */
+void PrintAboutCheContent();
+
+/**
+ * Start handle "About Chessplayer" page.
+ *
+ * @param
+ * @return iOptionResult (The handle result of subroutine)
+ */
+int StartAboutChe();
 
 /* iOptionResult */
 #define OPT_ABORT  -1

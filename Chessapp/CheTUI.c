@@ -20,6 +20,103 @@ extern GAME_RECORD_BOARD RecordBoard;
 // Home TUI //
 //////////////
 
+void SwitchToSelectedOption()
+{
+    int iOptionResult;
+
+    if (CurrentOptionNum < 0) {
+
+        CurrentOptionNum = -CurrentOptionNum;
+
+        switch (CurrentOptionNum)
+        {
+        case OPTION_PvP_NUM:
+        {
+            GAME_PREFAB_CONFIG game_prefab_config = {
+                GPC_MODE_PVP,   // mode
+                GPC_NULL,       // order
+                GPC_NULL        // level
+            };
+            iOptionResult = StartPvP(game_prefab_config);
+            if (iOptionResult == OPT_QUIT) {
+                return;
+            }
+            else if (iOptionResult == OPT_ABORT) {
+                goto error_abort;
+            }
+            break;
+        }
+            
+        case OPTION_PvC_NUM:
+        {
+            // TODO
+            GAME_PREFAB_CONFIG game_prefab_config = {
+                GPC_MODE_PVC,   // mode
+                GPC_NULL,       // order
+                GPC_NULL        // level
+            };
+            iOptionResult = StartPvC(game_prefab_config);
+            if (iOptionResult == OPT_QUIT) {
+                return;
+            }
+            else if (iOptionResult == OPT_ABORT) {
+                goto error_abort;
+            }
+            break;
+        }
+
+        case OPTION_PreAndSet_NUM:
+            // TODO
+            break;
+
+        case OPTION_AboutChe_NUM:
+            // TODO
+            iOptionResult = StartAboutChe();
+            if (iOptionResult == OPT_QUIT) {
+                return;
+            }
+            else if (iOptionResult == OPT_ABORT) {
+                goto error_abort;
+            }
+            break;
+
+        case OPTION_AboutPro_NUM:
+            // TODO
+            iOptionResult = StartAboutPro();
+            if (iOptionResult == OPT_QUIT) {
+                return;
+            }
+            else if (iOptionResult == OPT_ABORT) {
+                goto error_abort;
+            }
+            break;
+
+        case OPTION_Exit_NUM:
+            printf(GREEN_TEXT(HIGHLIGHT_TEXT("Bye ")) HIGHLIGHT_TEXT("EXIT_SUCCESS"));
+            putchar('\n');
+            exit(EXIT_SUCCESS);
+
+error_abort:
+        default:
+            printf(RED_TEXT(HIGHLIGHT_TEXT("Error ")) HIGHLIGHT_TEXT("EXIT_FAILURE"));
+            putchar('\n');
+            exit(EXIT_FAILURE);
+        }
+    }
+}
+
+
+void DisplayHome()
+{
+    printf(HOME_ICON);
+    putchar('\n');
+    putchar('\n');
+
+    PrintHomeOptions();
+
+    printf(PROMPT);
+}
+
 void PrintHomeOptions()
 {
     for (int i = 0; i < HOME_OPTION_NUM; ++i) {
@@ -48,22 +145,12 @@ void PrintHomeOptions()
     }
 }
 
-void DisplayHome()
-{
-    printf(HOME_ICON);
-    putchar('\n');
-    putchar('\n');
-
-    PrintHomeOptions();
-
-    printf(PROMPT);
-}
-
 void GetValidHomeOption()
 {
     char c;
     int iOption;
     
+get_user_input:
     c = getchar();
     if (c == '\n') {
         PutCharBack(c);
@@ -73,106 +160,30 @@ void GetValidHomeOption()
     }
     else {
         iOption = (int) (c - '0');
-        CurrentOptionNum = (iOption > 0 && iOption <= HOME_OPTION_NUM) ? 
-                              iOption : CurrentOptionNum;
-    }
-    ClearInputBuffer();
-
-    while (!IsOptionValid(iOption)) {
-
-        autoprint(
-            printf("No such option. Please choose from 1~%d, or press Enter.", HOME_OPTION_NUM);
-            putchar('\n');
-            printf(PROMPT);
-        );
-
-        c = getchar();
-        if (c == '\n') {
-            PutCharBack(c);
-            CurrentOptionNum = -CurrentOptionNum;
+        if (IsHomeOptionValid(iOption)) {
+            CurrentOptionNum = iOption;
             ClearInputBuffer();
             return;
         }
         else {
-            iOption = (int) (c - '0');
-            CurrentOptionNum = (iOption > 0 && iOption <= HOME_OPTION_NUM) ? 
-                                  iOption : CurrentOptionNum;
+            autoprint(
+                printf("No such option. Please choose from 1~%d, or press Enter.", HOME_OPTION_NUM);
+                putchar('\n');
+                printf(PROMPT);
+            );
+            ClearInputBuffer();
+            goto get_user_input;
         }
-        ClearInputBuffer();
     }
 }
 
-int IsOptionValid(int iOptionNum)
+int IsHomeOptionValid(int iOptionNum)
 {
     if (iOptionNum > 0 && iOptionNum <= HOME_OPTION_NUM) {
         return 1;
     }
     else {
         return 0;
-    }
-}
-
-void SwitchToSelectedOption()
-{
-    int iOptionResult;
-
-    if (CurrentOptionNum < 0) {
-
-        CurrentOptionNum = -CurrentOptionNum;
-
-        switch (CurrentOptionNum)
-        {
-        case OPTION_PvP_NUM:
-        {
-            GAME_PREFAB_CONFIG game_prefab_config = {
-                GPC_MODE_PVP,   // mode
-                GPC_NULL,       // order
-                GPC_NULL        // level
-            };
-            iOptionResult = StartPvP(game_prefab_config);
-            if (iOptionResult == OPT_QUIT) {
-                return;
-            }
-            break;
-        }
-            
-        case OPTION_PvC_NUM:
-        {
-            // TODO
-            GAME_PREFAB_CONFIG game_prefab_config = {
-                GPC_MODE_PVC,   // mode
-                GPC_NULL,       // order
-                GPC_NULL        // level
-            };
-            iOptionResult = StartPvC(game_prefab_config);
-            if (iOptionResult == OPT_QUIT) {
-                return;
-            }
-            break;
-        }
-
-        case OPTION_PreAndSet_NUM:
-            // TODO
-            break;
-
-        case OPTION_AboutChe_NUM:
-            // TODO
-            break;
-
-        case OPTION_AboutPro_NUM:
-            // TODO
-            break;
-
-        case OPTION_Exit_NUM:
-            printf(GREEN_TEXT(HIGHLIGHT_TEXT("Bye ")) HIGHLIGHT_TEXT("EXIT_SUCCESS"));
-            putchar('\n');
-            exit(EXIT_SUCCESS);
-
-        default:
-            printf(RED_TEXT(HIGHLIGHT_TEXT("Error ")) HIGHLIGHT_TEXT("EXIT_FAILURE"));
-            putchar('\n');
-            exit(EXIT_FAILURE);
-        }
     }
 }
 
@@ -699,4 +710,152 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
     }
 
     return OPT_ABORT;
+}
+
+void DisplayAboutProPage(int iOption)
+{
+    printf(HOME_ICON);
+    putchar('\n');
+    putchar('\n');
+
+    switch (iOption)
+    {
+    case OPTION_AboutPro_NUM:
+        PrintAboutProContent();
+        putchar('\n');
+        break;
+    
+    case OPTION_AboutPro_EasterEgg1_NUM:
+        PrintAboutProEasterEgg1Content();
+        putchar('\n');
+        break;
+
+    case OPTION_AboutPro_EasterEgg2_NUM:
+        PrintAboutProEasterEgg2Content();
+        putchar('\n');
+        break;
+
+    default:
+        printf("Unknown option for showing content of this page.");
+        putchar('\n');
+        break;
+    }
+
+    printf(PROMPT);
+}
+
+void PrintAboutProContent()
+{
+    printf(ABOUT_PROJECT_CONTENT);
+}
+
+void PrintAboutProEasterEgg1Content()
+{
+    printf(ABOUT_PROJECT_EASTER_EGG_1_CONTENT);
+}
+
+void PrintAboutProEasterEgg2Content()
+{
+    printf(ABOUT_PROJECT_EASTER_EGG_2_CONTENT);
+}
+
+int GetValidAboutProOption()
+{
+    char c;
+    
+get_user_input:
+    if ((c = getchar()) != '\n') {
+        ClearInputBuffer();
+    }
+    switch (c)
+    {
+    // Quit
+    case 'q':
+    case 'Q':
+        return OPTION_AboutPro_Quit_NUM;
+    
+    // Egg1
+    case 'c':
+    case 'C':
+        return OPTION_AboutPro_EasterEgg1_NUM;
+
+    // Egg2
+    case 't':
+    case 'T':
+        return OPTION_AboutPro_EasterEgg2_NUM;
+
+    default:
+        printf("Enter 'q' or 'Q' to quit, though you can also enter 'a' or 'B'.");
+        putchar('\n');
+        printf(PROMPT);
+        goto get_user_input;
+    }
+}
+
+int StartAboutPro()
+{
+    int iOption;
+
+    autodisplay(DisplayAboutProPage(OPTION_AboutPro_NUM));
+    
+get_user_input:
+    iOption = GetValidAboutProOption();
+
+    switch (iOption)
+    {
+    case OPTION_AboutPro_Quit_NUM:
+        return OPT_QUIT;
+
+    case OPTION_AboutPro_EasterEgg1_NUM:
+        autodisplay(DisplayAboutProPage(OPTION_AboutPro_EasterEgg1_NUM));
+        goto get_user_input;
+
+    case OPTION_AboutPro_EasterEgg2_NUM:
+        autodisplay(DisplayAboutProPage(OPTION_AboutPro_EasterEgg2_NUM));
+        goto get_user_input;
+
+    default:
+        printf("Unknow option for 'About Project' page.");
+        putchar('\n');
+        return OPT_ABORT;
+    }
+}
+
+void DisplayAboutChePage()
+{
+    printf(HOME_ICON);
+    putchar('\n');
+    putchar('\n');
+
+    PrintAboutCheContent();
+    putchar('\n');
+
+    printf(PROMPT);
+}
+
+void PrintAboutCheContent()
+{
+    printf(ABOUT_CHESSPLAYER_CONTENT);
+}
+
+int StartAboutChe()
+{
+    char c;
+
+    autodisplay(DisplayAboutChePage());
+    
+get_user_input:
+    if ((c = getchar()) != '\n') {
+        ClearInputBuffer();
+    }
+
+    if (c == 'q' || c == 'Q') {
+        return OPT_QUIT;
+    }
+    else {
+        printf("Enter 'q' or 'Q' to quit.");
+        putchar('\n');
+        printf(PROMPT);
+        goto get_user_input;
+    }
 }

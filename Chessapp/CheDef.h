@@ -399,6 +399,68 @@ typedef struct {
 } DEFAULT_ARRAY_POSITION, INDEXER;
 
 ///////////////
+// Other TUI //
+///////////////
+
+//////////////////////////////
+/* "About Chessplayer" page */
+//////////////////////////////
+
+#define ABOUTCHE_OPTION_NUM     1
+
+//define OPTION_AboutChe_NUM        4
+#define OPTION_AboutChe_Quit_NUM        40
+
+#define ABOUT_CHESSPLAYER_CONTENT \
+    "  `Chessplayer` is the core of this gobang game program, i.e. 'C' in 'PvC'.        " "\n" \
+    "  There are six game levels of `Chessplayer` in total: [Drunk], [Low], [Middle],   " "\n" \
+    "[High], [Invincible] and [Random]. [Drunk] means that `Chessplayer` will choose its" "\n" \
+    "position randomly, just like a drunkard. From [Low] to [Invincible], the game will " "\n" \
+    "be more and more difficult to win. [Random] doesn't mean that `Chessplayer` will   " "\n" \
+    "choose position randomly. Instead, the core program will choose a level randomly   " "\n" \
+    "for you. That's kind of interesting since you don't know the true game level.      " "\n" \
+    "  Enjoy yourself! Why not have a try right now.                                     " "\n"
+
+#define GPC_LEVEL_DRUNK  -100
+
+#define GPC_LEVEL_LOW      0
+#define GPC_LEVEL_MIDDLE   1
+#define GPC_LEVEL_HIGH     2
+#define GPC_LEVEL_INVINCIBLE   100
+#define GPC_LEVEL_RANDOM   42
+//////////////////////////
+/* "About Project" page */
+//////////////////////////
+
+#define ABOUTPRO_OPTION_NUM     3
+
+//#define OPTION_AboutPro_NUM       5
+#define OPTION_AboutPro_Quit_NUM        50
+#define OPTION_AboutPro_EasterEgg1_NUM  51
+#define OPTION_AboutPro_EasterEgg2_NUM  52
+
+#define ABOUT_PROJECT_CONTENT \
+    "  `Gobang.Chessplayer.C` is a small and light project for building a cross-platform" "\n" \
+    "gobang game program in console and terminal. As the name suggests, this project is " "\n" \
+    "based on C language. Building on different platforms is easy with CMake tool. There" "\n" \
+    "is no plan to continue extending this program since it is only a little practice.  " "\n" \
+    "In fact, I prefer to call it a cool toy instead a program.                         " "\n" \
+    "  Enjoy yourself! Nothing is more beautiful than our life right now.               " "\n"
+
+#define ABOUT_PROJECT_EASTER_EGG_1_CONTENT \
+    "  Congratulations! You have found one of the easter eggs in 'About Project' page.  " "\n" \
+    "Now you can relax for a while. (I won't tell you that there's another easter egg)  " "\n"
+
+#define ABOUT_PROJECT_EASTER_EGG_2_CONTENT \
+    "  The last trace of steam evaporated in the autumn air. The train rounded a corner." "\n" \
+    "Harry’s hand was still raised in farewell.                                         " "\n" \
+    "  “He’ll be alright,” murmured Ginny.                                              " "\n" \
+    "  As Harry looked at her, he lowered his hand absent- mindedly and touched the     " "\n" \
+    "lightning scar on his forehead.                                                    " "\n" \
+    "  “I know he will.”                                                                " "\n" \
+    "  The scar had not pained Harry for nineteen years. All was well.                  " "\n"
+
+///////////////
 // Game data //
 ///////////////
 
