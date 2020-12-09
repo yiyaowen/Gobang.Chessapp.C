@@ -13,7 +13,7 @@
  * @param
  * @return
  */
-void DisplayHome();
+void DisplayHomePage();
 
 /**
  * Print Homepage options
@@ -45,7 +45,7 @@ int IsHomeOptionValid(int iOption);
  * @param
  * @return
  */
-void SwitchToSelectedOption();
+void SwitchToSelectedHomeOption();
 
 ///////////////
 // Board TUI //
@@ -136,6 +136,88 @@ int StartPvP(GAME_PREFAB_CONFIG game_prefab_config);
 int StartPvC(GAME_PREFAB_CONFIG game_prefab_config);
 
 /**
+ * Display total "Preferences & Settings" pgae.
+ *
+ * @param iOption (The option selected now, used by [PrintPreAndSetOptions])
+ * @return
+ */
+void DisplayPreAndSetPage(int iOption);
+
+/**
+ * Print options of "Preferences & Settings" page.
+ *
+ * @param iOption (The option selected now, and it will be highlighted)
+ * @return
+ */
+void PrintPreAndSetOptions(int iOption);
+
+/**
+ * Print single option of "Preferences & Settings" page.
+ *
+ * @param iOption (The option selected now)
+ * @param iOptionNum (The number code of option)
+ * @param szOptionText (The text of option)
+ * @return
+ */
+void PrintPreAndSetOption(int iOption, int iOptionNum, const char *szOptionText);
+
+/**
+ * Loop until get a valid option for "Preferences & Settings" page.
+ *
+ * @param
+ * @return iOption(The valid option selected)
+ */
+int GetValidPreAndSetOption();
+
+/**
+ * Check if iOption is a valid option for "Preferences & Settings" page.
+ *
+ * @param iOption (The option to be checked)
+ * @return (If iOption is valid return 1, otherwise return 0)
+ */
+int IsPreAndSetOptionValid(int iOption);
+
+/**
+ * Display page [iOption]
+ *
+ * @param iOption (The page to be displayed)
+ * @return
+ */
+void SwitchToSelectedPreAndSetOption(int iOption);
+
+/**
+ * Start handle "Preferences & Settings" page.
+ *
+ * @param
+ * @return iOptionResult (The handle result of subroutine)
+ */
+int StartPreAndSet();
+
+/**
+ * Display total "About Chessplayer" page.
+ *
+ * @param
+ * @return
+ */
+void DisplayAboutChePage();
+
+/**
+ * Print content of "About Chessplayer" page.
+ *
+ * @param
+ * @return
+ */
+void PrintAboutCheContent();
+
+/**
+ * Start handle "About Chessplayer" page.
+ *
+ * @param
+ * @return iOptionResult (The handle result of subroutine)
+ */
+int StartAboutChe();
+
+/**
  * Display total "About Project" page with specific content.
  *
  * @param iOption (Different options correspond to different contents)
@@ -168,30 +250,6 @@ int GetValidAboutProOption();
  * @return iOptionResult (The handle result of subroutine)
  */
 int StartAboutPro();
-
-/**
- * Display total "About Chessplayer" page.
- *
- * @param
- * @return
- */
-void DisplayAboutChePage();
-
-/**
- * Print content of "About Chessplayer" page.
- *
- * @param
- * @return
- */
-void PrintAboutCheContent();
-
-/**
- * Start handle "About Chessplayer" page.
- *
- * @param
- * @return iOptionResult (The handle result of subroutine)
- */
-int StartAboutChe();
 
 /* iOptionResult */
 #define OPT_ABORT  -1

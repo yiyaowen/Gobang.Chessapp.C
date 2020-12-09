@@ -402,6 +402,22 @@ typedef struct {
 // Other TUI //
 ///////////////
 
+///////////////////////////////////
+/* "Preferences & Settings" page */
+///////////////////////////////////
+
+#define PREANDSET_OPTION_NUM   3
+
+//#define OPTION_PreAndSet_NUM      3
+#define OPTION_PreAndSet_Confirm_NUM        30
+#define OPTION_PreAndSet_Quit_NUM           31
+#define OPTION_PreAndSet_MusicSound_NUM     32
+#define OPTION_PreAndSet_NetworkConfig_NUM  33
+
+#define PREANDSET_OPTION_Quit           "<1> Previous Page"
+#define PREANDSET_OPTION_MusicSound     "<2> Music & Sound"
+#define PREANDSET_OPTION_NetworkConfig  "<3> Network Config"
+
 //////////////////////////////
 /* "About Chessplayer" page */
 //////////////////////////////
@@ -421,13 +437,6 @@ typedef struct {
     "for you. That's kind of interesting since you don't know the true game level.      " "\n" \
     "  Enjoy yourself! Why not have a try right now.                                     " "\n"
 
-#define GPC_LEVEL_DRUNK  -100
-
-#define GPC_LEVEL_LOW      0
-#define GPC_LEVEL_MIDDLE   1
-#define GPC_LEVEL_HIGH     2
-#define GPC_LEVEL_INVINCIBLE   100
-#define GPC_LEVEL_RANDOM   42
 //////////////////////////
 /* "About Project" page */
 //////////////////////////
