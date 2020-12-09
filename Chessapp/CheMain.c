@@ -8,11 +8,11 @@ int main(int argc, char * argv[])
 
     while (1) { 
 
-        autodisplay(DisplayHome());
+        autodisplay(DisplayHomePage());
 
         GetValidHomeOption();
 
-        SwitchToSelectedOption();
+        SwitchToSelectedHomeOption();
 
     }
 

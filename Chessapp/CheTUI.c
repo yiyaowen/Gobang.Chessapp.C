@@ -20,7 +20,7 @@ extern GAME_RECORD_BOARD RecordBoard;
 // Home TUI //
 //////////////
 
-void SwitchToSelectedOption()
+void SwitchToSelectedHomeOption()
 {
     int iOptionResult;
 
@@ -38,12 +38,6 @@ void SwitchToSelectedOption()
                 GPC_NULL        // level
             };
             iOptionResult = StartPvP(game_prefab_config);
-            if (iOptionResult == OPT_QUIT) {
-                return;
-            }
-            else if (iOptionResult == OPT_ABORT) {
-                goto error_abort;
-            }
             break;
         }
             
@@ -56,39 +50,22 @@ void SwitchToSelectedOption()
                 GPC_NULL        // level
             };
             iOptionResult = StartPvC(game_prefab_config);
-            if (iOptionResult == OPT_QUIT) {
-                return;
-            }
-            else if (iOptionResult == OPT_ABORT) {
-                goto error_abort;
-            }
             break;
         }
 
         case OPTION_PreAndSet_NUM:
             // TODO
+            iOptionResult = StartPreAndSet();
             break;
 
         case OPTION_AboutChe_NUM:
             // TODO
             iOptionResult = StartAboutChe();
-            if (iOptionResult == OPT_QUIT) {
-                return;
-            }
-            else if (iOptionResult == OPT_ABORT) {
-                goto error_abort;
-            }
             break;
 
         case OPTION_AboutPro_NUM:
             // TODO
             iOptionResult = StartAboutPro();
-            if (iOptionResult == OPT_QUIT) {
-                return;
-            }
-            else if (iOptionResult == OPT_ABORT) {
-                goto error_abort;
-            }
             break;
 
         case OPTION_Exit_NUM:
@@ -102,11 +79,18 @@ error_abort:
             putchar('\n');
             exit(EXIT_FAILURE);
         }
+
+        if (iOptionResult == OPT_QUIT) {
+            return;
+        }
+        else if (iOptionResult == OPT_ABORT) {
+            goto error_abort;
+        }
     }
 }
 
 
-void DisplayHome()
+void DisplayHomePage()
 {
     printf(HOME_ICON);
     putchar('\n');
@@ -709,6 +693,132 @@ int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
         }
     }
 
+    return OPT_ABORT;
+}
+
+void DisplayPreAndSetPage(int iOption)
+{
+    printf(HOME_ICON);
+    putchar('\n');
+    putchar('\n');
+
+    PrintPreAndSetOptions(iOption);
+
+    printf(PROMPT);
+}
+
+void PrintPreAndSetOptions(int iOption)
+{
+    PrintPreAndSetOption(iOption, OPTION_PreAndSet_Quit_NUM, PREANDSET_OPTION_Quit);
+    PrintPreAndSetOption(iOption, OPTION_PreAndSet_MusicSound_NUM, PREANDSET_OPTION_MusicSound);
+    PrintPreAndSetOption(iOption, OPTION_PreAndSet_NetworkConfig_NUM, PREANDSET_OPTION_NetworkConfig);
+}
+
+void PrintPreAndSetOption(int iOption, int iOptionNum, const char *szOptionText)
+{
+    PrintSpaces(20);
+    if (iOption == iOptionNum) {
+        printf(BLUE_TEXT(HIGHLIGHT_TEXT(SELECT_ARROW)));
+        PrintSpaces(2);
+        printf(HIGHLIGHT_TEXT(UNDERLINE_TEXT("%s")), szOptionText);
+    }
+    else {
+        PrintSpaces(5);
+        printf("%s", szOptionText);
+    }
+    putchar('\n');
+    putchar('\n');
+}
+
+int GetValidPreAndSetOption()
+{
+    char c;
+    int iOption;
+    
+get_user_input:
+    c = getchar();
+    if (c == '\n') {
+        PutCharBack(c);
+        ClearInputBuffer();
+        return OPTION_PreAndSet_Confirm_NUM;
+    }
+    else {
+        iOption = (int) (c - '0');
+        if (IsPreAndSetOptionValid(iOption)) {
+            ClearInputBuffer();
+            return iOption+OPTION_PreAndSet_NUM*10;
+        }
+        else {
+            autoprint(
+                printf("No such option. Please choose from 1~%d, or press Enter.", PREANDSET_OPTION_NUM);
+                putchar('\n');
+                printf(PROMPT);
+            );
+            ClearInputBuffer();
+            goto get_user_input;
+        }
+    }
+}
+
+int IsPreAndSetOptionValid(int iOption)
+{
+    if (iOption > 0 && iOption <= PREANDSET_OPTION_NUM) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+void SwitchToSelectedPreAndSetOption(int iOption)
+{
+    // TODO
+}
+
+int StartPreAndSet()
+{
+    int iOption, iOptionSelected;
+    iOption = iOptionSelected = OPTION_PreAndSet_Quit_NUM;
+
+get_user_input:
+    autodisplay(DisplayPreAndSetPage(iOptionSelected));
+
+    iOption = GetValidPreAndSetOption();
+
+    if (iOption == OPTION_PreAndSet_Confirm_NUM) {
+
+        switch (iOptionSelected)
+        {
+        case OPTION_PreAndSet_MusicSound_NUM:
+        {
+            // TODO
+            goto get_user_input;
+        }
+            
+        case OPTION_PreAndSet_NetworkConfig_NUM:
+        {
+            // TODO
+            goto get_user_input;
+        }
+
+        case OPTION_PreAndSet_Quit_NUM:
+        {
+            // TODO
+            return OPT_QUIT;
+        }
+
+error_abort:
+        default:
+            printf(RED_TEXT(HIGHLIGHT_TEXT("Error ")) HIGHLIGHT_TEXT("EXIT_FAILURE"));
+            putchar('\n');
+            exit(EXIT_FAILURE);
+        }
+    }
+    else {
+        iOptionSelected = iOption;
+        goto get_user_input;
+    }
+    
     return OPT_ABORT;
 }
 
