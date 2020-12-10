@@ -196,7 +196,9 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 
 #endif
 
-/* Universal Utils */
+///////////////
+/* Universal */
+///////////////
 #define BEGIN_ATTR(attr) do { \
     printf(attr); \
 } while (0)
@@ -204,7 +206,7 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 #define NONE_ATTR       "\033[00m"
 
 #ifdef WIN
-// Default VTS attributes are deprecated on Windows.
+// VTS's default attributes don't work well on Windows.
 // Use white-foreground with black-background instead.
 #define DEFAULT_F_ATTR  "\033[37m"
 #define DEFAULT_B_ATTR  "\033[40m"
@@ -284,6 +286,59 @@ extern int CHE_DOUBLE_BUFFER_STATE;
     ungetc(c, stdin); \
 } while (0)
 
+#define AbortWithMsg(msg) do { \
+    printf(RED_TEXT(HIGHLIGHT_TEXT("%s")), msg); \
+    putchar('\n'); \
+} while (0)
+
+////////////////
+// Global TUI //
+////////////////
+
+/* Route status */
+#define ROUTE_OVER      1
+#define ROUTE_CONTINUE  2
+
+/* Route exit_status */
+#define ROUTE_SUCCESS EXIT_SUCCESS
+#define ROUTE_FAILURE EXIT_FAILURE
+
+/* Page IDs  */
+#define PAGE_ID_Home            0
+#define PAGE_ID_PvP             1
+#define PAGE_ID_PvC             2
+#define PAGE_ID_PreAndSet       3
+#define PAGE_ID_MusicSound      31
+#define PAGE_ID_NetworkConfig   32
+#define PAGE_ID_AboutChe        4
+#define PAGE_ID_AboutPro        5
+
+/* Page names */
+#define PAGE_NAME_Home            "Home"
+#define PAGE_NAME_PvP             "PvP"
+#define PAGE_NAME_PvC             "PvC"
+#define PAGE_NAME_PreAndSet       "PreAndSet"
+#define PAGE_NAME_MusicSound      "MusicSound"
+#define PAGE_NAME_NetworkConfig   "NetworkConfig"
+#define PAGE_NAME_AboutChe        "AboutChe"
+#define PAGE_NAME_AboutPro        "AboutPro"
+
+/* Page descriptions */
+#define PAGE_DESC_Home          "Home"
+#define PAGE_DESC_PvP           "Player versus Player"
+#define PAGE_DESC_PvC           "Player versus Chessplayer"
+#define PAGE_DESC_PreAndSet     "Preferences and Settings"
+#define PAGE_DESC_MusicSound    "Music and Sound"
+#define PAGE_DESC_NetworkConfig "Network Configuration"
+#define PAGE_DESC_AboutChe      "About Chessplayer"
+#define PAGE_DESC_AboutPro      "About `Gobang.Chessplayer.C` Project"
+
+///////////////
+// TUI Utils //
+///////////////
+
+#define OPTION_Confirm_NUM -2002
+
 //////////////
 // Home TUI //
 //////////////
@@ -307,7 +362,7 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 
 #define HOME_OPTION_NUM     6
 
-#define OPTION_HOME_NUM     0
+#define OPTION_Home_NUM     0
 #define OPTION_PvP_NUM          1
 #define OPTION_PvC_NUM          2
 #define OPTION_PreAndSet_NUM    3
@@ -315,7 +370,6 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 #define OPTION_AboutPro_NUM     5
 #define OPTION_Exit_NUM         6
 
-#define HOME_OPTION_Home    "<0> Home"
 #define HOME_OPTION_PvP             "<1> Player vs. Player"
 #define HOME_OPTION_PvC             "<2> Player vs. `Chessplayer`"
 #define HOME_OPTION_PreAndSet       "<3> Preferences & Settings"
@@ -325,9 +379,9 @@ extern int CHE_DOUBLE_BUFFER_STATE;
 
 typedef const char * HOME_OPTIONS[HOME_OPTION_NUM];
 
-///////////////
-// Board TUI //
-///////////////
+//////////////
+// Game TUI //
+//////////////
 
 #define BOARD_SIZE      15
 
@@ -398,18 +452,13 @@ typedef struct {
     int j;
 } DEFAULT_ARRAY_POSITION, INDEXER;
 
-///////////////
-// Other TUI //
-///////////////
-
-///////////////////////////////////
-/* "Preferences & Settings" page */
-///////////////////////////////////
+///////////////////
+// PreAndSet TUI //
+///////////////////
 
 #define PREANDSET_OPTION_NUM   3
 
 //#define OPTION_PreAndSet_NUM      3
-#define OPTION_PreAndSet_Confirm_NUM        30
 #define OPTION_PreAndSet_Quit_NUM           31
 #define OPTION_PreAndSet_MusicSound_NUM     32
 #define OPTION_PreAndSet_NetworkConfig_NUM  33
@@ -418,14 +467,14 @@ typedef struct {
 #define PREANDSET_OPTION_MusicSound     "<2> Music & Sound"
 #define PREANDSET_OPTION_NetworkConfig  "<3> Network Config"
 
-//////////////////////////////
-/* "About Chessplayer" page */
-//////////////////////////////
+//////////////////
+// AboutChe TUI //
+//////////////////
 
 #define ABOUTCHE_OPTION_NUM     1
 
 //define OPTION_AboutChe_NUM        4
-#define OPTION_AboutChe_Quit_NUM        40
+#define OPTION_AboutChe_Quit_NUM        41
 
 #define ABOUT_CHESSPLAYER_CONTENT \
     "  `Chessplayer` is the core of this gobang game program, i.e. 'C' in 'PvC'.        " "\n" \
@@ -437,16 +486,17 @@ typedef struct {
     "for you. That's kind of interesting since you don't know the true game level.      " "\n" \
     "  Enjoy yourself! Why not have a try right now.                                     " "\n"
 
-//////////////////////////
-/* "About Project" page */
-//////////////////////////
+//////////////////
+// AboutPro TUI //
+//////////////////
 
 #define ABOUTPRO_OPTION_NUM     3
 
 //#define OPTION_AboutPro_NUM       5
-#define OPTION_AboutPro_Quit_NUM        50
-#define OPTION_AboutPro_EasterEgg1_NUM  51
-#define OPTION_AboutPro_EasterEgg2_NUM  52
+#define OPTION_AboutPro_Quit_NUM        51
+#define OPTION_AboutPro_Normal_NUM      52
+#define OPTION_AboutPro_EasterEgg1_NUM  53
+#define OPTION_AboutPro_EasterEgg2_NUM  54
 
 #define ABOUT_PROJECT_CONTENT \
     "  `Gobang.Chessplayer.C` is a small and light project for building a cross-platform" "\n" \
@@ -489,8 +539,6 @@ typedef struct {
     int order;
     int level;
 } GAME_PREFAB_CONFIG;
-
-#define GPC_NULL    2002
 
 /* iMode */
 #define GPC_MODE_PVP    0
@@ -540,5 +588,11 @@ typedef struct {
 /* The answer to life, the universe, and everything */
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 #define GPC_LEVEL_RANDOM   42
+
+#define InitGPC(gpc) do { \
+    gpc.mode = GPC_MODE_PVP; \
+    gpc.order = GPC_ORDER_PLAYER; \
+    gpc.level = GPC_LEVEL_DRUNK; \
+} while (0)
 
 #endif /* INCLUDE_CHE_DEF_H */

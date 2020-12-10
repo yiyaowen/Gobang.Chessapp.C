@@ -3,9 +3,6 @@
 #include "CheGlobal.h"
 #include "CheTUI.h"
 
-extern DEFAULT_FLAT_BOARD Board;
-extern GAME_RECORD_BOARD RecordBoard;
-
 //////////////////////////////////
 // Data analysis and conversion //
 //////////////////////////////////

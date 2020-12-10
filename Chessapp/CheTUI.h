@@ -3,68 +3,164 @@
 
 #include "CheDef.h"
 
+////////////////
+// Global TUI //
+////////////////
+
+typedef struct {
+    int status;
+    int exit_status;
+} Route;
+
+/**
+ * Get default route.
+ *
+ * @param route (Route to be initialiazed)
+ * @return
+ */
+void InitRoute(Route *route);
+
+typedef void *PageInfo;
+
+typedef struct {
+   int id;
+   char *name;
+   char *desc;
+   PageInfo page_info;
+   void(*pfnDisplayer)(PageInfo);
+   Route *(*pfnHandler)(Route *, PageInfo);
+} Page;
+    
+#define PAGE_STACK_CAPACITY 10
+typedef struct {
+    Page *pages[PAGE_STACK_CAPACITY];
+    int count;
+    Page *pTopPage;
+} PageStack;
+
+/**
+ * Start a routine.
+ *
+ * @param pNewPage (The new page to display)
+ * @param route (Route information for [pNewPage])
+ * @return route_ (Route information from [pNewPage])
+ */
+Route *StartRoutine(Page *pNewPage, Route *route);
+
+/**
+ * Push a page to [PageStack].
+ *
+ * @param pNewPage (The new page to push)
+ * @return
+ */
+void PushPage(Page *pNewPage);
+
+/**
+ * Call handler of top page.
+ *
+ * @param route (Route information for top page)
+ * @return route_ (Route information from top page)
+ */
+Route *HandlePage(Route *route);
+
+/**
+ * Pop a page from [PageStack].
+ *
+ * @param
+ * @return
+ */
+void PopPage();
+
+///////////////////
+// Page template //
+///////////////////
+
+/*
+typedef struct {
+
+} *####PageInfo;
+
+void Init####PageInfo(####PageInfo info);
+
+void Init####Page(Page *####_page);
+
+void Display####Page(PageInfo page_info);
+
+Route *Handle####Page(Route *route, PageInfo page_info);
+*/
+
+///////////////
+// TUI Utils //
+///////////////
+
+/**
+ * Get a valid option.
+ *
+ * @param iBaseOption (Code of base option)
+ * @param iOptionCount (Total options count)
+ * @return iOption (A valid option)
+ */
+int GetValidOption(int iBaseOption, int iOptionCount);
+
 //////////////
 // Home TUI //
 //////////////
 
+typedef struct {
+    int iOptionCount;
+    int iOptionSelected;
+} *HomePageInfo;
+void InitHomePageInfo(HomePageInfo info);
+void InitHomePage(Page *home_page);
+void DisplayHomePage(PageInfo page_info);
+Route *HandleHomePage(Route *route, PageInfo page_info);
+
+//////////////
+// Game TUI //
+//////////////
+
+typedef struct {
+    GAME_PREFAB_CONFIG game_prefab_config;
+} *GamePageInfo;
+void InitGamePageInfo(GamePageInfo info);
+void InitGamePage(Page *game_page);
+void InitPvPPage(Page *pvp_page);
+void InitPvCPage(Page *pvc_page);
+void DisplayGamePage(PageInfo page_info);
+Route *HandleGamePage(Route *route, PageInfo page_info);
+
 /**
- * Display total Homepage
+ * Display chessboard.
  *
- * @param
+ * @param pos (Position selected, and it will highlighted)
  * @return
  */
-void DisplayHomePage();
+void DisplayBoard(POSITION pos);
 
 /**
- * Print Homepage options
+ * Start a PvP game.
  *
- * @param
- * @return
+ * @param route (Route from [HandleGamePage])
+ * @param game_prefab_config (Game's prefabricated configuration)
+ * @return route_ (Route after handled)
  */
-void PrintHomeOptions();
+Route *StartPvP(Route *route, GAME_PREFAB_CONFIG game_prefab_config);
 
 /**
- * Loop until get a valid input for homepage option
+ * Start a PvC game.
  *
- * @param
- * @return
+ * @param route (Route from [HandleGamePage])
+ * @param game_prefab_config (Game's prefabricated configuration)
+ * @return route_ (Route after handled)
  */
-void GetValidHomeOption();
-
-/**
- * Check if iOption is a valid homepage option
- *
- * @param iOption (The option to be checked)
- * @return (If iOption is valid return 1, otherwise return 0)
- */
-int IsHomeOptionValid(int iOption);
-
-/**
- * Display page [CurrentOptionNum]
- *
- * @param
- * @return
- */
-void SwitchToSelectedHomeOption();
-
-///////////////
-// Board TUI //
-///////////////
-
-/**
- * Display Game Info Frame and Chessboard
- *
- * @param
- * @return
- */
-void DisplayBoard();
+Route *StartPvC(Route *route, GAME_PREFAB_CONFIG game_prefab_config);
 
 /* iRound */
 #define ROUND_BLACK         1
 #define ROUND_WHITE         2
 
 /**
- * Display input hint for the specific side
+ * Display input hint for the specific side.
  *
  * @param iRound (ROUND_WHITE or ROUND_BLACK)
  * @return
@@ -72,16 +168,16 @@ void DisplayBoard();
 void PrintHint(int iRound);
 
 /**
- * Loop until get a valid input for Chessboard position
+ * Loop until get a valid input for Chessboard position.
  *
  * @param iRound (ROUND_WHITE or ROUND_BLACK)
  * @param pos (The position that has been selected)
- * @return (The valid position from user input)
+ * @return pos_ (The valid position from user input)
  */
 POSITION GetValidPosition(int iRound, POSITION pos);
 
 /**
- * Check if the option is a special control option
+ * Check if the option is a special control option.
  *
  * @param key (The option to be checked)
  * @return (If it is a special control option return 1, otherwise return 0)
@@ -89,7 +185,7 @@ POSITION GetValidPosition(int iRound, POSITION pos);
 int IsSpecialControlOption(char key);
 
 /**
- * Handle special control options when playing
+ * Handle special control options when playing.
  *
  * @param key (The special control option)
  * @param inPos (The position that will be modified)
@@ -98,7 +194,7 @@ int IsSpecialControlOption(char key);
 void HandleControlOption(char key, POSITION * inPos);
 
 /**
- * Check if pos is a valid Chessboard position
+ * Check if pos is a valid Chessboard position.
  *
  * @param pos (The position to be checked)
  * @return iErrorType (If pos is valid return POS_VALID, otherwise return specific error type)
@@ -112,36 +208,25 @@ int IsPositionValid(POSITION pos);
 #define POS_BAD_FORMAT          3
 
 /**
- * Display error hint of the specific error type
+ * Display error hint of the specific error type.
  *
  * @param iErrorType (The type of input error)
  * @return
  */
 void PrintErrorHint(int iErrorType);
 
-/**
- * Start handle PvP game. Loop until the game is over
- *
- * @param game_prefab_config (Prefab configuration of game)
- * @return iOptionResult (The handle result of subroutine)
- */
-int StartPvP(GAME_PREFAB_CONFIG game_prefab_config);
+///////////////////
+// PreAndSet TUI //
+///////////////////
 
-/**
- * Start handle PvC game. Loop until the game is over
- *
- * @param game_prefab_config (Prefab configuration of game)
- * @return iOptionResult (The handle result of subroutine)
- */
-int StartPvC(GAME_PREFAB_CONFIG game_prefab_config);
-
-/**
- * Display total "Preferences & Settings" pgae.
- *
- * @param iOption (The option selected now, used by [PrintPreAndSetOptions])
- * @return
- */
-void DisplayPreAndSetPage(int iOption);
+typedef struct {
+    int iOptionCount;
+    int iOptionSelected;
+} *PreAndSetPageInfo;
+void InitPreAndSetPageInfo(PreAndSetPageInfo info);
+void InitPreAndSetPage(Page *pre_and_set_page);
+void DisplayPreAndSetPage(PageInfo page_info);
+Route *HandlePreAndSetPage(Route *route, PageInfo page_info);
 
 /**
  * Print options of "Preferences & Settings" page.
@@ -161,45 +246,17 @@ void PrintPreAndSetOptions(int iOption);
  */
 void PrintPreAndSetOption(int iOption, int iOptionNum, const char *szOptionText);
 
-/**
- * Loop until get a valid option for "Preferences & Settings" page.
- *
- * @param
- * @return iOption(The valid option selected)
- */
-int GetValidPreAndSetOption();
+//////////////////
+// AboutChe TUI //
+//////////////////
 
-/**
- * Check if iOption is a valid option for "Preferences & Settings" page.
- *
- * @param iOption (The option to be checked)
- * @return (If iOption is valid return 1, otherwise return 0)
- */
-int IsPreAndSetOptionValid(int iOption);
-
-/**
- * Display page [iOption]
- *
- * @param iOption (The page to be displayed)
- * @return
- */
-void SwitchToSelectedPreAndSetOption(int iOption);
-
-/**
- * Start handle "Preferences & Settings" page.
- *
- * @param
- * @return iOptionResult (The handle result of subroutine)
- */
-int StartPreAndSet();
-
-/**
- * Display total "About Chessplayer" page.
- *
- * @param
- * @return
- */
-void DisplayAboutChePage();
+typedef struct {
+    void *reserved;
+} *AboutChePageInfo;
+void InitAboutChePageInfo(AboutChePageInfo info);
+void InitAboutChePage(Page *about_che_page);
+void DisplayAboutChePage(PageInfo page_info);
+Route *HandleAboutChePage(Route *route, PageInfo page_info);
 
 /**
  * Print content of "About Chessplayer" page.
@@ -209,21 +266,17 @@ void DisplayAboutChePage();
  */
 void PrintAboutCheContent();
 
-/**
- * Start handle "About Chessplayer" page.
- *
- * @param
- * @return iOptionResult (The handle result of subroutine)
- */
-int StartAboutChe();
+//////////////////
+// AboutPro TUI //
+//////////////////
 
-/**
- * Display total "About Project" page with specific content.
- *
- * @param iOption (Different options correspond to different contents)
- * @return
- */
-void DisplayAboutProPage(int iOption);
+typedef struct {
+    int iOptionSelected;
+} *AboutProPageInfo;
+void InitAboutProPageInfo(AboutProPageInfo info);
+void InitAboutProPage(Page *about_pro_page);
+void DisplayAboutProPage(PageInfo page_info);
+Route *HandleAboutProPage(Route *route, PageInfo page_info);
 
 /**
  * Print content of "About Project" page.
@@ -242,17 +295,5 @@ void PrintAboutProEasterEgg2Content();
  * @return iOption (The valid option for "About Project" page)
  */
 int GetValidAboutProOption();
-
-/**
- * Start handle "About Project" page.
- *
- * @param
- * @return iOptionResult (The handle result of subroutine)
- */
-int StartAboutPro();
-
-/* iOptionResult */
-#define OPT_ABORT  -1
-#define OPT_QUIT    0
 
 #endif /* INCLUDE_CHE_TUI_H */

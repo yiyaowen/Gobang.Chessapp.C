@@ -1,5 +1,5 @@
-#ifndef INCLUDE_CHE_DATA
-#define INCLUDE_CHE_DATA
+#ifndef INCLUDE_CHE_DATA_H
+#define INCLUDE_CHE_DATA_H
 
 #include "CheDef.h"
 

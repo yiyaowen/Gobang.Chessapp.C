@@ -10,104 +10,122 @@ INCLUDE_DOUBLE_BUFFER
 
 #include "Cor.h" // GetCoreAnalysisResultP
 
-extern HOME_OPTIONS HomeOptions;
-extern int CurrentOptionNum;
+////////////////
+// Global TUI //
+////////////////
 
-extern DEFAULT_FLAT_BOARD Board;
-extern GAME_RECORD_BOARD RecordBoard;
+void InitRoute(Route *route)
+{
+    route->status = ROUTE_CONTINUE;
+    route->exit_status = ROUTE_SUCCESS;
+}
+
+Route *StartRoutine(Page *pNewPage, Route *route)
+{
+    PushPage(pNewPage);
+    route = HandlePage(route);
+    PopPage();
+    return route;
+}
+
+void PushPage(Page *pNewPage)
+{
+    if (PS.count <= PAGE_STACK_CAPACITY) {
+        PS.pTopPage = PS.pages[PS.count++] = pNewPage;
+    }
+    else {
+        AbortWithMsg("Stack Overflow: PageStack holds at most 10 pages.");
+    }
+}
+
+Route *HandlePage(Route *route)
+{
+    while (1) {
+        autodisplay((*(PS.pTopPage->pfnDisplayer))(PS.pTopPage->page_info));
+        route = (*(PS.pTopPage->pfnHandler))(route, PS.pTopPage->page_info);
+        if (route->status == ROUTE_OVER) return route;
+    }
+}
+
+void PopPage()
+{
+    if (PS.count > 0) {
+        PS.pTopPage = PS.pages[--PS.count];
+    }
+    else {
+        AbortWithMsg("Stack Underflow: PageStack holds at least 0 pages.");
+    }
+}
+
+///////////////
+// TUI Utils //
+///////////////
+
+int GetValidOption(int iBaseOption, int iOptionCount)
+{
+    char c;
+    int iOption;
+
+get_user_input:
+    c = getchar();
+    if (c == '\n') {
+        PutCharBack(c);
+        ClearInputBuffer();
+        return OPTION_Confirm_NUM;
+    }
+    else {
+        iOption = (int)(c - '0');
+        if (iOption > 0 && iOption <= iOptionCount) {
+            ClearInputBuffer();
+            return iOption+iBaseOption*10;
+        }
+        else {
+            autoprint(
+                printf("No such option. Please choose from 1~%d, or press Enter.", iOptionCount);
+                putchar('\n');
+                printf(PROMPT);
+            );
+            ClearInputBuffer();
+            goto get_user_input;
+        }
+    }
+}
 
 //////////////
 // Home TUI //
 //////////////
 
-void SwitchToSelectedHomeOption()
+void InitHomePageInfo(HomePageInfo info)
 {
-    int iOptionResult;
-
-    if (CurrentOptionNum < 0) {
-
-        CurrentOptionNum = -CurrentOptionNum;
-
-        switch (CurrentOptionNum)
-        {
-        case OPTION_PvP_NUM:
-        {
-            GAME_PREFAB_CONFIG game_prefab_config = {
-                GPC_MODE_PVP,   // mode
-                GPC_NULL,       // order
-                GPC_NULL        // level
-            };
-            iOptionResult = StartPvP(game_prefab_config);
-            break;
-        }
-            
-        case OPTION_PvC_NUM:
-        {
-            // TODO
-            GAME_PREFAB_CONFIG game_prefab_config = {
-                GPC_MODE_PVC,   // mode
-                GPC_NULL,       // order
-                GPC_NULL        // level
-            };
-            iOptionResult = StartPvC(game_prefab_config);
-            break;
-        }
-
-        case OPTION_PreAndSet_NUM:
-            // TODO
-            iOptionResult = StartPreAndSet();
-            break;
-
-        case OPTION_AboutChe_NUM:
-            // TODO
-            iOptionResult = StartAboutChe();
-            break;
-
-        case OPTION_AboutPro_NUM:
-            // TODO
-            iOptionResult = StartAboutPro();
-            break;
-
-        case OPTION_Exit_NUM:
-            printf(GREEN_TEXT(HIGHLIGHT_TEXT("Bye ")) HIGHLIGHT_TEXT("EXIT_SUCCESS"));
-            putchar('\n');
-            exit(EXIT_SUCCESS);
-
-error_abort:
-        default:
-            printf(RED_TEXT(HIGHLIGHT_TEXT("Error ")) HIGHLIGHT_TEXT("EXIT_FAILURE"));
-            putchar('\n');
-            exit(EXIT_FAILURE);
-        }
-
-        if (iOptionResult == OPT_QUIT) {
-            return;
-        }
-        else if (iOptionResult == OPT_ABORT) {
-            goto error_abort;
-        }
-    }
+    info->iOptionCount = HOME_OPTION_NUM;
+    info->iOptionSelected = OPTION_PvP_NUM;
 }
 
-
-void DisplayHomePage()
+void InitHomePage(Page *home_page)
 {
+    HomePageInfo home_page_info;
+    InitHomePageInfo(home_page_info);
+    home_page->id = PAGE_ID_Home;
+    home_page->name = PAGE_NAME_Home;
+    home_page->desc = PAGE_DESC_Home;
+    home_page->page_info = home_page_info;
+    home_page->pfnHandler = HandleHomePage;
+    home_page->pfnDisplayer = DisplayHomePage;
+}
+
+void DisplayHomePage(PageInfo page_info)
+{
+    HomePageInfo info = (HomePageInfo)page_info;
+
     printf(HOME_ICON);
     putchar('\n');
     putchar('\n');
 
-    PrintHomeOptions();
-
-    printf(PROMPT);
-}
-
-void PrintHomeOptions()
-{
-    for (int i = 0; i < HOME_OPTION_NUM; ++i) {
+    for (int i = 0; i < info->iOptionCount; ++i) {
 
         PrintSpaces(20);
         
-        if (i+1 == CurrentOptionNum) {
+        if (i+1 == info->iOptionSelected) {
 
             printf(BLUE_TEXT(HIGHLIGHT_TEXT(SELECT_ARROW)));
             PrintSpaces(2);
@@ -127,56 +145,132 @@ void PrintHomeOptions()
         putchar('\n');
         putchar('\n');
     }
+
+    printf(PROMPT);
 }
 
-void GetValidHomeOption()
+Route *HandleHomePage(Route *route, PageInfo page_info)
 {
-    char c;
+    HomePageInfo info = (HomePageInfo)page_info;
+
     int iOption;
     
-get_user_input:
-    c = getchar();
-    if (c == '\n') {
-        PutCharBack(c);
-        CurrentOptionNum = -CurrentOptionNum;
-        ClearInputBuffer();
-        return;
+    iOption = GetValidOption(OPTION_Home_NUM, HOME_OPTION_NUM);
+    
+    if (iOption == OPTION_Confirm_NUM) {
+
+        Route *sub_route;
+        InitRoute(sub_route);
+
+        switch (info->iOptionSelected)
+        {
+        case OPTION_PvP_NUM:
+        {
+            Page pvp_page;
+            InitPvPPage(&pvp_page);
+            sub_route = StartRoutine(&pvp_page, sub_route);
+            break;
+        }
+            
+        case OPTION_PvC_NUM:
+        {
+            Page pvc_page;
+            InitPvCPage(&pvc_page);
+            sub_route = StartRoutine(&pvc_page, sub_route);
+            break;
+        }
+
+        case OPTION_PreAndSet_NUM:
+        {
+            Page pre_and_set_page;
+            InitPreAndSetPage(&pre_and_set_page);
+            sub_route = StartRoutine(&pre_and_set_page, sub_route);
+            break;
+        }
+
+        case OPTION_AboutChe_NUM:
+        {
+            Page about_che_page;
+            InitAboutChePage(&about_che_page);
+            sub_route = StartRoutine(&about_che_page, sub_route);
+            break;
+        }
+
+        case OPTION_AboutPro_NUM:
+        {
+            Page about_pro_page;
+            InitAboutProPage(&about_pro_page);
+            sub_route = StartRoutine(&about_pro_page, sub_route);
+            break;
+        }
+
+        case OPTION_Exit_NUM:
+        {
+            route->status = ROUTE_OVER; 
+            route->exit_status = ROUTE_SUCCESS;
+            return route;
+        }
+
+        default:
+            route->status = ROUTE_OVER;
+            route->exit_status = ROUTE_FAILURE;
+            return route;
+        }
+        if (sub_route->exit_status == ROUTE_FAILURE) {
+            route->status = ROUTE_OVER;
+            route->exit_status = ROUTE_FAILURE;
+            return route;
+        }
     }
     else {
-        iOption = (int) (c - '0');
-        if (IsHomeOptionValid(iOption)) {
-            CurrentOptionNum = iOption;
-            ClearInputBuffer();
-            return;
-        }
-        else {
-            autoprint(
-                printf("No such option. Please choose from 1~%d, or press Enter.", HOME_OPTION_NUM);
-                putchar('\n');
-                printf(PROMPT);
-            );
-            ClearInputBuffer();
-            goto get_user_input;
-        }
+        info->iOptionSelected = iOption;
+        route->status = ROUTE_CONTINUE;
     }
+    return route;
 }
 
-int IsHomeOptionValid(int iOptionNum)
+//////////////
+// Game TUI //
+//////////////
+
+void InitGamePageInfo(GamePageInfo info)
 {
-    if (iOptionNum > 0 && iOptionNum <= HOME_OPTION_NUM) {
-        return 1;
-    }
-    else {
-        return 0;
-    }
+    InitGPC(info->game_prefab_config);
 }
 
-///////////////
-// Board TUI //
-///////////////
+void InitGamePage(Page *game_page)
+{
+    GamePageInfo game_page_info;
+    InitGamePageInfo(game_page_info);
+    game_page->id = PAGE_ID_PvP;
+    game_page->name = PAGE_NAME_PvP;
+    game_page->desc = PAGE_DESC_PvP;
+    game_page->page_info = game_page_info;
+    game_page->pfnHandler = HandleGamePage;
+    game_page->pfnDisplayer = DisplayGamePage;
+}
+void InitPvPPage(Page *pvp_page)
+{
+    InitGamePage(pvp_page);
+    ((GamePageInfo)pvp_page->page_info)->game_prefab_config.mode = GPC_MODE_PVP;
+}
+void InitPvCPage(Page *pvc_page)
+{
+    InitGamePage(pvc_page); 
+    ((GamePageInfo)pvc_page->page_info)->game_prefab_config.mode = GPC_MODE_PVC;
+}
 
-void DisplayBoard(POSITION pos) 
-{	
+void DisplayGamePage(PageInfo page_info)
+{
+    GamePageInfo info = (GamePageInfo)page_info;
+
+    POSITION pos;
+    InitPos(pos);
+    DisplayBoard(pos);
+}
+
+void DisplayBoard(POSITION pos)
+{
     int i, j;
     char row;
     char col;
@@ -351,6 +445,205 @@ void DisplayBoard(POSITION pos)
     putchar('\n');
 }
 
+Route *HandleGamePage(Route *route, PageInfo page_info)
+{
+    GamePageInfo info = (GamePageInfo)page_info;
+    switch (info->game_prefab_config.mode)
+    {
+    case GPC_MODE_PVP:
+        route = StartPvP(route, info->game_prefab_config);
+        break;
+
+    case GPC_MODE_PVC:
+        route = StartPvC(route, info->game_prefab_config);
+        break;
+    
+    default:
+        route->status = ROUTE_OVER;
+        route->exit_status = ROUTE_FAILURE;
+        break;
+    }
+    return route;
+}
+
+Route *StartPvP(Route *route, GAME_PREFAB_CONFIG game_prefab_config)
+{
+    int iTotalRound = 0;
+    int iGameResult;
+    POSITION pos;
+    POSITION lastPos;
+
+    InitBoardArray();
+    InitRecordBoardArray();
+    InitPos(pos);
+    InitPos(lastPos);
+
+    autodisplay(DisplayBoard(pos));
+
+    while (1) 
+    {
+        ////////////////////
+        /* Round of Black */
+        ////////////////////
+        do {
+
+            pos = GetValidPosition(ROUND_BLACK, pos); 
+            if (pos.status == POS_QUIT) {
+                route->status = ROUTE_OVER;
+                route->exit_status = ROUTE_SUCCESS;
+                return route;
+            }
+
+            autodisplay(DisplayBoard(pos));
+
+        } while (pos.status == POS_PENDING);
+
+        ++iTotalRound;
+        UpdateGlobalBoardArrays(iTotalRound, ROUND_BLACK, lastPos, pos);
+        lastPos = pos;
+        autodisplay(DisplayBoard(pos));
+
+        iGameResult = GetGameResult(RECORD_BLACK);
+        if (iGameResult == GR_WIN) {
+            // TODO
+            printf("BLACK WIN\n");
+            exit(0);
+        }
+
+        ////////////////////
+        /* Round of White */
+        ////////////////////
+        do {
+        
+            pos = GetValidPosition(ROUND_WHITE, pos);
+            if (pos.status == POS_QUIT) {
+                route->status = ROUTE_OVER;
+                route->exit_status = ROUTE_SUCCESS;
+                return route;
+            }
+
+            autodisplay(DisplayBoard(pos));
+
+        } while (pos.status == POS_PENDING);
+
+        ++iTotalRound;
+        UpdateGlobalBoardArrays(iTotalRound, ROUND_WHITE, lastPos, pos);
+        lastPos = pos;
+        autodisplay(DisplayBoard(pos));
+
+        iGameResult = GetGameResult(RECORD_WHITE);
+        if (iGameResult == GR_WIN) {
+            // TODO
+            printf("WHITE WIN\n");
+            exit(0);
+        }
+    }   
+    route->status = ROUTE_OVER;
+    route->exit_status = ROUTE_FAILURE;
+    return route;
+}
+
+Route *StartPvC(Route *route, GAME_PREFAB_CONFIG game_prefab_config)
+{
+    int iTotalRound = 0;
+    int iGameResult;
+    POSITION pos;
+    POSITION lastPos;
+    bool fPlayerFirst = (game_prefab_config.order == GPC_ORDER_PLAYER) ? true : false;
+
+    InitBoardArray();
+    InitRecordBoardArray();
+    InitPos(pos);
+
+    autodisplay(DisplayBoard(pos));
+
+    while (1)
+    {
+        ////////////////////
+        /* Round of Black */
+        ////////////////////
+        do {
+
+            if (fPlayerFirst) {
+                pos = GetValidPosition(ROUND_BLACK, pos);
+            }
+            else {
+                ANALYSIS_PREFAB_CONFIG analysis_prefb_config = {
+                    APC_SIDE_BLACK, // iSide
+                    APC_LEVEL_DRUNK // iLevel
+                };
+                COR_POSITION cor_pos = GetCoreAnalysisResultP(RecordBoard, analysis_prefb_config);
+                pos.x = cor_pos.x;
+                pos.y = cor_pos.y;
+                pos.status = POS_VERIFIED;
+            }
+            if (pos.status == POS_QUIT) {
+                route->status = ROUTE_OVER;
+                route->exit_status = ROUTE_FAILURE;
+                return route;
+            }
+
+            autodisplay(DisplayBoard(pos));
+
+        } while (pos.status == POS_PENDING);
+
+        ++iTotalRound;
+        UpdateGlobalBoardArrays(iTotalRound, ROUND_BLACK, lastPos, pos);
+        lastPos = pos;
+        autodisplay(DisplayBoard(pos));
+
+        iGameResult = GetGameResult(RECORD_BLACK);
+        if (iGameResult == GR_WIN) {
+            // TODO
+            printf("BLACK WIN\n");
+            exit(0);
+        }
+
+        ////////////////////
+        /* Round of White */
+        ////////////////////
+        do {
+        
+            if (!fPlayerFirst) {
+                pos = GetValidPosition(ROUND_WHITE, pos);
+            }
+            else {
+                ANALYSIS_PREFAB_CONFIG analysis_prefb_config = {
+                    APC_SIDE_WHITE, // iSide
+                    APC_LEVEL_DRUNK // iLevel
+                };
+                COR_POSITION cor_pos = GetCoreAnalysisResultP(RecordBoard, analysis_prefb_config);
+                pos.x = cor_pos.x;
+                pos.y = cor_pos.y;
+                pos.status = POS_VERIFIED;
+            }
+            if (pos.status == POS_QUIT) {
+                route->status = ROUTE_OVER;
+                route->exit_status = ROUTE_FAILURE;
+                return route;
+            }
+
+            autodisplay(DisplayBoard(pos));
+
+        } while (pos.status == POS_PENDING);
+
+        ++iTotalRound;
+        UpdateGlobalBoardArrays(iTotalRound, ROUND_WHITE, lastPos, pos);
+        lastPos = pos;
+        autodisplay(DisplayBoard(pos));
+
+        iGameResult = GetGameResult(RECORD_WHITE);
+        if (iGameResult == GR_WIN) {
+            // TODO
+            printf("WHITE WIN\n");
+            exit(0);
+        }
+    }
+    route->status = ROUTE_OVER;
+    route->exit_status = ROUTE_FAILURE;
+    return route;
+}
+
 void PrintHint(int iRound)
 {
     if (iRound == ROUND_BLACK) {
@@ -484,7 +777,6 @@ void HandleControlOption(char key, POSITION *inPos)
         return;
     }
 }
-        
 
 int IsPositionValid(POSITION pos)
 {
@@ -529,195 +821,52 @@ void PrintErrorHint(int iErrorType)
     printf(PROMPT);
 }
 
-int StartPvP(GAME_PREFAB_CONFIG game_prefab_config)
+///////////////////
+// PreAndSet TUI //
+///////////////////
+
+void InitPreAndSetPageInfo(PreAndSetPageInfo info)
 {
-    int iTotalRound = 0;
-    int iGameResult;
-    POSITION pos;
-    POSITION lastPos;
-
-    InitBoardArray();
-    InitRecordBoardArray();
-    InitPos(pos);
-
-    autodisplay(DisplayBoard(pos));
-
-    while (1) 
-    {
-        ////////////////////
-        /* Round of Black */
-        ////////////////////
-        do {
-
-            pos = GetValidPosition(ROUND_BLACK, pos); 
-            if (pos.status == POS_QUIT) {
-                return OPT_QUIT;
-            }
-
-            autodisplay(DisplayBoard(pos));
-
-        } while (pos.status == POS_PENDING);
-
-        ++iTotalRound;
-        UpdateGlobalBoardArrays(iTotalRound, ROUND_BLACK, lastPos, pos);
-        lastPos = pos;
-        autodisplay(DisplayBoard(pos));
-
-        iGameResult = GetGameResult(RECORD_BLACK);
-        if (iGameResult == GR_WIN) {
-            // TODO
-            printf("BLACK WIN\n");
-            exit(0);
-        }
-
-        ////////////////////
-        /* Round of White */
-        ////////////////////
-        do {
-        
-            pos = GetValidPosition(ROUND_WHITE, pos);
-            if (pos.status == POS_QUIT) {
-                return OPT_QUIT;
-            }
-
-            autodisplay(DisplayBoard(pos));
-
-        } while (pos.status == POS_PENDING);
-
-        ++iTotalRound;
-        UpdateGlobalBoardArrays(iTotalRound, ROUND_WHITE, lastPos, pos);
-        lastPos = pos;
-        autodisplay(DisplayBoard(pos));
-
-        iGameResult = GetGameResult(RECORD_WHITE);
-        if (iGameResult == GR_WIN) {
-            // TODO
-            printf("WHITE WIN\n");
-            exit(0);
-        }
-    }   
-
-    return OPT_ABORT;
+    info->iOptionCount = OPTION_PreAndSet_NUM;
+    info->iOptionSelected = OPTION_PreAndSet_Quit_NUM;
 }
 
-int StartPvC(GAME_PREFAB_CONFIG game_prefab_config)
+void InitPreAndSetPage(Page *pre_and_set_page)
 {
-    int iTotalRound = 0;
-    int iGameResult;
-    POSITION pos;
-    POSITION lastPos;
-    bool fPlayerFirst = (game_prefab_config.order == GPC_ORDER_PLAYER) ? true : false;
-
-    InitBoardArray();
-    InitRecordBoardArray();
-    InitPos(pos);
-
-    autodisplay(DisplayBoard(pos));
-
-    while (1)
-    {
-        ////////////////////
-        /* Round of Black */
-        ////////////////////
-        do {
-
-            if (fPlayerFirst) {
-                pos = GetValidPosition(ROUND_BLACK, pos);
-            }
-            else {
-                ANALYSIS_PREFAB_CONFIG analysis_prefb_config = {
-                    APC_SIDE_BLACK, // iSide
-                    APC_LEVEL_DRUNK // iLevel
-                };
-                COR_POSITION cor_pos = GetCoreAnalysisResultP(RecordBoard, analysis_prefb_config);
-                pos.x = cor_pos.x;
-                pos.y = cor_pos.y;
-                pos.status = POS_VERIFIED;
-            }
-            if (pos.status == POS_QUIT) {
-                return OPT_QUIT;
-            }
-
-            autodisplay(DisplayBoard(pos));
-
-        } while (pos.status == POS_PENDING);
-
-        ++iTotalRound;
-        UpdateGlobalBoardArrays(iTotalRound, ROUND_BLACK, lastPos, pos);
-        lastPos = pos;
-        autodisplay(DisplayBoard(pos));
-
-        iGameResult = GetGameResult(RECORD_BLACK);
-        if (iGameResult == GR_WIN) {
-            // TODO
-            printf("BLACK WIN\n");
-            exit(0);
-        }
-
-        ////////////////////
-        /* Round of White */
-        ////////////////////
-        do {
-        
-            if (!fPlayerFirst) {
-                pos = GetValidPosition(ROUND_WHITE, pos);
-            }
-            else {
-                ANALYSIS_PREFAB_CONFIG analysis_prefb_config = {
-                    APC_SIDE_WHITE, // iSide
-                    APC_LEVEL_DRUNK // iLevel
-                };
-                COR_POSITION cor_pos = GetCoreAnalysisResultP(RecordBoard, analysis_prefb_config);
-                pos.x = cor_pos.x;
-                pos.y = cor_pos.y;
-                pos.status = POS_VERIFIED;
-            }
-            if (pos.status == POS_QUIT) {
-                return OPT_QUIT;
-            }
-
-            autodisplay(DisplayBoard(pos));
-
-        } while (pos.status == POS_PENDING);
-
-        ++iTotalRound;
-        UpdateGlobalBoardArrays(iTotalRound, ROUND_WHITE, lastPos, pos);
-        lastPos = pos;
-        autodisplay(DisplayBoard(pos));
-
-        iGameResult = GetGameResult(RECORD_WHITE);
-        if (iGameResult == GR_WIN) {
-            // TODO
-            printf("WHITE WIN\n");
-            exit(0);
-        }
-    }
-
-    return OPT_ABORT;
+    PreAndSetPageInfo pre_and_set_page_info;
+    InitPreAndSetPageInfo(pre_and_set_page_info);
+    pre_and_set_page->id = PAGE_ID_PreAndSet;
+    pre_and_set_page->name = PAGE_NAME_PreAndSet;
+    pre_and_set_page->desc = PAGE_DESC_PreAndSet;
+    pre_and_set_page->page_info = pre_and_set_page_info;
+    pre_and_set_page->pfnHandler = HandlePreAndSetPage;
+    pre_and_set_page->pfnDisplayer = DisplayPreAndSetPage;
 }
 
-void DisplayPreAndSetPage(int iOption)
+void DisplayPreAndSetPage(PageInfo page_info)
 {
+    PreAndSetPageInfo info = (PreAndSetPageInfo)page_info;
+
     printf(HOME_ICON);
     putchar('\n');
     putchar('\n');
 
-    PrintPreAndSetOptions(iOption);
+    PrintPreAndSetOptions(info->iOptionSelected);
 
     printf(PROMPT);
 }
 
-void PrintPreAndSetOptions(int iOption)
+void PrintPreAndSetOptions(int iOptionSelected)
 {
-    PrintPreAndSetOption(iOption, OPTION_PreAndSet_Quit_NUM, PREANDSET_OPTION_Quit);
-    PrintPreAndSetOption(iOption, OPTION_PreAndSet_MusicSound_NUM, PREANDSET_OPTION_MusicSound);
-    PrintPreAndSetOption(iOption, OPTION_PreAndSet_NetworkConfig_NUM, PREANDSET_OPTION_NetworkConfig);
+    PrintPreAndSetOption(iOptionSelected, OPTION_PreAndSet_Quit_NUM, PREANDSET_OPTION_Quit);
+    PrintPreAndSetOption(iOptionSelected, OPTION_PreAndSet_MusicSound_NUM, PREANDSET_OPTION_MusicSound);
+    PrintPreAndSetOption(iOptionSelected, OPTION_PreAndSet_NetworkConfig_NUM, PREANDSET_OPTION_NetworkConfig);
 }
 
-void PrintPreAndSetOption(int iOption, int iOptionNum, const char *szOptionText)
+void PrintPreAndSetOption(int iOptionSelected, int iOption, const char *szOptionText)
 {
     PrintSpaces(20);
-    if (iOption == iOptionNum) {
+    if (iOptionSelected == iOption) {
         printf(BLUE_TEXT(HIGHLIGHT_TEXT(SELECT_ARROW)));
         PrintSpaces(2);
         printf(HIGHLIGHT_TEXT(UNDERLINE_TEXT("%s")), szOptionText);
@@ -730,107 +879,149 @@ void PrintPreAndSetOption(int iOption, int iOptionNum, const char *szOptionText)
     putchar('\n');
 }
 
-int GetValidPreAndSetOption()
+Route *HandlePreAndSetPage(Route *route, PageInfo page_info)
 {
-    char c;
-    int iOption;
-    
-get_user_input:
-    c = getchar();
-    if (c == '\n') {
-        PutCharBack(c);
-        ClearInputBuffer();
-        return OPTION_PreAndSet_Confirm_NUM;
-    }
-    else {
-        iOption = (int) (c - '0');
-        if (IsPreAndSetOptionValid(iOption)) {
-            ClearInputBuffer();
-            return iOption+OPTION_PreAndSet_NUM*10;
-        }
-        else {
-            autoprint(
-                printf("No such option. Please choose from 1~%d, or press Enter.", PREANDSET_OPTION_NUM);
-                putchar('\n');
-                printf(PROMPT);
-            );
-            ClearInputBuffer();
-            goto get_user_input;
-        }
-    }
-}
+    PreAndSetPageInfo info = (PreAndSetPageInfo)page_info;
 
-int IsPreAndSetOptionValid(int iOption)
-{
-    if (iOption > 0 && iOption <= PREANDSET_OPTION_NUM) {
-        return 1;
-    }
-    else {
-        return 0;
-    }
-}
+    int iOption;     
 
-void SwitchToSelectedPreAndSetOption(int iOption)
-{
-    // TODO
-}
+    iOption = GetValidOption(OPTION_PreAndSet_NUM, PREANDSET_OPTION_NUM);
 
-int StartPreAndSet()
-{
-    int iOption, iOptionSelected;
-    iOption = iOptionSelected = OPTION_PreAndSet_Quit_NUM;
+    if (iOption == OPTION_Confirm_NUM) {
 
-get_user_input:
-    autodisplay(DisplayPreAndSetPage(iOptionSelected));
+        Route *sub_route;
+        InitRoute(sub_route);
 
-    iOption = GetValidPreAndSetOption();
-
-    if (iOption == OPTION_PreAndSet_Confirm_NUM) {
-
-        switch (iOptionSelected)
+        switch (info->iOptionSelected)
         {
         case OPTION_PreAndSet_MusicSound_NUM:
-        {
             // TODO
-            goto get_user_input;
-        }
+            route->status = ROUTE_CONTINUE;
+            return route;
             
         case OPTION_PreAndSet_NetworkConfig_NUM:
-        {
             // TODO
-            goto get_user_input;
-        }
+            route->status = ROUTE_CONTINUE;
+            return route;
 
         case OPTION_PreAndSet_Quit_NUM:
-        {
-            // TODO
-            return OPT_QUIT;
-        }
+            route->status = ROUTE_OVER;
+            route->exit_status = ROUTE_SUCCESS;
+            return route;
 
-error_abort:
         default:
-            printf(RED_TEXT(HIGHLIGHT_TEXT("Error ")) HIGHLIGHT_TEXT("EXIT_FAILURE"));
-            putchar('\n');
-            exit(EXIT_FAILURE);
+            route->status = ROUTE_OVER;
+            route->exit_status = ROUTE_FAILURE;
+            return route;
+        }
+        if (sub_route->exit_status == ROUTE_FAILURE) {
+            route->status = ROUTE_OVER;
+            route->exit_status = ROUTE_FAILURE;
         }
     }
     else {
-        iOptionSelected = iOption;
-        goto get_user_input;
+        info->iOptionSelected = iOption;
+        route->status = ROUTE_CONTINUE;
     }
-    
-    return OPT_ABORT;
+    return route;
 }
 
-void DisplayAboutProPage(int iOption)
+//////////////////
+// AboutPro TUI //
+//////////////////
+
+void InitAboutChePageInfo(AboutChePageInfo info)
 {
+    // Reserved
+}
+
+void InitAboutChePage(Page *about_che_page)
+{
+    AboutChePageInfo about_che_page_info;
+    InitAboutChePageInfo(about_che_page_info);
+    about_che_page->id = PAGE_ID_AboutChe;
+    about_che_page->name = PAGE_NAME_AboutChe;
+    about_che_page->desc = PAGE_DESC_AboutChe;
+    about_che_page->page_info = about_che_page_info;
+    about_che_page->pfnHandler = HandleAboutChePage;
+    about_che_page->pfnDisplayer = DisplayAboutChePage;
+}
+
+void DisplayAboutChePage(PageInfo page_info)
+{
+    AboutChePageInfo info = (AboutChePageInfo)page_info;
+
     printf(HOME_ICON);
     putchar('\n');
     putchar('\n');
 
-    switch (iOption)
+    PrintAboutCheContent();
+    putchar('\n');
+
+    printf(PROMPT);
+}
+
+Route *HandleAboutChePage(Route *route, PageInfo page_info)
+{
+    AboutChePageInfo info = (AboutChePageInfo)page_info;
+
+    char c;
+    
+get_user_input:
+    if ((c = getchar()) != '\n') {
+        ClearInputBuffer();
+    }
+
+    if (c == 'q' || c == 'Q') {
+        route->status = ROUTE_OVER;
+        route->exit_status = ROUTE_SUCCESS;
+        return route;
+    }
+    else {
+        printf("Enter 'q' or 'Q' to quit.");
+        putchar('\n');
+        printf(PROMPT);
+        goto get_user_input;
+    }
+}
+
+void PrintAboutCheContent()
+{
+    printf(ABOUT_CHESSPLAYER_CONTENT);
+}
+
+//////////////////
+// AboutPro TUI //
+//////////////////
+
+void InitAboutProPageInfo(AboutProPageInfo info)
+{
+    // Reserved
+}
+
+void InitAboutProPage(Page *about_pro_page)
+{
+    AboutProPageInfo about_pro_page_info;
+    InitAboutProPageInfo(about_pro_page_info);
+    about_pro_page->id = PAGE_ID_AboutPro;
+    about_pro_page->name = PAGE_NAME_AboutPro;
+    about_pro_page->desc = PAGE_DESC_AboutPro;
+    about_pro_page->page_info = about_pro_page_info;
+    about_pro_page->pfnHandler = HandleAboutProPage;
+    about_pro_page->pfnDisplayer = DisplayAboutProPage;
+}
+
+void DisplayAboutProPage(PageInfo page_info)
+{
+    AboutProPageInfo info = (AboutProPageInfo)page_info;
+    
+    printf(HOME_ICON);
+    putchar('\n');
+    putchar('\n');
+
+    switch (info->iOptionSelected)
     {
-    case OPTION_AboutPro_NUM:
+    case OPTION_AboutPro_Normal_NUM:
         PrintAboutProContent();
         putchar('\n');
         break;
@@ -852,6 +1043,34 @@ void DisplayAboutProPage(int iOption)
     }
 
     printf(PROMPT);
+}
+
+Route *HandleAboutProPage(Route *route, PageInfo page_info)
+{
+    AboutProPageInfo info = (AboutProPageInfo)page_info;
+
+    info->iOptionSelected = GetValidAboutProOption();
+
+    switch (info->iOptionSelected)
+    {
+    case OPTION_AboutPro_Quit_NUM:
+        route->status = ROUTE_OVER;
+        route->exit_status = ROUTE_SUCCESS;
+        return route;
+
+    case OPTION_AboutPro_EasterEgg1_NUM:
+        route->status = ROUTE_CONTINUE;
+        return route;
+
+    case OPTION_AboutPro_EasterEgg2_NUM:
+        route->status = ROUTE_CONTINUE;
+        return route;
+
+    default:
+        route->status = ROUTE_OVER;
+        route->exit_status = ROUTE_FAILURE;
+        return route;
+    }
 }
 
 void PrintAboutProContent()
@@ -896,74 +1115,6 @@ get_user_input:
 
     default:
         printf("Enter 'q' or 'Q' to quit, though you can also enter 'a' or 'B'.");
-        putchar('\n');
-        printf(PROMPT);
-        goto get_user_input;
-    }
-}
-
-int StartAboutPro()
-{
-    int iOption;
-
-    autodisplay(DisplayAboutProPage(OPTION_AboutPro_NUM));
-    
-get_user_input:
-    iOption = GetValidAboutProOption();
-
-    switch (iOption)
-    {
-    case OPTION_AboutPro_Quit_NUM:
-        return OPT_QUIT;
-
-    case OPTION_AboutPro_EasterEgg1_NUM:
-        autodisplay(DisplayAboutProPage(OPTION_AboutPro_EasterEgg1_NUM));
-        goto get_user_input;
-
-    case OPTION_AboutPro_EasterEgg2_NUM:
-        autodisplay(DisplayAboutProPage(OPTION_AboutPro_EasterEgg2_NUM));
-        goto get_user_input;
-
-    default:
-        printf("Unknow option for 'About Project' page.");
-        putchar('\n');
-        return OPT_ABORT;
-    }
-}
-
-void DisplayAboutChePage()
-{
-    printf(HOME_ICON);
-    putchar('\n');
-    putchar('\n');
-
-    PrintAboutCheContent();
-    putchar('\n');
-
-    printf(PROMPT);
-}
-
-void PrintAboutCheContent()
-{
-    printf(ABOUT_CHESSPLAYER_CONTENT);
-}
-
-int StartAboutChe()
-{
-    char c;
-
-    autodisplay(DisplayAboutChePage());
-    
-get_user_input:
-    if ((c = getchar()) != '\n') {
-        ClearInputBuffer();
-    }
-
-    if (c == 'q' || c == 'Q') {
-        return OPT_QUIT;
-    }
-    else {
-        printf("Enter 'q' or 'Q' to quit.");
         putchar('\n');
         printf(PROMPT);
         goto get_user_input;

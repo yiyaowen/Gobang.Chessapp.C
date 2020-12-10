@@ -2,27 +2,50 @@
 #define INCLUDE_CHE_GLOBAL_H
 
 #include "CheDef.h"
+#include "CheTUI.h"
+
+/**
+ * Initialize all global variables
+ *
+ * @param
+ * @return
+ */
+void InitGlobalVariables();
+
+////////////////
+// Global TUI //
+////////////////
+
+extern PageStack PS;
+
+/**
+ * Initialize page stack.
+ *
+ * @param
+ * @return
+ */
+void InitPageStack();
 
 //////////////
 // Home TUI //
 //////////////
 
-HOME_OPTIONS HomeOptions;
-int CurrentOptionNum;
-
-///////////////
-// Board TUI //
-///////////////
-
-DEFAULT_FLAT_BOARD Board;
+extern HOME_OPTIONS HomeOptions;
+extern int CurrentOptionNum;
 
 /**
- * Initialize home options
+ * Initialize home options.
  *
  * @param
  * @return
  */
 void InitHomeOptionsArray();
+
+///////////////
+// Board TUI //
+///////////////
+
+extern DEFAULT_FLAT_BOARD Board;
 
 /**
  * Initialize Chessboard
@@ -32,19 +55,11 @@ void InitHomeOptionsArray();
  */
 void InitBoardArray();
 
-/**
- * Initialize all gobal variables
- *
- * @param
- * @return
- */
-void InitGlobalVariables();
-
 ///////////////
 // Game data //
 ///////////////
 
-GAME_RECORD_BOARD RecordBoard;
+extern GAME_RECORD_BOARD RecordBoard;
 
 /**
  * Initialize Record Chessboard

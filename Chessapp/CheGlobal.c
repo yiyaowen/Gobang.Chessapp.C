@@ -2,14 +2,13 @@
 #include "CheTUI.h"
 #include "CheGlobal.h"
 
-extern HOME_OPTIONS HomeOptions;
-extern int CurrentOptionNum;
-
-extern DEFAULT_FLAT_BOARD Board;
-extern GAME_RECORD_BOARD RecordBoard;
+int CurrentOptionNum;
 
 void InitGlobalVariables()
 {
+    /* Global TUI */
+    InitPageStack();
+
     /* Home TUI */
     InitHomeOptionsArray();
     CurrentOptionNum = OPTION_PvP_NUM;
@@ -21,6 +20,15 @@ void InitGlobalVariables()
     InitRecordBoardArray();
 }
 
+PageStack PS;
+
+void InitPageStack()
+{
+    PS.count = 0;
+}
+
+HOME_OPTIONS HomeOptions;
+
 void InitHomeOptionsArray()
 {
     HomeOptions[0] = HOME_OPTION_PvP;
@@ -30,6 +38,8 @@ void InitHomeOptionsArray()
     HomeOptions[4] = HOME_OPTION_AboutPro;
     HomeOptions[5] = HOME_OPTION_Exit;
 }
+
+DEFAULT_FLAT_BOARD Board;
 
 void InitBoardArray()
 {
@@ -62,6 +72,8 @@ void InitBoardArray()
         }
     }
 }
+
+GAME_RECORD_BOARD RecordBoard;
 
 void InitRecordBoardArray()
 {

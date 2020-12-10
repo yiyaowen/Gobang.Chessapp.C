@@ -5,16 +5,14 @@ int main(int argc, char * argv[])
     EnableVirtualTerminalSequences();
     EnableConsoleDoubleBuffer();
     InitGlobalVariables();
+    
+    Page *home_page;
+    Route *route;
 
-    while (1) { 
+    InitHomePage(home_page);
+    InitRoute(route);
 
-        autodisplay(DisplayHomePage());
+    route = StartRoutine(home_page, route);
 
-        GetValidHomeOption();
-
-        SwitchToSelectedHomeOption();
-
-    }
-
-    return EXIT_SUCCESS;
+    return route->exit_status;
 }
