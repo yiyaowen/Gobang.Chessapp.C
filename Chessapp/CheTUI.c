@@ -30,7 +30,7 @@ Route *StartRoutine(Page *pNewPage, Route *route)
 
 void PushPage(Page *pNewPage)
 {
-    if (PS.count <= PAGE_STACK_CAPACITY) {
+    if (PS.count < PAGE_STACK_CAPACITY) {
         PS.pTopPage = PS.pages[PS.count++] = pNewPage;
     }
     else {
@@ -50,7 +50,8 @@ Route *HandlePage(Route *route)
 void PopPage()
 {
     if (PS.count > 0) {
-        PS.pTopPage = PS.pages[--PS.count];
+        --PS.count;
+        PS.pTopPage = PS.pages[max(0,PS.count-1)];
     }
     else {
         AbortWithMsg("Stack Underflow: PageStack holds at least 0 pages.");
@@ -103,7 +104,7 @@ void InitHomePageInfo(HomePageInfo info)
 
 void InitHomePage(Page *home_page)
 {
-    HomePageInfo home_page_info;
+    HomePageInfo home_page_info = malloc(sizeof(HomePageInfoType));
     InitHomePageInfo(home_page_info);
     home_page->id = PAGE_ID_Home;
     home_page->name = PAGE_NAME_Home;
@@ -159,7 +160,7 @@ Route *HandleHomePage(Route *route, PageInfo page_info)
     
     if (iOption == OPTION_Confirm_NUM) {
 
-        Route *sub_route;
+        Route* sub_route = malloc(sizeof(Route));
         InitRoute(sub_route);
 
         switch (info->iOptionSelected)
@@ -240,7 +241,7 @@ void InitGamePageInfo(GamePageInfo info)
 
 void InitGamePage(Page *game_page)
 {
-    GamePageInfo game_page_info;
+    GamePageInfo game_page_info = malloc(sizeof(GamePageInfoType));
     InitGamePageInfo(game_page_info);
     game_page->id = PAGE_ID_PvP;
     game_page->name = PAGE_NAME_PvP;
@@ -554,6 +555,7 @@ Route *StartPvC(Route *route, GAME_PREFAB_CONFIG game_prefab_config)
     InitBoardArray();
     InitRecordBoardArray();
     InitPos(pos);
+    InitPos(lastPos);
 
     autodisplay(DisplayBoard(pos));
 
@@ -833,7 +835,7 @@ void InitPreAndSetPageInfo(PreAndSetPageInfo info)
 
 void InitPreAndSetPage(Page *pre_and_set_page)
 {
-    PreAndSetPageInfo pre_and_set_page_info;
+    PreAndSetPageInfo pre_and_set_page_info = malloc(sizeof(PreAndSetPageInfoType));
     InitPreAndSetPageInfo(pre_and_set_page_info);
     pre_and_set_page->id = PAGE_ID_PreAndSet;
     pre_and_set_page->name = PAGE_NAME_PreAndSet;
@@ -889,7 +891,7 @@ Route *HandlePreAndSetPage(Route *route, PageInfo page_info)
 
     if (iOption == OPTION_Confirm_NUM) {
 
-        Route *sub_route;
+        Route* sub_route = malloc(sizeof(Route));
         InitRoute(sub_route);
 
         switch (info->iOptionSelected)
@@ -927,7 +929,7 @@ Route *HandlePreAndSetPage(Route *route, PageInfo page_info)
 }
 
 //////////////////
-// AboutPro TUI //
+// AboutChe TUI //
 //////////////////
 
 void InitAboutChePageInfo(AboutChePageInfo info)
@@ -937,7 +939,7 @@ void InitAboutChePageInfo(AboutChePageInfo info)
 
 void InitAboutChePage(Page *about_che_page)
 {
-    AboutChePageInfo about_che_page_info;
+    AboutChePageInfo about_che_page_info = malloc(sizeof(AboutChePageInfoType));
     InitAboutChePageInfo(about_che_page_info);
     about_che_page->id = PAGE_ID_AboutChe;
     about_che_page->name = PAGE_NAME_AboutChe;
@@ -978,9 +980,11 @@ get_user_input:
         return route;
     }
     else {
-        printf("Enter 'q' or 'Q' to quit.");
-        putchar('\n');
-        printf(PROMPT);
+        autoprint(
+            printf("Enter 'q' or 'Q' to quit.");
+            putchar('\n');
+            printf(PROMPT);
+        );
         goto get_user_input;
     }
 }
@@ -996,12 +1000,12 @@ void PrintAboutCheContent()
 
 void InitAboutProPageInfo(AboutProPageInfo info)
 {
-    // Reserved
+    info->iOptionSelected = OPTION_AboutPro_Normal_NUM;
 }
 
 void InitAboutProPage(Page *about_pro_page)
 {
-    AboutProPageInfo about_pro_page_info;
+    AboutProPageInfo about_pro_page_info = malloc(sizeof(AboutProPageInfoType));
     InitAboutProPageInfo(about_pro_page_info);
     about_pro_page->id = PAGE_ID_AboutPro;
     about_pro_page->name = PAGE_NAME_AboutPro;
@@ -1114,9 +1118,11 @@ get_user_input:
         return OPTION_AboutPro_EasterEgg2_NUM;
 
     default:
-        printf("Enter 'q' or 'Q' to quit, though you can also enter 'a' or 'B'.");
-        putchar('\n');
-        printf(PROMPT);
+        autoprint(
+            printf("Enter 'q' or 'Q' to quit, though you can also enter 'a' or 'B'.");
+            putchar('\n');
+            printf(PROMPT);
+        );
         goto get_user_input;
     }
 }

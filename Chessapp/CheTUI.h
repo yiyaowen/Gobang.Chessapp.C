@@ -109,7 +109,7 @@ int GetValidOption(int iBaseOption, int iOptionCount);
 typedef struct {
     int iOptionCount;
     int iOptionSelected;
-} *HomePageInfo;
+} *HomePageInfo, HomePageInfoType;
 void InitHomePageInfo(HomePageInfo info);
 void InitHomePage(Page *home_page);
 void DisplayHomePage(PageInfo page_info);
@@ -121,7 +121,7 @@ Route *HandleHomePage(Route *route, PageInfo page_info);
 
 typedef struct {
     GAME_PREFAB_CONFIG game_prefab_config;
-} *GamePageInfo;
+} *GamePageInfo, GamePageInfoType;
 void InitGamePageInfo(GamePageInfo info);
 void InitGamePage(Page *game_page);
 void InitPvPPage(Page *pvp_page);
@@ -222,7 +222,7 @@ void PrintErrorHint(int iErrorType);
 typedef struct {
     int iOptionCount;
     int iOptionSelected;
-} *PreAndSetPageInfo;
+} *PreAndSetPageInfo, PreAndSetPageInfoType;
 void InitPreAndSetPageInfo(PreAndSetPageInfo info);
 void InitPreAndSetPage(Page *pre_and_set_page);
 void DisplayPreAndSetPage(PageInfo page_info);
@@ -251,8 +251,8 @@ void PrintPreAndSetOption(int iOption, int iOptionNum, const char *szOptionText)
 //////////////////
 
 typedef struct {
-    void *reserved;
-} *AboutChePageInfo;
+    void* reserved;
+} *AboutChePageInfo, AboutChePageInfoType;
 void InitAboutChePageInfo(AboutChePageInfo info);
 void InitAboutChePage(Page *about_che_page);
 void DisplayAboutChePage(PageInfo page_info);
@@ -272,7 +272,7 @@ void PrintAboutCheContent();
 
 typedef struct {
     int iOptionSelected;
-} *AboutProPageInfo;
+} *AboutProPageInfo, AboutProPageInfoType;
 void InitAboutProPageInfo(AboutProPageInfo info);
 void InitAboutProPage(Page *about_pro_page);
 void DisplayAboutProPage(PageInfo page_info);

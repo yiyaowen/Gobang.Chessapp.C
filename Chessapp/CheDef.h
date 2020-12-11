@@ -1,4 +1,4 @@
-#ifndef INCLUDE_CHE_DEF_H
+﻿#ifndef INCLUDE_CHE_DEF_H
 #define INCLUDE_CHE_DEF_H
 
 #include <stdio.h> // printf, stdin

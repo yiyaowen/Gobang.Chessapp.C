@@ -2,12 +2,12 @@
 
 COR_INDEXER GetCoreAnalysisResultI(COR_GAME_RECORD_BOARD board, ANALYSIS_PREFAB_CONFIG analysis_prefab_config)
 {
-    COR_INDEXER cor_indexer;
+    COR_INDEXER cor_indexer = { 0, 0 };
 
     switch (analysis_prefab_config.level)
     {
     case APC_LEVEL_DRUNK:
-        srand(time(0));
+        srand((unsigned)time(0));
         cor_indexer.i = rand() % COR_BOARD_SIZE;
         cor_indexer.j = rand() % COR_BOARD_SIZE;
         while (board[cor_indexer.i][cor_indexer.j] * analysis_prefab_config.side != 0) {

@@ -6,8 +6,8 @@ int main(int argc, char * argv[])
     EnableConsoleDoubleBuffer();
     InitGlobalVariables();
     
-    Page *home_page;
-    Route *route;
+    Page* home_page = malloc(sizeof(Page));
+    Route* route = malloc(sizeof(Route));
 
     InitHomePage(home_page);
     InitRoute(route);
