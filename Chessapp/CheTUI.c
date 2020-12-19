@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h> // bool
+#include <stdbool.h>
 
 #include "CheData.h"
 #include "CheDef.h"
@@ -8,41 +8,39 @@
 #include "CheTUI.h"
 INCLUDE_DOUBLE_BUFFER
 
-#include "Cor.h" // GetCoreAnalysisResultP
+#include "Core.h"
 
-////////////////
-// Global TUI //
-////////////////
-
-void InitRoute(Route *route)
+Route* GetDefaultRoute()
 {
+    Route* route = malloc(sizeof(Route));
     route->status = ROUTE_CONTINUE;
     route->exit_status = ROUTE_SUCCESS;
+    return route;
 }
 
-Route *StartRoutine(Page *pNewPage, Route *route)
+Route* StartRoutine(Page* page, Route* route)
 {
-    PushPage(pNewPage);
-    route = HandlePage(route);
+    PushPage(page);
+    route = HandleTopPage(route);
     PopPage();
     return route;
 }
 
-void PushPage(Page *pNewPage)
+void PushPage(Page* page)
 {
     if (PS.count < PAGE_STACK_CAPACITY) {
-        PS.pTopPage = PS.pages[PS.count++] = pNewPage;
+        PS.top_page = PS.pages[PS.count++] = page;
     }
     else {
         AbortWithMsg("Stack Overflow: PageStack holds at most 10 pages.");
     }
 }
 
-Route *HandlePage(Route *route)
+Route* HandleTopPage(Route* route)
 {
     while (1) {
-        autodisplay((*(PS.pTopPage->pfnDisplayer))(PS.pTopPage->page_info));
-        route = (*(PS.pTopPage->pfnHandler))(route, PS.pTopPage->page_info);
+        autodisplay((*(PS.top_page->pfnDisplayer))(PS.top_page->info));
+        route = (*(PS.top_page->pfnHandler))(route, PS.top_page->info);
         if (route->status == ROUTE_OVER) return route;
     }
 }
@@ -51,18 +49,15 @@ void PopPage()
 {
     if (PS.count > 0) {
         --PS.count;
-        PS.pTopPage = PS.pages[max(0,PS.count-1)];
+        PS.top_page= PS.pages[(PS.count-1 > 0) ? PS.count-1 : 0];
+        free(PS.pages[PS.count]);
     }
     else {
         AbortWithMsg("Stack Underflow: PageStack holds at least 0 pages.");
     }
 }
 
-///////////////
-// TUI Utils //
-///////////////
-
-int GetValidOption(int iBaseOption, int iOptionCount)
+int GetValidOptionFromUser(int iBaseOption, int iOptionCount)
 {
     char c;
     int iOption;
@@ -92,31 +87,34 @@ get_user_input:
     }
 }
 
-//////////////
-// Home TUI //
-//////////////
-
-void InitHomePageInfo(HomePageInfo info)
+HomePageInfo GetDefaultHomePageInfo()
 {
+    HomePageInfo info = malloc(sizeof(HomePageInfoType));
+
     info->iOptionCount = HOME_OPTION_NUM;
     info->iOptionSelected = OPTION_PvP_NUM;
+
+    return info;
 }
 
-void InitHomePage(Page *home_page)
+Page* GetDefaultHomePage()
 {
-    HomePageInfo home_page_info = malloc(sizeof(HomePageInfoType));
-    InitHomePageInfo(home_page_info);
-    home_page->id = PAGE_ID_Home;
-    home_page->name = PAGE_NAME_Home;
-    home_page->desc = PAGE_DESC_Home;
-    home_page->page_info = home_page_info;
-    home_page->pfnHandler = HandleHomePage;
-    home_page->pfnDisplayer = DisplayHomePage;
+    Page* page = malloc(sizeof(Page));
+    HomePageInfo info = GetDefaultHomePageInfo();
+
+    page->id = PAGE_ID_Home;
+    page->name = PAGE_NAME_Home;
+    page->desc = PAGE_DESC_Home;
+    page->info = info;
+    page->pfnHandler = HandleHomePage;
+    page->pfnDisplayer = DisplayHomePage;
+
+    return page;
 }
 
-void DisplayHomePage(PageInfo page_info)
+void DisplayHomePage(PageInfo info_)
 {
-    HomePageInfo info = (HomePageInfo)page_info;
+    HomePageInfo info = (HomePageInfo)info_;
 
     printf(HOME_ICON);
     putchar('\n');
@@ -150,58 +148,52 @@ void DisplayHomePage(PageInfo page_info)
     printf(PROMPT);
 }
 
-Route *HandleHomePage(Route *route, PageInfo page_info)
+Route* HandleHomePage(Route* route, PageInfo info_)
 {
-    HomePageInfo info = (HomePageInfo)page_info;
+    HomePageInfo info = (HomePageInfo)info_;
 
     int iOption;
     
-    iOption = GetValidOption(OPTION_Home_NUM, HOME_OPTION_NUM);
+    iOption = GetValidOptionFromUser(OPTION_Home_NUM, HOME_OPTION_NUM);
     
     if (iOption == OPTION_Confirm_NUM) {
 
-        Route* sub_route = malloc(sizeof(Route));
-        InitRoute(sub_route);
+        Route* sub_route = GetDefaultRoute();
 
         switch (info->iOptionSelected)
         {
         case OPTION_PvP_NUM:
         {
-            Page pvp_page;
-            InitPvPPage(&pvp_page);
-            sub_route = StartRoutine(&pvp_page, sub_route);
+            Page* pvp_page = GetDefaultPvPPage();
+            sub_route = StartRoutine(pvp_page, sub_route);
             break;
         }
             
         case OPTION_PvC_NUM:
         {
-            Page pvc_page;
-            InitPvCPage(&pvc_page);
-            sub_route = StartRoutine(&pvc_page, sub_route);
+            Page* pvc_page = GetDefaultPvCPage();
+            sub_route = StartRoutine(pvc_page, sub_route);
             break;
         }
 
         case OPTION_PreAndSet_NUM:
         {
-            Page pre_and_set_page;
-            InitPreAndSetPage(&pre_and_set_page);
-            sub_route = StartRoutine(&pre_and_set_page, sub_route);
+            Page* pre_and_set_page = GetDefaultPreAndSetPage();
+            sub_route = StartRoutine(pre_and_set_page, sub_route);
             break;
         }
 
         case OPTION_AboutChe_NUM:
         {
-            Page about_che_page;
-            InitAboutChePage(&about_che_page);
-            sub_route = StartRoutine(&about_che_page, sub_route);
+            Page* about_che_page = GetDefaultAboutChePage();
+            sub_route = StartRoutine(about_che_page, sub_route);
             break;
         }
 
         case OPTION_AboutPro_NUM:
         {
-            Page about_pro_page;
-            InitAboutProPage(&about_pro_page);
-            sub_route = StartRoutine(&about_pro_page, sub_route);
+            Page* about_pro_page = GetDefaultAboutProPage();
+            sub_route = StartRoutine(about_pro_page, sub_route);
             break;
         }
 
@@ -241,29 +233,33 @@ void InitGamePageInfo(GamePageInfo info)
 
 void InitGamePage(Page *game_page)
 {
-    GamePageInfo game_page_info = malloc(sizeof(GamePageInfoType));
-    InitGamePageInfo(game_page_info);
+    GamePageInfo game_info = malloc(sizeof(GamePageInfoType));
+    InitGamePageInfo(game_info);
     game_page->id = PAGE_ID_PvP;
     game_page->name = PAGE_NAME_PvP;
     game_page->desc = PAGE_DESC_PvP;
-    game_page->page_info = game_page_info;
+    game_page->info = game_info;
     game_page->pfnHandler = HandleGamePage;
     game_page->pfnDisplayer = DisplayGamePage;
 }
-void InitPvPPage(Page *pvp_page)
+Page* GetDefaultPvPPage()
 {
+    Page* pvp_page = malloc(sizeof(Page));
     InitGamePage(pvp_page);
-    ((GamePageInfo)pvp_page->page_info)->game_prefab_config.mode = GPC_MODE_PVP;
+    ((GamePageInfo)pvp_page->info)->game_prefab_config.mode = GPC_MODE_PVP;
+    return pvp_page;
 }
-void InitPvCPage(Page *pvc_page)
+Page* GetDefaultPvCPage()
 {
+    Page* pvc_page = malloc(sizeof(Page));
     InitGamePage(pvc_page); 
-    ((GamePageInfo)pvc_page->page_info)->game_prefab_config.mode = GPC_MODE_PVC;
+    ((GamePageInfo)pvc_page->info)->game_prefab_config.mode = GPC_MODE_PVC;
+    return pvc_page;
 }
 
-void DisplayGamePage(PageInfo page_info)
+void DisplayGamePage(PageInfo info_)
 {
-    GamePageInfo info = (GamePageInfo)page_info;
+    GamePageInfo info = (GamePageInfo)info_;
 
     POSITION pos;
     InitPos(pos);
@@ -446,9 +442,9 @@ void DisplayBoard(POSITION pos)
     putchar('\n');
 }
 
-Route *HandleGamePage(Route *route, PageInfo page_info)
+Route *HandleGamePage(Route *route, PageInfo info_)
 {
-    GamePageInfo info = (GamePageInfo)page_info;
+    GamePageInfo info = (GamePageInfo)info_;
     switch (info->game_prefab_config.mode)
     {
     case GPC_MODE_PVP:
@@ -488,7 +484,7 @@ Route *StartPvP(Route *route, GAME_PREFAB_CONFIG game_prefab_config)
         ////////////////////
         do {
 
-            pos = GetValidPosition(ROUND_BLACK, pos); 
+            pos = GetValidPositionFromUser(ROUND_BLACK, pos); 
             if (pos.status == POS_QUIT) {
                 route->status = ROUTE_OVER;
                 route->exit_status = ROUTE_SUCCESS;
@@ -516,7 +512,7 @@ Route *StartPvP(Route *route, GAME_PREFAB_CONFIG game_prefab_config)
         ////////////////////
         do {
         
-            pos = GetValidPosition(ROUND_WHITE, pos);
+            pos = GetValidPositionFromUser(ROUND_WHITE, pos);
             if (pos.status == POS_QUIT) {
                 route->status = ROUTE_OVER;
                 route->exit_status = ROUTE_SUCCESS;
@@ -567,21 +563,21 @@ Route *StartPvC(Route *route, GAME_PREFAB_CONFIG game_prefab_config)
         do {
 
             if (fPlayerFirst) {
-                pos = GetValidPosition(ROUND_BLACK, pos);
+                pos = GetValidPositionFromUser(ROUND_BLACK, pos);
             }
             else {
-                ANALYSIS_PREFAB_CONFIG analysis_prefb_config = {
-                    APC_SIDE_BLACK, // iSide
-                    APC_LEVEL_DRUNK // iLevel
+                CorePrefabConfig prefabConfig = {
+                    CPC_SIDE_BLACK, // iSide
+                    CPC_LEVEL_DRUNK // iLevel
                 };
-                COR_POSITION cor_pos = GetCoreAnalysisResultP(RecordBoard, analysis_prefb_config);
-                pos.x = cor_pos.x;
-                pos.y = cor_pos.y;
+                CorePoint point = getCorePoint(RecordBoard, &prefabConfig);
+                pos.x = Idx_iToPos_x(point.i);
+                pos.y = Idx_jToPos_y(point.j);
                 pos.status = POS_VERIFIED;
             }
             if (pos.status == POS_QUIT) {
                 route->status = ROUTE_OVER;
-                route->exit_status = ROUTE_FAILURE;
+                route->exit_status = ROUTE_SUCCESS;
                 return route;
             }
 
@@ -607,21 +603,21 @@ Route *StartPvC(Route *route, GAME_PREFAB_CONFIG game_prefab_config)
         do {
         
             if (!fPlayerFirst) {
-                pos = GetValidPosition(ROUND_WHITE, pos);
+                pos = GetValidPositionFromUser(ROUND_WHITE, pos);
             }
             else {
-                ANALYSIS_PREFAB_CONFIG analysis_prefb_config = {
-                    APC_SIDE_WHITE, // iSide
-                    APC_LEVEL_DRUNK // iLevel
+                CorePrefabConfig prefabConfig = {
+                    CPC_SIDE_WHITE, // iSide
+                    CPC_LEVEL_DRUNK // iLevel
                 };
-                COR_POSITION cor_pos = GetCoreAnalysisResultP(RecordBoard, analysis_prefb_config);
-                pos.x = cor_pos.x;
-                pos.y = cor_pos.y;
+                CorePoint point = getCorePoint(RecordBoard, &prefabConfig);
+                pos.x = Idx_iToPos_x(point.i);
+                pos.y = Idx_jToPos_y(point.j);
                 pos.status = POS_VERIFIED;
             }
             if (pos.status == POS_QUIT) {
                 route->status = ROUTE_OVER;
-                route->exit_status = ROUTE_FAILURE;
+                route->exit_status = ROUTE_SUCCESS;
                 return route;
             }
 
@@ -659,7 +655,7 @@ void PrintHint(int iRound)
     printf(PROMPT);
 }
 
-POSITION GetValidPosition(int iRound, POSITION pos)
+POSITION GetValidPositionFromUser(int iRound, POSITION pos)
 {
     char c;
     int iErrorType;
@@ -833,21 +829,23 @@ void InitPreAndSetPageInfo(PreAndSetPageInfo info)
     info->iOptionSelected = OPTION_PreAndSet_Quit_NUM;
 }
 
-void InitPreAndSetPage(Page *pre_and_set_page)
+Page* GetDefaultPreAndSetPage()
 {
-    PreAndSetPageInfo pre_and_set_page_info = malloc(sizeof(PreAndSetPageInfoType));
-    InitPreAndSetPageInfo(pre_and_set_page_info);
+    Page* pre_and_set_page = malloc(sizeof(Page));
+    PreAndSetPageInfo pre_and_set_info = malloc(sizeof(PreAndSetPageInfoType));
+    InitPreAndSetPageInfo(pre_and_set_info);
     pre_and_set_page->id = PAGE_ID_PreAndSet;
     pre_and_set_page->name = PAGE_NAME_PreAndSet;
     pre_and_set_page->desc = PAGE_DESC_PreAndSet;
-    pre_and_set_page->page_info = pre_and_set_page_info;
+    pre_and_set_page->info = pre_and_set_info;
     pre_and_set_page->pfnHandler = HandlePreAndSetPage;
     pre_and_set_page->pfnDisplayer = DisplayPreAndSetPage;
+    return pre_and_set_page;
 }
 
-void DisplayPreAndSetPage(PageInfo page_info)
+void DisplayPreAndSetPage(PageInfo info_)
 {
-    PreAndSetPageInfo info = (PreAndSetPageInfo)page_info;
+    PreAndSetPageInfo info = (PreAndSetPageInfo)info_;
 
     printf(HOME_ICON);
     putchar('\n');
@@ -881,18 +879,17 @@ void PrintPreAndSetOption(int iOptionSelected, int iOption, const char *szOption
     putchar('\n');
 }
 
-Route *HandlePreAndSetPage(Route *route, PageInfo page_info)
+Route *HandlePreAndSetPage(Route *route, PageInfo info_)
 {
-    PreAndSetPageInfo info = (PreAndSetPageInfo)page_info;
+    PreAndSetPageInfo info = (PreAndSetPageInfo)info_;
 
     int iOption;     
 
-    iOption = GetValidOption(OPTION_PreAndSet_NUM, PREANDSET_OPTION_NUM);
+    iOption = GetValidOptionFromUser(OPTION_PreAndSet_NUM, PREANDSET_OPTION_NUM);
 
     if (iOption == OPTION_Confirm_NUM) {
 
-        Route* sub_route = malloc(sizeof(Route));
-        InitRoute(sub_route);
+        Route* sub_route = GetDefaultRoute();
 
         switch (info->iOptionSelected)
         {
@@ -932,26 +929,28 @@ Route *HandlePreAndSetPage(Route *route, PageInfo page_info)
 // AboutChe TUI //
 //////////////////
 
-void InitAboutChePageInfo(AboutChePageInfo info)
+void InitAboutChePageInfo(AboutChePageInfo info_)
 {
     // Reserved
 }
 
-void InitAboutChePage(Page *about_che_page)
+Page* GetDefaultAboutChePage()
 {
-    AboutChePageInfo about_che_page_info = malloc(sizeof(AboutChePageInfoType));
-    InitAboutChePageInfo(about_che_page_info);
+    Page* about_che_page = malloc(sizeof(Page));
+    AboutChePageInfo about_che_info = malloc(sizeof(AboutChePageInfoType));
+    InitAboutChePageInfo(about_che_info);
     about_che_page->id = PAGE_ID_AboutChe;
     about_che_page->name = PAGE_NAME_AboutChe;
     about_che_page->desc = PAGE_DESC_AboutChe;
-    about_che_page->page_info = about_che_page_info;
+    about_che_page->info = about_che_info;
     about_che_page->pfnHandler = HandleAboutChePage;
     about_che_page->pfnDisplayer = DisplayAboutChePage;
+    return about_che_page;
 }
 
-void DisplayAboutChePage(PageInfo page_info)
+void DisplayAboutChePage(PageInfo info_)
 {
-    AboutChePageInfo info = (AboutChePageInfo)page_info;
+    AboutChePageInfo info = (AboutChePageInfo)info_;
 
     printf(HOME_ICON);
     putchar('\n');
@@ -963,9 +962,9 @@ void DisplayAboutChePage(PageInfo page_info)
     printf(PROMPT);
 }
 
-Route *HandleAboutChePage(Route *route, PageInfo page_info)
+Route *HandleAboutChePage(Route *route, PageInfo info_)
 {
-    AboutChePageInfo info = (AboutChePageInfo)page_info;
+    AboutChePageInfo info = (AboutChePageInfo)info_;
 
     char c;
     
@@ -1003,21 +1002,23 @@ void InitAboutProPageInfo(AboutProPageInfo info)
     info->iOptionSelected = OPTION_AboutPro_Normal_NUM;
 }
 
-void InitAboutProPage(Page *about_pro_page)
+Page* GetDefaultAboutProPage()
 {
-    AboutProPageInfo about_pro_page_info = malloc(sizeof(AboutProPageInfoType));
-    InitAboutProPageInfo(about_pro_page_info);
+    Page* about_pro_page= malloc(sizeof(Page));
+    AboutProPageInfo about_pro_info = malloc(sizeof(AboutProPageInfoType));
+    InitAboutProPageInfo(about_pro_info);
     about_pro_page->id = PAGE_ID_AboutPro;
     about_pro_page->name = PAGE_NAME_AboutPro;
     about_pro_page->desc = PAGE_DESC_AboutPro;
-    about_pro_page->page_info = about_pro_page_info;
+    about_pro_page->info = about_pro_info;
     about_pro_page->pfnHandler = HandleAboutProPage;
     about_pro_page->pfnDisplayer = DisplayAboutProPage;
+    return about_pro_page;
 }
 
-void DisplayAboutProPage(PageInfo page_info)
+void DisplayAboutProPage(PageInfo info_)
 {
-    AboutProPageInfo info = (AboutProPageInfo)page_info;
+    AboutProPageInfo info = (AboutProPageInfo)info_;
     
     printf(HOME_ICON);
     putchar('\n');
@@ -1026,7 +1027,7 @@ void DisplayAboutProPage(PageInfo page_info)
     switch (info->iOptionSelected)
     {
     case OPTION_AboutPro_Normal_NUM:
-        PrintAboutProContent();
+        PrintAboutProNormalContent();
         putchar('\n');
         break;
     
@@ -1049,11 +1050,11 @@ void DisplayAboutProPage(PageInfo page_info)
     printf(PROMPT);
 }
 
-Route *HandleAboutProPage(Route *route, PageInfo page_info)
+Route *HandleAboutProPage(Route *route, PageInfo info_)
 {
-    AboutProPageInfo info = (AboutProPageInfo)page_info;
+    AboutProPageInfo info = (AboutProPageInfo)info_;
 
-    info->iOptionSelected = GetValidAboutProOption();
+    info->iOptionSelected = GetValidAboutProOptionFromUser();
 
     switch (info->iOptionSelected)
     {
@@ -1077,7 +1078,7 @@ Route *HandleAboutProPage(Route *route, PageInfo page_info)
     }
 }
 
-void PrintAboutProContent()
+void PrintAboutProNormalContent()
 {
     printf(ABOUT_PROJECT_CONTENT);
 }
@@ -1092,7 +1093,7 @@ void PrintAboutProEasterEgg2Content()
     printf(ABOUT_PROJECT_EASTER_EGG_2_CONTENT);
 }
 
-int GetValidAboutProOption()
+int GetValidAboutProOptionFromUser()
 {
     char c;
     

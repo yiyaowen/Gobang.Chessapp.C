@@ -19,7 +19,7 @@ endif ()
 
 # global path
 set(CHESSAPP_PATH ${CMAKE_SOURCE_DIR}/Chessapp)
-set(CORE_PATH ${CMAKE_SOURCE_DIR}/Core)
+set(CORE_PATH ${CMAKE_SOURCE_DIR}/Gobang.Core.C)
 
 add_subdirectory(Chessapp)
-add_subdirectory(Core)
+add_subdirectory(Gobang.Core.C)
