@@ -113,12 +113,13 @@ Route* updateAboutProPage(PageData* data, Route* routePassByAboutPro)
 
     switch (aboutProData->selectedOption)
     {
-        case ABOUTPRO_PAGE_OPTION_ID_NORMAL:
+    case ABOUTPRO_PAGE_OPTION_ID_PREVIOUS:
         {
             routePassByAboutPro->status = ROUTE_OVER;
             routePassByAboutPro->exitStatus = ROUTE_EXIT_SUCCESS;
             return routePassByAboutPro;
         }
+        case ABOUTPRO_PAGE_OPTION_ID_NORMAL:
         case ABOUTPRO_PAGE_OPTION_ID_EASTEREGG1:
         case ABOUTPRO_PAGE_OPTION_ID_EASTEREGG2:
         {

@@ -9,14 +9,21 @@ GameTmpData* getNewGameTmpData()
     data->currentActiveSide = SIDE_BLACK;
     data->currentSelectedPoint = makePoint(0, 0);
     data->isLastMoveConfirmed = false;
-    data->booleanGameBoard = (bool*)malloc(sizeof(bool)* BOARD_SIZE * BOARD_SIZE);
-    memset(data->booleanGameBoard, false, BOARD_SIZE * BOARD_SIZE);
+    for (int i = 0; i < BOARD_SIZE; ++i) {
+        for (int j = 0; j < BOARD_SIZE; ++j) {
+            data->piecesGameBoard[i][j] = SIDE_EMPTY;
+        }
+    }
     return data;
+}
+
+void addNewMoveToGameTmpData(Side moveSide, Point movePoint, GameTmpData* tmpData)
+{
+    (tmpData->piecesGameBoard)[movePoint.i][movePoint.j] = moveSide;
 }
 
 void releaseGameTmpData(GameTmpData** data)
 {
-    free((*data)->booleanGameBoard);
     free(*data);
     *data = NULL;
 }

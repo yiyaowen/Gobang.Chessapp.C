@@ -1,6 +1,6 @@
 #include "PreAndSetPage.h"
 #include "TuiUtility.h"
-#include "HomePage/HomePage.h"
+#include "Page/HomePage/HomePage.h"
 #include "TuiUserInteraction.h"
 #include "ChessappDefinitions.h"
 #include "SmartDisplay.h"
@@ -17,7 +17,7 @@ Page* getNewPreAndSetPage()
 
     PreAndSetPageData* rawData = malloc(sizeof(PreAndSetPageData));
     rawData->totalOptionCount = PREANDSET_OPTION_NUM;
-    rawData->selectedOption = PREANDSET_PAGE_OPTION_ID_PREANDSET;
+    rawData->selectedOption = PREANDSET_PAGE_OPTION_ID_PREVIOUS;
     preAndSet->data = getNewPageData();
     preAndSet->data->masterPageId = preAndSet->id;
     preAndSet->data->rawData = rawData;

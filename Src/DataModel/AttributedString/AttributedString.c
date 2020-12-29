@@ -1,5 +1,5 @@
 #include "AttributedString.h"
-#include "DataComparison.h"
+#include "DataUtility/DataComparison.h"
 
 #include <string.h>
 

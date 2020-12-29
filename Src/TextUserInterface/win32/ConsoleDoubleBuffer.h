@@ -1,5 +1,5 @@
 // ConsoleDoubleBuffer.h for win32
-ifndef CONSOLE_DOUBLE_BUFFER_H
+#ifndef CONSOLE_DOUBLE_BUFFER_H
 #define CONSOLE_DOUBLE_BUFFER_H
 
 #include "ChessappDefinition.h"

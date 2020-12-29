@@ -1,9 +1,9 @@
 #ifndef ABOUT_PRO_PAGE_H
 #define ABOUT_PRO_PAGE_H
 
-#include "Route.h"
-#include "Page.h"
-#include "PageOption.h"
+#include "Route/Route.h"
+#include "Page/Page.h"
+#include "Page/PageOption.h"
 
 typedef struct type_AboutProPageData {
     int selectedOption;

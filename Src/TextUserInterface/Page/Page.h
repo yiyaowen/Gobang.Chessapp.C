@@ -1,7 +1,7 @@
 #ifndef PAGE_H
 #define PAGE_H
 
-#include "Route.h"
+#include "Route/Route.h"
 #include "PageID.h"
 
 typedef struct type_PageData {
@@ -34,15 +34,20 @@ Page* getNewDefaultPage();
 
 void releasePage(Page** page);
 
+#define PAGE_STACK_CAPACITY 10
 typedef struct type_PageStack {
     int count;
     Page** pages;
-    const int capacity;
+    int capacity;
     Page* topPage;
 } PageStack;
 
 extern PageStack* globalTuiPageStack;
 #define getGlobalTuiPageStack() (globalTuiPageStack)
+
+#define enableGlobalTuiPageStack() do { \
+    globalTuiPageStack = getNewPageStack(); \
+} while (0)
 
 PageStack* getNewPageStack();
 

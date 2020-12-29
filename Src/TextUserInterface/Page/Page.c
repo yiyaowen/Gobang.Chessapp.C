@@ -3,7 +3,6 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
-#include <string.h>
 
 PageData* getNewPageData()
 {
@@ -11,16 +10,6 @@ PageData* getNewPageData()
     data->masterPageId = PAGE_ID_DEFAULT;
     data->rawData = NULL;
     return data;
-}
-
-void setPageDataParentPageId(PageData* data, PageID newId)
-{
-    data->masterPageId = newId;
-}
-
-void setPageDataRawData(PageData* data, void* newData)
-{
-    data->rawData = newData;
 }
 
 Page* getNewDefaultPage()
@@ -49,7 +38,8 @@ PageStack* getNewPageStack()
 {
     PageStack* stack = malloc(sizeof(PageStack));
     stack->count = 0;
-    stack->pages = NULL;
+    stack->capacity = PAGE_STACK_CAPACITY;
+    stack->pages = (Page**)malloc(sizeof(Page*)*(stack->capacity));
     stack->topPage = NULL;
     return stack;
 }
@@ -70,7 +60,10 @@ Route* handleTopPageInPageStack(PageStack* stack, Route* route)
         Page* topPage = stack->topPage;
         topPage->displayFunc(topPage->data);
         route = topPage->updateFunc(topPage->data, route);
-        if (isRouteOver(route)) return route;
+        if (isRouteOver(route)) {
+            route->status = ROUTE_CONTINUE;
+            return route;
+        }
     }
 }
 
@@ -92,6 +85,7 @@ void releasePageStack(PageStack** stack)
         Page* pageToRelease = popPageFromPageStack(*stack);
         releasePage(&pageToRelease);
     }
+    free((*stack)->pages);
     free(*stack);
     *stack = NULL;
 }

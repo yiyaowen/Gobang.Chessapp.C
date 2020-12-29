@@ -2,9 +2,9 @@
 #define GAME_PAGE_H
 
 #include "ChessappDefinitions.h"
-#include "Route.h"
-#include "Page.h"
-#include "PageOption.h"
+#include "Route/Route.h"
+#include "Page/Page.h"
+#include "Page/PageOption.h"
 #include "Point/Point.h"
 #include "RenjuGroup/RenjuGroup.h"
 #include "GameData/GamePrefabConfig.h"
@@ -26,6 +26,8 @@ typedef struct type_GamePageData {
 
 GamePageSceneTUi* getNewGamePageSceneTui();
 
+void changeHighlightedSelectedPointInGamePageSceneTui(Point currentPoint, Point lastPoint, GamePageSceneTUi* tui);
+
 void drawNewPieceAtPointInGamePageSceneTui(Side whichSide, Point whichPoint, Point lastPoint, GamePageSceneTUi* tui);
 
 void updateGameInformationInGamePageSceneTui(GamePageData* data, GamePageSceneTUi* tui);
@@ -37,6 +39,8 @@ void releaseGamePageSceneTui(GamePageSceneTUi** tui);
 PAGE_FUNCTION_TEMPLATE(Game)
 
 Page* getNewGamePage(GamePrefabConfig* prefabConfig);
+
+void updateGamePageDataWithMovePoint(GamePageData* data, Point movePoint);
 
 void printInputHint(Side side);
 

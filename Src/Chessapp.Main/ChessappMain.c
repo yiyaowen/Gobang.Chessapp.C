@@ -1,15 +1,17 @@
-#include "C
+#include "Page/HomePage/HomePage.h"
+#include "ChessappDispatch.h"
+#include "ConsoleDoubleBuffer.h"
+#include "VirtualTerminalSequences.h"
 
-int main(int argc, char * argv[])
+int main()
 {
-    EnableVirtualTerminalSequences();
-    EnableConsoleDoubleBuffer();
-    InitGlobalVariables();
-    
-    Page* home_page = GetDefaultHomePage();
-    Route* route = GetDefaultRoute();
+    enableConsoleDoubleBuffer();
+    enableVirtualTerminalSequences();
+    enableGlobalTuiPageStack();
 
-    route = StartRoutine(home_page, route);
+    Page* homePage = getNewHomePage();
+    Route* routeFromMain = getNewDefaultRoute();
+    routeFromMain = startRoutine(getGlobalTuiPageStack(), homePage, routeFromMain);
 
-    return route->exit_status;
+    return routeFromMain->exitStatus;
 }

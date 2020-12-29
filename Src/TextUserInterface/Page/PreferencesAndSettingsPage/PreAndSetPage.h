@@ -1,9 +1,9 @@
 #ifndef PRE_AND_SET_PAGE_H
 #define PRE_AND_SET_PAGE_H
 
-#include "Route.h"
-#include "Page.h"
-#include "PageOption.h"
+#include "Route/Route.h"
+#include "Page/Page.h"
+#include "Page/PageOption.h"
 
 typedef struct type_PreAndSetPageData {
     int totalOptionCount;

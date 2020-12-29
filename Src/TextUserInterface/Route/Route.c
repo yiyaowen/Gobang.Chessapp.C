@@ -1,6 +1,6 @@
 #include "Route.h"
 
-Route* GetDefaultRoute()
+Route* getNewDefaultRoute()
 {
     Route* route = malloc(sizeof(Route));
     route->status = ROUTE_CONTINUE;

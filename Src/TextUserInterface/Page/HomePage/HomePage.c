@@ -1,5 +1,5 @@
 #include "HomePage.h"
-#include "PageID.h"
+#include "Page/PageID.h"
 #include "TuiUtility.h"
 #include "TuiUserInteraction.h"
 #include "ChessappDispatch.h"
@@ -7,10 +7,10 @@
 
 #include "GameData/GamePrefabConfig.h"
 
-#include "GamePage/GamePage.h"
-#include "PreferencesAndSettingsPage/PreAndSetPage.h"
-#include "AboutChessplayerPage/AboutChePage.h"
-#include "AboutProjectPage/AboutProPage.h"
+#include "Page/GamePage/GamePage.h"
+#include "Page/PreferencesAndSettingsPage/PreAndSetPage.h"
+#include "Page/AboutChessplayerPage/AboutChePage.h"
+#include "Page/AboutProjectPage/AboutProPage.h"
 
 #include "SmartDisplay.h"
 
@@ -104,6 +104,7 @@ Route* updateHomePage(PageData* data, Route* routePassByHome)
             {
                 routePassByHome->status = ROUTE_OVER;
                 routePassByHome->exitStatus = ROUTE_EXIT_FAILURE;
+                break;
             }
             default:
             {

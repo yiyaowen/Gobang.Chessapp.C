@@ -1,7 +1,7 @@
 #include <stdlib.h>
 
 #include "RenjuGroup.h"
-#include "DataComparison.h"
+#include "DataUtility/DataComparison.h"
 
 Renju* getRenju()
 {
@@ -255,6 +255,14 @@ void addWhitePieceNewPointToRenjuGroupList(Point point, RenjuGroupList* list)
             getFDiagonalRenjuGroupInRenjuGroupList(list), point
         )
     );
+}
+
+void addNewMoveToRenjuGroupList(Side moveSide, Point movePoint, RenjuGroupList* list)
+{
+    if (isBlackSide(moveSide))
+        addBlackPieceNewPointToRenjuGroupList(movePoint, list);
+    else
+        addWhitePieceNewPointToRenjuGroupList(movePoint, list);
 }
 
 Side getWinnerInRenjuGroupList(RenjuGroupList* list)

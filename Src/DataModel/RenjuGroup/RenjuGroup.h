@@ -4,8 +4,8 @@
 #include <stdbool.h>
 
 #include "ChessappDefinitions.h"
-#include "Point.h"
-#include "IntPair.h"
+#include "Point/Point.h"
+#include "Pair/IntPair.h"
 
 // Renju
 typedef struct type_Renju {
@@ -78,6 +78,8 @@ RenjuGroup* getFDiagonalRenjuGroupInRenjuGroupList(RenjuGroupList* list);
 
 void addBlackPieceNewPointToRenjuGroupList(Point point, RenjuGroupList* list);
 void addWhitePieceNewPointToRenjuGroupList(Point point, RenjuGroupList* list);
+
+void addNewMoveToRenjuGroupList(Side moveSide, Point movePoint, RenjuGroupList* list);
 
 Side getWinnerInRenjuGroupList(RenjuGroupList* list);
 

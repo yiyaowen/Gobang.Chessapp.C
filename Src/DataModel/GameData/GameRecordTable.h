@@ -12,7 +12,7 @@ typedef struct type_GameRecordTable {
 
 GameRecordTable* getNewGameRecordTable();
 
-void addNewMoveToMoveHistoryArrayInGameRecordTable(Side moveSide, Point movePoint, GameRecordTable* recordTable);
+void addNewMoveToGameRecordTable(Side moveSide, Point movePoint, GameRecordTable* recordTable);
 
 Point getLastMovePointInGameRecordTable(GameRecordTable* recordTable);
 

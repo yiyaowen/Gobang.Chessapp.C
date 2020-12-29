@@ -11,7 +11,7 @@ GameRecordTable* getNewGameRecordTable()
     return table;
 }
 
-void addNewMoveToMoveHistoryArrayInGameRecordTable(Side moveSide, Point movePoint, GameRecordTable* recordTable)
+void addNewMoveToGameRecordTable(Side moveSide, Point movePoint, GameRecordTable* recordTable)
 {
     if (recordTable->totalMoveCount < recordTable->maxRecordStepCount) {
         recordTable->moveHistoryArray[(recordTable->totalMoveCount)++] = movePoint;

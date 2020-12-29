@@ -1,8 +1,3 @@
-include_directories(
-    Page
-    Route
-)
-
 file(GLOB_RECURSE TextUserInterfaceSourceFiles
     "Page/*.c"
     "Route/*.c"
@@ -18,23 +13,23 @@ file(GLOB_RECURSE TextUserInterfaceHeaderFiles
 )
 
 if(CMAKE_HOST_WIN32)
-    include_directories(win32)
     file(GLOB TuiWin32SourceFiles "win32/*.c")
     file(GLOB TuiWin32HeaderFiles "win32/*.h")
     list(APPEND TextUserInterfaceSourceFiles ${TuiWin32SourceFiles})
     list(APPEND TextUserInterfaceHeaderFiles ${TuiWin32HeaderFiles})
 elseif(CMAKE_HOST_APPLE)
-    include_directories(unix)
     file(GLOB TuiAppleSourceFiles "unix/*.c")
     file(GLOB TuiAppleHeaderFiles "unix/*.h")
     list(APPEND TextUserInterfaceSourceFiles ${TuiAppleSourceFiles})
     list(APPEND TextUserInterfaceHeaderFiles ${TuiAppleHeaderFiles})
 elseif(CMAKE_HOST_UNIX)
-    include_directories(unix)
     file(GLOB TuiUnixSourceFiles "unix/*.c")
     file(GLOB TuiUnixHeaderFiles "unix/*.h")
     list(APPEND TextUserInterfaceSourceFiles ${TuiUnixSourceFiles})
     list(APPEND TextUserInterfaceHeaderFiles ${TuiUnixHeaderFiles})
 endif()
 
-add_library(tui STATIC ${TextUserInterfaceSourceFiles})
+add_library(tui STATIC
+    ${TextUserInterfaceSourceFiles}
+    ${TextUserInterfaceHeaderFiles}
+)
