@@ -1,11 +1,11 @@
 #include "GamePage.h"
-#include "DataUtility/DataComparison.h"
 #include "Location/Location.h"
 #include "DataUtility/DataConversion.h"
 #include "SmartDisplay.h"
 #include "TuiUtility.h"
 #include "DataUtility/DataInteraction.h"
 #include "Core.h"
+#include "AudioPlayer.h"
 
 #include <string.h>
 #include <ctype.h>
@@ -25,19 +25,22 @@ GamePageSceneTUi* getNewGamePageSceneTui()
 
 void changeHighlightedSelectedPointInGamePageSceneTui(Point currentPoint, Point lastPoint, GamePageSceneTUi* tui)
 {
-    int pointFragmentIndex = calculateCrossDotFragmentIndexFromBoardPoint(currentPoint);
     int lastPointFragmentIndex = calculateCrossDotFragmentIndexFromBoardPoint(lastPoint);
+    int lastRowNumberFragmentIndex = calculateRowNumberFragmentIndex(lastPoint.i);
+    int lastColumnNumberFragmentIndex = calculateColumnNumberFragmentIndex(lastPoint.j); int pointFragmentIndex = calculateCrossDotFragmentIndexFromBoardPoint(currentPoint);
     int currentRowNumberFragmentIndex = calculateRowNumberFragmentIndex(currentPoint.i);
     int currentColumnNumberFragmentIndex = calculateColumnNumberFragmentIndex(currentPoint.j);
-    int lastRowNumberFragmentIndex = calculateRowNumberFragmentIndex(lastPoint.i);
-    int lastColumnNumberFragmentIndex = calculateColumnNumberFragmentIndex(lastPoint.j);
 
-    setAttributedStringNthFragmentNewAttribute(tui->string, pointFragmentIndex, RED_F_ATTR HIGHLIGHT_ATTR);
-    setAttributedStringNthFragmentNewAttribute(tui->string, lastPointFragmentIndex, DEFAULT_ATTR);
-    setAttributedStringNthFragmentNewAttribute(tui->string, currentRowNumberFragmentIndex, RED_F_ATTR HIGHLIGHT_ATTR);
-    setAttributedStringNthFragmentNewAttribute(tui->string, currentColumnNumberFragmentIndex, RED_F_ATTR HIGHLIGHT_ATTR);
-    setAttributedStringNthFragmentNewAttribute(tui->string, lastRowNumberFragmentIndex, DEFAULT_ATTR);
-    setAttributedStringNthFragmentNewAttribute(tui->string, lastColumnNumberFragmentIndex, DEFAULT_ATTR);
+    if (!isPointNull(lastPoint)) {
+        setAttributedStringNthFragmentNewAttribute(tui->string, lastPointFragmentIndex, DEFAULT_ATTR);
+        setAttributedStringNthFragmentNewAttribute(tui->string, lastRowNumberFragmentIndex, DEFAULT_ATTR);
+        setAttributedStringNthFragmentNewAttribute(tui->string, lastColumnNumberFragmentIndex, DEFAULT_ATTR);
+    }
+    if (!isPointNull(currentPoint)) {
+        setAttributedStringNthFragmentNewAttribute(tui->string, pointFragmentIndex, RED_F_ATTR HIGHLIGHT_ATTR);
+        setAttributedStringNthFragmentNewAttribute(tui->string, currentRowNumberFragmentIndex, RED_F_ATTR HIGHLIGHT_ATTR);
+        setAttributedStringNthFragmentNewAttribute(tui->string, currentColumnNumberFragmentIndex, RED_F_ATTR HIGHLIGHT_ATTR);
+    }
 }
 
 void drawNewPieceAtPointInGamePageSceneTui(Side whichSide, Point whichPoint, Point lastPoint, GamePageSceneTUi* tui)
@@ -46,12 +49,16 @@ void drawNewPieceAtPointInGamePageSceneTui(Side whichSide, Point whichPoint, Poi
     int lastPointFragmentIndex = calculateCrossDotFragmentIndexFromBoardPoint(lastPoint);
 
     if (isBlackSide(whichSide)) {
-        setAttributedStringNthFragmentNewRawText(tui->string, pointFragmentIndex, BLACK_TRIANGLE_ICON);
-        setAttributedStringNthFragmentNewRawText(tui->string, lastPointFragmentIndex, WHITE_CIRCLE_ICON);
+        if (!isPointNull(whichPoint))
+            setAttributedStringNthFragmentNewRawText(tui->string, pointFragmentIndex, BLACK_TRIANGLE_ICON);
+        if (!isPointNull(lastPoint))
+            setAttributedStringNthFragmentNewRawText(tui->string, lastPointFragmentIndex, WHITE_CIRCLE_ICON);
     }
     else {
-        setAttributedStringNthFragmentNewRawText(tui->string, pointFragmentIndex, WHITE_TRIANGLE_ICON);
-        setAttributedStringNthFragmentNewRawText(tui->string, lastPointFragmentIndex, BLACK_CIRCLE_ICON);
+        if (!isPointNull(whichPoint))
+            setAttributedStringNthFragmentNewRawText(tui->string, pointFragmentIndex, WHITE_TRIANGLE_ICON);
+        if (!isPointNull(lastPoint))
+            setAttributedStringNthFragmentNewRawText(tui->string, lastPointFragmentIndex, BLACK_CIRCLE_ICON);
     }
 }
 
@@ -66,7 +73,6 @@ void updateGameInformationInGamePageSceneTui(GamePageData* data, GamePageSceneTU
     int totalAvailableMoveCount;
     char* desc;
     Side currentSide = data->tmpData->currentActiveSide;
-    Side lastSide = reverseSide(currentSide);
 
     if (isBlackSide(currentSide)) {
         point = data->tmpData->currentSelectedPoint;
@@ -85,7 +91,7 @@ void updateGameInformationInGamePageSceneTui(GamePageData* data, GamePageSceneTU
     point = getLastMovePointInGameRecordTable(data->recordTable);
     fillLocationDescriptionFromPoint(desc, location, point);
 
-    if (isBlackSide(lastSide)) {
+    if (isBlackSide(currentSide)) {
         setAttributedStringNthFragmentNewRawText(tui->string, getBlackLastStepFragmentIndex(), desc);
         free(desc);
         totalAvailableMoveCount = data->recordTable->totalMoveCount / 2 + data->recordTable->totalMoveCount % 2;
@@ -111,12 +117,10 @@ void updateGameInformationInGamePageSceneTui(GamePageData* data, GamePageSceneTU
 
 void printGamePageSceneTui(GamePageSceneTUi* tui)
 {
-    clearAndPrintWithDoubleBuffer(
-        char* tuiTextToPrint = copyAttributedStringText(tui->string);
-        printf("%s", tuiTextToPrint);
-        printf("\n\n");
-        printf(PROMPT);
-    );
+    char* tuiTextToPrint = copyAttributedStringText(tui->string);
+    printf("%s", tuiTextToPrint);
+    printf("\n\n");
+    printf(PROMPT);
 }
 
 void releaseGamePageSceneTui(GamePageSceneTUi** tui)
@@ -125,6 +129,8 @@ void releaseGamePageSceneTui(GamePageSceneTUi** tui)
     free(*tui);
     (*tui) = NULL;
 }
+
+#define DEFAULT_CORE_GAME_TAG   0
 
 Page* getNewGamePage(GamePrefabConfig* prefabConfig)
 {
@@ -137,9 +143,11 @@ Page* getNewGamePage(GamePrefabConfig* prefabConfig)
     game->releaseFunc = releaseGamePage;
 
     GamePageData* rawData = (GamePageData*)malloc(sizeof(GamePageData));
+    if (isGameModePvC(prefabConfig->mode)) {
+        createNewCoreGameWithTag(DEFAULT_CORE_GAME_TAG, prefabConfig->machineSide);
+    }
     rawData->prefabConfig = prefabConfig;
     rawData->recordTable = getNewGameRecordTable();
-    rawData->renjuGroupList = getNewRenjuGroupList();
     rawData->tmpData = getNewGameTmpData();
     rawData->sceneTui = getNewGamePageSceneTui();
     game->data = getNewPageData();
@@ -174,7 +182,6 @@ get_user_input:
     if (isSpecialControlOption(key)) {
         clearInputBuffer();
         handleSpecialControlOption(key, route, data);
-        data->tmpData->currentSelectedPoint = point;
         data->tmpData->isLastMoveConfirmed = false;
         return point;
     }
@@ -182,7 +189,6 @@ get_user_input:
         putCharBack(key);
         clearInputBuffer();
         if (getErrorTypeOfMovePoint(point, data) == INPUT_ERROR_TYPE_VALID) {
-            data->tmpData->currentSelectedPoint = point;
             data->tmpData->isLastMoveConfirmed = true;
             return point;
         }
@@ -200,10 +206,10 @@ get_user_input:
             errorType = INPUT_ERROR_TYPE_BAD_FORMAT;
         }
         printWithDoubleBuffer(printInputErrorHint(errorType));
+        point = data->tmpData->currentSelectedPoint;
         goto get_user_input;
     }
 
-    data->tmpData->currentSelectedPoint = point;
     data->tmpData->isLastMoveConfirmed = false;
     return point;
 }
@@ -277,8 +283,8 @@ void handleSpecialControlOption(char key, Route* route, GamePageData* data)
 
 InputErrorType getErrorTypeOfMovePoint(Point point, GamePageData* data)
 {
-    if (0 <= point.i && point.i < BOARD_SIZE &&
-        0 <= point.j && point.j < BOARD_SIZE)
+    if (point.i < 0 || point.i >= BOARD_SIZE ||
+        point.j < 0 || point.j >= BOARD_SIZE)
     {
         return INPUT_ERROR_TYPE_OUT_OF_BOARD;
     }
@@ -328,6 +334,16 @@ void displayGamePage(PageData* data)
 }
 
 #define isMachineRound(CURRENT_SIDE, MACHINE_SIDE) ((CURRENT_SIDE) == (MACHINE_SIDE))
+
+#define printGameOverHint(WINNER) do { \
+    if (isBlackSide(WINNER)) \
+        printf(RED_TEXT(HIGHLIGHT_TEXT("Black Win. "))); \
+    else \
+        printf(GREEN_TEXT(HIGHLIGHT_TEXT("White Win. "))); \
+    printf("Press enter to continue. " HIGHLIGHT_TEXT("[Enter]")); \
+    clearInputBuffer(); \
+} while (0)
+
 Route* updateGamePage(PageData* data, Route* routePassByGame)
 {
     GamePageData* gameData = (GamePageData*)data->rawData;
@@ -336,6 +352,13 @@ Route* updateGamePage(PageData* data, Route* routePassByGame)
     CorePrefabConfig prefabConfig;
     Point movePoint;
 
+    if (!isEmptySide(gameData->tmpData->winner)) {
+        printGameOverHint(gameData->tmpData->winner);
+        routePassByGame->status = ROUTE_OVER;
+        routePassByGame->exitStatus = ROUTE_EXIT_SUCCESS;
+        return routePassByGame;
+    }
+
     if (isMachineRound(currentActiveSide, machineSide))
         goto get_move_from_machine;
     else
@@ -343,26 +366,19 @@ Route* updateGamePage(PageData* data, Route* routePassByGame)
 
 get_move_from_user:
     movePoint = getValidMovePointFromUser(routePassByGame, gameData);
+    playBeepSound();
     goto update_game_data;
 
 get_move_from_machine:
     prefabConfig.side = getCorePrefabConfigSideFromGameSide(machineSide);
     prefabConfig.level = getCorePrefabConfigLevelFromGameLevel(gameData->prefabConfig->level);
-    CorePoint corePoint = getCorePointFromCoreAlgorithm(gameData->tmpData->piecesGameBoard, &prefabConfig);
+    CorePoint corePoint = getCorePointFromCoreAlgorithm(&prefabConfig, DEFAULT_CORE_GAME_TAG);
     movePoint = makePoint(corePoint.i, corePoint.j);
     gameData->tmpData->isLastMoveConfirmed = true;
     goto update_game_data;
 
 update_game_data:
     updateGamePageDataWithMovePoint(gameData, movePoint);
-
-    // TODO
-    if (isBlackSide(gameData->tmpData->winner)) {
-        abortWithMsg("Black win.");
-    }
-    else if (isWhiteSide(gameData->tmpData->winner)) {
-        abortWithMsg("White win.");
-    }
 
     return routePassByGame;
 }
@@ -371,20 +387,22 @@ void updateGamePageDataWithMovePoint(GamePageData* data, Point movePoint)
 {
     Side moveSide = data->tmpData->currentActiveSide;
     Point lastMovePoint = getLastMovePointInGameRecordTable(data->recordTable);
+    Point lastSelectedPoint = data->tmpData->lastSelectedPoint;
+    data->tmpData->lastSelectedPoint = movePoint;
     data->tmpData->currentSelectedPoint = movePoint;
     if (data->tmpData->isLastMoveConfirmed) {
         addNewMoveToGameTmpData(moveSide, movePoint, data->tmpData);
         addNewMoveToGameRecordTable(moveSide, movePoint, data->recordTable);
-        addNewMoveToRenjuGroupList(moveSide, movePoint, data->renjuGroupList);
+        addNewMovePieceToCoreGameWithTag(moveSide, makeCorePointFromPoint(movePoint), DEFAULT_CORE_GAME_TAG);
         changeHighlightedSelectedPointInGamePageSceneTui(movePoint, lastMovePoint, data->sceneTui);
         drawNewPieceAtPointInGamePageSceneTui(moveSide, movePoint, lastMovePoint, data->sceneTui);
         updateGameInformationInGamePageSceneTui(data, data->sceneTui);
         data->tmpData->isLastMoveConfirmed = false;
         reverseSide(data->tmpData->currentActiveSide);
-        data->tmpData->winner = getWinnerInRenjuGroupList(data->renjuGroupList);
+        data->tmpData->winner = getWinnerSideInCoreGameWithTag(DEFAULT_CORE_GAME_TAG);
     }
     else {
-        changeHighlightedSelectedPointInGamePageSceneTui(movePoint, lastMovePoint, data->sceneTui);
+        changeHighlightedSelectedPointInGamePageSceneTui(movePoint, lastSelectedPoint, data->sceneTui);
         updateGameInformationInGamePageSceneTui(data, data->sceneTui);
     }
 }
@@ -392,9 +410,11 @@ void updateGamePageDataWithMovePoint(GamePageData* data, Point movePoint)
 void releaseGamePage(PageData** data)
 {
     GamePageData* gameData = (GamePageData*)((*data)->rawData);
+    if (isGameModePvC(gameData->prefabConfig->mode)) {
+        removeCoreGameWithTag(DEFAULT_CORE_GAME_TAG);
+    }
     releaseGamePrefabConfig(&(gameData->prefabConfig));
     releaseGameRecordTable(&(gameData->recordTable));
-    releaseRenjuGroupList(&(gameData->renjuGroupList));
     releaseGameTmpData(&(gameData->tmpData));
     releaseGamePageSceneTui(&(gameData->sceneTui));
     free(gameData);

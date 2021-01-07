@@ -4,6 +4,8 @@
 #include "TuiUserInteraction.h"
 #include "ChessappDefinitions.h"
 #include "SmartDisplay.h"
+#include "AudioPlayer.h"
+#include "NetworkManager.h"
 
 Page* getNewPreAndSetPage()
 {
@@ -27,17 +29,21 @@ Page* getNewPreAndSetPage()
 
 #define printPreAndSetOption(ABBR) \
     printOption(PREANDSET_PAGE_OPTION_NAME_ ## ABBR, PREANDSET_PAGE_OPTION_ID_ ## ABBR, selectedOption);
+
+#define printPreAndSetSwitchOption(ABBR, STATUS) \
+    printSwitchOption(PREANDSET_PAGE_OPTION_NAME_ ## ABBR, PREANDSET_PAGE_OPTION_ID_ ## ABBR, selectedOption, STATUS);
+
 void displayPreAndSetPage(PageData* data)
 {
     PreAndSetPageData* preAndSetData = (PreAndSetPageData*)data->rawData;
-    int selectedOption = preAndSetData->selectedOption;
+    PageOptionID selectedOption = preAndSetData->selectedOption;
 
     clearAndPrintWithDoubleBuffer(
         printf(HOME_PAGE_DASHBOARD_FRAME);
         printf("\n\n");
         printPreAndSetOption(PREVIOUS);
-        printPreAndSetOption(MUSICSOUND);
-        printPreAndSetOption(NETWORKCONFIG);
+        printPreAndSetSwitchOption(MUSICSOUND, isGlobalAudioEnabled());
+        printPreAndSetSwitchOption(NETWORKCONFIG, isGlobalNetworkEnabled());
         printf(PROMPT);
     );
 }
@@ -49,6 +55,7 @@ Route* updatePreAndSetPage(PageData* data, Route* routePassByPreAndSet)
     int currentPageOptionCount = preAndSetData->totalOptionCount;
 
     PageOptionID option = getValidPageOptionFromUser(currentPageId, currentPageOptionCount);
+    playBeepSound();
 
     if (option == PAGE_OPTION_ID_CONFIRM) {
 
@@ -62,15 +69,13 @@ Route* updatePreAndSetPage(PageData* data, Route* routePassByPreAndSet)
             }
             case PREANDSET_PAGE_OPTION_ID_MUSICSOUND:
             {
-                // TODO
-                int a = 2;
+                reverseGlobalAudioStatus();
                 routePassByPreAndSet->status = ROUTE_CONTINUE;
                 break;
             }
             case PREANDSET_PAGE_OPTION_ID_NETWORKCONFIG:
             {
-                // TODO
-                int a = 3;
+                reverseGlobalNetworkStatus();
                 routePassByPreAndSet->status = ROUTE_CONTINUE;
                 break;
             }

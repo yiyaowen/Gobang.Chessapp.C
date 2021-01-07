@@ -4,15 +4,16 @@
 #include "TuiUserInteraction.h"
 #include "ChessappDispatch.h"
 #include "ChessappDefinitions.h"
-
+#include "SmartDisplay.h"
 #include "GameData/GamePrefabConfig.h"
+#include "AudioPlayer.h"
 
 #include "Page/GamePage/GamePage.h"
 #include "Page/PreferencesAndSettingsPage/PreAndSetPage.h"
 #include "Page/AboutChessplayerPage/AboutChePage.h"
 #include "Page/AboutProjectPage/AboutProPage.h"
+#include "Page/PvCPrefabPage/PvcPrefabPage.h"
 
-#include "SmartDisplay.h"
 
 Page* getNewHomePage()
 {
@@ -61,6 +62,7 @@ Route* updateHomePage(PageData* data, Route* routePassByHome)
     int currentPageTotalOptionCount = homeData->totalOptionCount;
 
     PageOptionID option = getValidPageOptionFromUser(currentPageId, currentPageTotalOptionCount);
+    playBeepSound();
 
     if (option == PAGE_OPTION_ID_CONFIRM) {
 
@@ -76,10 +78,8 @@ Route* updateHomePage(PageData* data, Route* routePassByHome)
             }
             case HOME_PAGE_OPTION_ID_PVC:
             {
-                GamePrefabConfig* gamePrefabConfig =
-                    getGamePrefabConfig(GAME_MODE_PVC, GAME_ORDER_CHESSPLAYER_FIRST, GAME_LEVEL_DRUNK);
-                Page* pvcPage = getNewDefaultPage(gamePrefabConfig);
-                routePassByHome = startRoutine(getGlobalTuiPageStack(), pvcPage, routePassByHome);
+                Page* pvcPrefabPage = getNewPvcPrefabPage();
+                routePassByHome = startRoutine(getGlobalTuiPageStack(), pvcPrefabPage, routePassByHome);
                 break;
             }
             case HOME_PAGE_OPTION_ID_PREANDSET:

@@ -10,6 +10,7 @@ typedef struct type_GameTmpData {
     Side winner;
     Side currentActiveSide;
     Point currentSelectedPoint;
+    Point lastSelectedPoint;
     bool isLastMoveConfirmed;
     Side piecesGameBoard[BOARD_SIZE][BOARD_SIZE];
 } GameTmpData;

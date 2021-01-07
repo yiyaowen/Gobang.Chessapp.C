@@ -29,6 +29,7 @@ void releaseGamePrefabConfig(GamePrefabConfig** config);
 #define GAME_MODE_PVC    1
 
 #define isGameModePvP(MODE) ((MODE) == GAME_MODE_PVP)
+#define isGameModePvC(MODE) ((MODE) == GAME_MODE_PVC)
 
 /* Game order */
 #define GAME_ORDER_PLAYER_FIRST          10
@@ -49,17 +50,17 @@ void releaseGamePrefabConfig(GamePrefabConfig** config);
 #define GAME_LEVEL_RANDOM    25
 
 #define getCorePrefabConfigSideFromGameSide(SIDE) (\
-    (SIDE) == SIDE_BLACK ? CPC_SIDE_BLACK : \
-    (SIDE) == SIDE_WHITE ? CPC_SIDE_WHITE : \
-    CPC_SIDE_EMPTY \
+    (SIDE) == SIDE_BLACK ? CORE_SIDE_BLACK : \
+    (SIDE) == SIDE_WHITE ? CORE_SIDE_WHITE : \
+    CORE_SIDE_EMPTY \
     )
 
 #define getCorePrefabConfigLevelFromGameLevel(LEVEL) ( \
-    (LEVEL) == GAME_LEVEL_DRUNK ? CPC_LEVEL_DRUNK : \
-    (LEVEL) == GAME_LEVEL_LOW ? CPC_LEVEL_LOW : \
-    (LEVEL) == GAME_LEVEL_MIDDLE ? CPC_LEVEL_MIDDLE : \
-    (LEVEL) == GAME_LEVEL_HIGH ? CPC_LEVEL_HIGH : \
-    CPC_LEVEL_RANDOM \
+    (LEVEL) == GAME_LEVEL_DRUNK ? CORE_LEVEL_DRUNK : \
+    (LEVEL) == GAME_LEVEL_LOW ? CORE_LEVEL_LOW : \
+    (LEVEL) == GAME_LEVEL_MIDDLE ? CORE_LEVEL_MIDDLE : \
+    (LEVEL) == GAME_LEVEL_HIGH ? CORE_LEVEL_HIGH : \
+    CORE_LEVEL_RANDOM \
 )
 
 #endif // GAME_PREFAB_CONFIG_H

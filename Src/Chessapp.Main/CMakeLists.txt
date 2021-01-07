@@ -8,6 +8,7 @@ add_executable(chessapp
 
 target_link_libraries(chessapp
     core
+    utils
     datamodel
     tui
 )

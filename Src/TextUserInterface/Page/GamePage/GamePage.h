@@ -6,7 +6,6 @@
 #include "Page/Page.h"
 #include "Page/PageOption.h"
 #include "Point/Point.h"
-#include "RenjuGroup/RenjuGroup.h"
 #include "GameData/GamePrefabConfig.h"
 #include "GameData/GameRecordTable.h"
 #include "GameData/GameTmpData.h"
@@ -19,7 +18,6 @@ typedef struct type_GamePageSceneTui {
 typedef struct type_GamePageData {
     GamePrefabConfig* prefabConfig;
     GameRecordTable* recordTable;
-    RenjuGroupList* renjuGroupList;
     GameTmpData* tmpData;
     GamePageSceneTUi* sceneTui;
 } GamePageData;

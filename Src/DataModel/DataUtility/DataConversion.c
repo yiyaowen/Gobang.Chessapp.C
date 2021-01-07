@@ -3,12 +3,12 @@
 
 Point makePointFromLocation(Location location)
 {
-    Point point = { BOARD_SIZE-location.x, location.y-'A' };
+    Point point = { BOARD_SIZE-location.y, location.x-'A' };
     return point;
 }
 
 Location makeLocationFromPoint(Point point)
 {
-    Location location = { BOARD_SIZE-point.i, (char)(point.j+'A') };
+    Location location = { (char)(point.j+'A'), BOARD_SIZE-point.i };
     return location;
 }

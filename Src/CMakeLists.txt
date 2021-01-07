@@ -1,6 +1,7 @@
 include_directories(
     "${CMAKE_SOURCE_DIR}/Gobang.Core.C/Interface" # Core Interface
     Chessapp.Main
+    Chessapp.Utility
     DataModel
     TextUserInterface
 )
@@ -14,5 +15,6 @@ elseif(CMAKE_HOST_UNIX)
 endif()
 
 add_subdirectory(Chessapp.Main)
+add_subdirectory(Chessapp.Utility)
 add_subdirectory(DataModel)
 add_subdirectory(TextUserInterface)

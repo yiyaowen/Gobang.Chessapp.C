@@ -37,6 +37,7 @@ typedef int Side;
 
 #define isBlackSide(SIDE) ((SIDE) == SIDE_BLACK)
 #define isWhiteSide(SIDE) ((SIDE) == SIDE_WHITE)
+#define isEmptySide(SIDE) ((SIDE) == SIDE_EMPTY)
 
 #define reverseSide(SIDE) ((SIDE) = -(SIDE))
 

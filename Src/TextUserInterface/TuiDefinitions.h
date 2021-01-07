@@ -77,22 +77,21 @@
 #define CYAN_BACK(originText)           "\033[46m" originText DEFAULT_B_ATTR
 #define WHITE_BACK(originText)          "\033[47m" originText DEFAULT_B_ATTR
 
-#define HOME_PAGE_DASHBOARD_FRAME_WIDTH     84
-#define HOME_PAGE_DASHBOARD_FRAME_HEIGHT    14
 #define HOME_PAGE_DASHBOARD_FRAME \
     "//========>>========>>========>>========>>========>>========>>========>>========>>\\\\" "\n" \
     "||  [Gobang News] Last Update: YYYY-MM-dd hh:mm                                   ||" "\n" \
     "||                                                                                ||" "\n" \
-    "||  1.                                                                            ||" "\n" \
+    "||  1. Gomoku, a.k.a Five in a Row, is an abstract strategy board game. It is     ||" "\n" \
+    "||     traditionally played with Go pieces (black and white stones) on a board.   ||" "\n" \
     "||                                                                                ||" "\n" \
-    "||  2.                                                                            ||" "\n" \
+    "||  2. People have been applying artificial intelligence techniques on playing    ||" "\n" \
+    "||     gomoku for several decades. Reisch proved that gomoku is PSPACE-complete.  ||" "\n"   \
     "||                                                                                ||" "\n" \
-    "||  3.                                                                            ||" "\n" \
+    "||  3. In the Gomoku World Championship 2017, there was a match between the world ||" "\n" \
+    "||     champion program Yixin and the world champion human player Rudolf Dupszki. ||" "\n"   \
+    "||     Yixin won the match with a score of 2–0.                                   ||" "\n" \
     "||                                                                                ||" "\n" \
-    "||  4.                                                                            ||" "\n" \
-    "||                                                                                ||" "\n" \
-    "||  5.                                                                            ||" "\n" \
-    "||                                                                                ||" "\n" \
+    "||  Just enjoy this little game. :-)                                              ||" "\n" \
     "||                                                        <Gobang.Chessplayer.C>  ||" "\n" \
   "\\\\<<========<<========<<========<<========<<========<<========<<========<<========//"
 

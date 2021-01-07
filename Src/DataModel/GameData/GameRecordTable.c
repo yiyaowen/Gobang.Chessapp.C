@@ -20,6 +20,7 @@ void addNewMoveToGameRecordTable(Side moveSide, Point movePoint, GameRecordTable
 
 Point getLastMovePointInGameRecordTable(GameRecordTable* recordTable)
 {
+    if (recordTable->totalMoveCount == 0) return makeNullPoint();
     return (recordTable->moveHistoryArray)[recordTable->totalMoveCount-1];
 }
 
