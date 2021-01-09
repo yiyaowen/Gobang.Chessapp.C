@@ -1,0 +1,4 @@
+MachineWin		WAVE	"MachineWinGame(KO).wav"
+MovePiece		WAVE	"NewPieceMovedOnBoard.wav"
+ChangeOption	WAVE	"OptionEntryChanged.wav"
+PlayerWin		WAVE	"PlayerWinGame(Victory).wav"

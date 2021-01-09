@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Gobang.Core.C\Src\Core.Main\Core.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.Main\CoreDefinitions.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.Random\CoreRandom.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.Random\CoreRandomUtility.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenju.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuGroup.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuGroupList.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuPattern.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuRange.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuRangeGroup.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.Utility\CoreBoard.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.Utility\CoreMathUtils.h" />
+    <ClInclude Include="Gobang.Core.C\Src\Core.Utility\CorePair.h" />
+    <ClInclude Include="Src\Chessapp.Main\ChessappDefinitions.h" />
+    <ClInclude Include="Src\Chessapp.Main\ChessappDispatch.h" />
+    <ClInclude Include="Src\Chessapp.Main\ChessappGlobalConfig.h" />
+    <ClInclude Include="Src\Chessapp.Utility\AudioPlayer.h" />
+    <ClInclude Include="Src\Chessapp.Utility\NetworkManager.h" />
+    <ClInclude Include="Src\DataModel\AttributedString\AttributedString.h" />
+    <ClInclude Include="Src\DataModel\DataUtility\DataComparison.h" />
+    <ClInclude Include="Src\DataModel\DataUtility\DataConversion.h" />
+    <ClInclude Include="Src\DataModel\DataUtility\DataInteraction.h" />
+    <ClInclude Include="Src\DataModel\GameData\GamePrefabConfig.h" />
+    <ClInclude Include="Src\DataModel\GameData\GameRecordTable.h" />
+    <ClInclude Include="Src\DataModel\GameData\GameTmpData.h" />
+    <ClInclude Include="Src\DataModel\Location\Location.h" />
+    <ClInclude Include="Src\DataModel\Pair\IntPair.h" />
+    <ClInclude Include="Src\DataModel\Pair\StringPair.h" />
+    <ClInclude Include="Src\DataModel\Point\Point.h" />
+    <ClInclude Include="Src\TextUserInterface\Page\AboutChessplayerPage\AboutChePage.h" />
+    <ClInclude Include="Src\TextUserInterface\Page\AboutProjectPage\AboutProPage.h" />
+    <ClInclude Include="Src\TextUserInterface\Page\GamePage\GamePage.h" />
+    <ClInclude Include="Src\TextUserInterface\Page\HomePage\HomePage.h" />
+    <ClInclude Include="Src\TextUserInterface\Page\Page.h" />
+    <ClInclude Include="Src\TextUserInterface\Page\PageID.h" />
+    <ClInclude Include="Src\TextUserInterface\Page\PageOption.h" />
+    <ClInclude Include="Src\TextUserInterface\Page\PreferencesAndSettingsPage\PreAndSetPage.h" />
+    <ClInclude Include="Src\TextUserInterface\Page\PvCPrefabPage\PvcPrefabPage.h" />
+    <ClInclude Include="Src\TextUserInterface\Route\Route.h" />
+    <ClInclude Include="Src\TextUserInterface\TuiDefinitions.h" />
+    <ClInclude Include="Src\TextUserInterface\TuiUserInteraction.h" />
+    <ClInclude Include="Src\TextUserInterface\TuiUtility.h" />
+    <ClInclude Include="Src\TextUserInterface\win32\ConsoleDoubleBuffer.h" />
+    <ClInclude Include="Src\TextUserInterface\win32\SmartDisplay.h" />
+    <ClInclude Include="Src\TextUserInterface\win32\VirtualTerminalSequences.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Gobang.Core.C\Src\Core.Main\Core.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.Random\CoreRandom.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.Random\CoreRandomUtility.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenju.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuGroup.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuGroupList.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuPattern.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuRange.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuRangeGroup.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.Utility\CoreBoard.c" />
+    <ClCompile Include="Gobang.Core.C\Src\Core.Utility\CorePair.c" />
+    <ClCompile Include="Src\Chessapp.Main\ChessappDispatch.c" />
+    <ClCompile Include="Src\Chessapp.Main\ChessappGlobalConfig.c" />
+    <ClCompile Include="Src\Chessapp.Main\ChessappMain.c" />
+    <ClCompile Include="Src\Chessapp.Utility\AudioPlayer.c" />
+    <ClCompile Include="Src\Chessapp.Utility\NetworkManager.c" />
+    <ClCompile Include="Src\DataModel\AttributedString\AttributedString.c" />
+    <ClCompile Include="Src\DataModel\DataUtility\DataComparison.c" />
+    <ClCompile Include="Src\DataModel\DataUtility\DataConversion.c" />
+    <ClCompile Include="Src\DataModel\DataUtility\DataInteraction.c" />
+    <ClCompile Include="Src\DataModel\GameData\GamePrefabConfig.c" />
+    <ClCompile Include="Src\DataModel\GameData\GameRecordTable.c" />
+    <ClCompile Include="Src\DataModel\GameData\GameTmpData.c" />
+    <ClCompile Include="Src\DataModel\Location\Location.c" />
+    <ClCompile Include="Src\DataModel\Pair\StringPair.c" />
+    <ClCompile Include="Src\DataModel\Point\Point.c" />
+    <ClCompile Include="Src\TextUserInterface\Page\AboutChessplayerPage\AboutChePage.c" />
+    <ClCompile Include="Src\TextUserInterface\Page\AboutProjectPage\AboutProPage.c" />
+    <ClCompile Include="Src\TextUserInterface\Page\GamePage\GamePage.c" />
+    <ClCompile Include="Src\TextUserInterface\Page\HomePage\HomePage.c" />
+    <ClCompile Include="Src\TextUserInterface\Page\Page.c" />
+    <ClCompile Include="Src\TextUserInterface\Page\PreferencesAndSettingsPage\PreAndSetPage.c" />
+    <ClCompile Include="Src\TextUserInterface\Page\PvCPrefabPage\PvcPrefabPage.c" />
+    <ClCompile Include="Src\TextUserInterface\Route\Route.c" />
+    <ClCompile Include="Src\TextUserInterface\TuiUserInteraction.c" />
+    <ClCompile Include="Src\TextUserInterface\win32\ConsoleDoubleBuffer.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Sounds\ChessappSound.rc" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{acdbb532-f473-4af6-bc53-b2b6ac7399c3}</ProjectGuid>
+    <RootNamespace>chessapp</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface\Page;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface\Route;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface\win32;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\Point;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\Pair;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\Location;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\GameData;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\DataUtility;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\AttributedString;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\Chessapp.Utility;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\Chessapp.Main;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.Utility;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.RenjuGroup;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.Random;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.Main;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

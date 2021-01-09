@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Gobang.Core.C\Src\Core.Main\Core.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.Main\CoreDefinitions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.Random\CoreRandom.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.Random\CoreRandomUtility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenju.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuGroup.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuGroupList.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuPattern.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuRange.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuRangeGroup.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.Utility\CoreBoard.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.Utility\CoreMathUtils.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.Utility\CorePair.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Chessapp.Main\ChessappDefinitions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Chessapp.Main\ChessappDispatch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Chessapp.Main\ChessappGlobalConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Chessapp.Utility\AudioPlayer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Chessapp.Utility\NetworkManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\AttributedString\AttributedString.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\DataUtility\DataComparison.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\DataUtility\DataConversion.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\DataUtility\DataInteraction.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\GameData\GamePrefabConfig.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\GameData\GameRecordTable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\GameData\GameTmpData.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\Location\Location.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\Pair\IntPair.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\Pair\StringPair.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\DataModel\Point\Point.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Page\AboutChessplayerPage\AboutChePage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Page\AboutProjectPage\AboutProPage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Page\GamePage\GamePage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Page\HomePage\HomePage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Page\PreferencesAndSettingsPage\PreAndSetPage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Page\PvCPrefabPage\PvcPrefabPage.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Page\Page.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Page\PageID.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Page\PageOption.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\Route\Route.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\win32\ConsoleDoubleBuffer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\win32\SmartDisplay.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\win32\VirtualTerminalSequences.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\TuiDefinitions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\TuiUserInteraction.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\TextUserInterface\TuiUtility.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Gobang.Core.C\Src\Core.Main\Core.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.Random\CoreRandom.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.Random\CoreRandomUtility.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenju.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuGroup.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuGroupList.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuPattern.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuRange.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.RenjuGroup\CoreRenjuRangeGroup.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.Utility\CoreBoard.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.Utility\CorePair.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Chessapp.Main\ChessappDispatch.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Chessapp.Main\ChessappGlobalConfig.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Chessapp.Main\ChessappMain.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Chessapp.Utility\AudioPlayer.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Chessapp.Utility\NetworkManager.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\AttributedString\AttributedString.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\DataUtility\DataComparison.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\DataUtility\DataConversion.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\DataUtility\DataInteraction.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\GameData\GamePrefabConfig.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\GameData\GameRecordTable.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\GameData\GameTmpData.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\Location\Location.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\Pair\StringPair.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\DataModel\Point\Point.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\Page\AboutChessplayerPage\AboutChePage.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\Page\AboutProjectPage\AboutProPage.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\Page\GamePage\GamePage.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\Page\HomePage\HomePage.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\Page\PreferencesAndSettingsPage\PreAndSetPage.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\Page\PvCPrefabPage\PvcPrefabPage.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\Page\Page.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\Route\Route.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\win32\ConsoleDoubleBuffer.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\TextUserInterface\TuiUserInteraction.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Sounds\ChessappSound.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
