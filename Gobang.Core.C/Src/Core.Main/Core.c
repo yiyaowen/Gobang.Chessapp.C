@@ -83,3 +83,9 @@ CoreSide getWinnerSideInCoreGameWithTag(CoreGameTag tag)
     RenjuGroupList* list = getRenjuGroupListInTaggedRenjuGroupListPoolWithTag(pool, tag);
     return getWinnerInRenjuGroupList(list);
 }
+
+CoreBanReason getPointBanReasonInCoreGameWithTag(CorePoint point, CoreGameTag tag)
+{
+    RenjuGroupList* list = getRenjuGroupListInTaggedRenjuGroupListPoolWithTag(pool, tag);
+    return getPoinBanReasonInRenjuGroupList(point, list);
+}

@@ -84,4 +84,6 @@ void createNewCoreGameWithTag(CoreGameTag tag, CoreSide favors);
  */
  CoreSide getWinnerSideInCoreGameWithTag(CoreGameTag tag);
 
+ CoreBanReason getPointBanReasonInCoreGameWithTag(CorePoint point, CoreGameTag tag);
+
 #endif // CORE_H

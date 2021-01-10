@@ -287,8 +287,15 @@ void handleSpecialControlOption(char key, Route* route, GamePageData* data)
     }
 }
 
+#define getInputErrorTypeFromBanReason(REASON) \
+    (isBanReasonEmpty(REASON) ? INPUT_ERROR_TYPE_BAN_EMPTY : \
+    isBanReasonThreeAndThree(REASON) ? INPUT_ERROR_TYPE_BAN_THREE_AND_THREE : \
+    isBanReasonFourAndFour(REASON) ? INPUT_ERROR_TYPE_BAN_FOUR_AND_FOUR : \
+    INPUT_ERROR_TYPE_BAN_LONG_RENJU)
+
 InputErrorType getErrorTypeOfMovePoint(Point point, GamePageData* data)
 {
+    InputErrorType errorType;
     if (point.i < 0 || point.i >= BOARD_SIZE ||
         point.j < 0 || point.j >= BOARD_SIZE)
     {
@@ -296,6 +303,12 @@ InputErrorType getErrorTypeOfMovePoint(Point point, GamePageData* data)
     }
     else if (data->tmpData->piecesGameBoard[point.i][point.j] != SIDE_EMPTY) {
         return INPUT_ERROR_TYPE_OVERLAPPED;
+    }
+    else if (isBlackSide(data->tmpData->currentActiveSide) &&
+        (errorType = getInputErrorTypeFromBanReason(getPointBanReasonInCoreGameWithTag(
+        makeCorePointFromPoint(point), DEFAULT_CORE_GAME_TAG))) != INPUT_ERROR_TYPE_BAN_EMPTY)
+    {
+        return errorType;
     }
     else {
         return INPUT_ERROR_TYPE_VALID;
@@ -319,6 +332,24 @@ void printInputErrorHint(InputErrorType errorType)
         case INPUT_ERROR_TYPE_BAD_FORMAT:
         {
             printf("Bad position format. Please input a letter followed by a number.\n");
+            break;
+        }
+        case INPUT_ERROR_TYPE_BAN_THREE_AND_THREE:
+        {
+            printf("Position is forbidden, since it will cause a "
+                RED_TEXT(HIGHLIGHT_TEXT("Three and Three Ban")) ".\n");
+            break;
+        }
+        case INPUT_ERROR_TYPE_BAN_FOUR_AND_FOUR:
+        {
+            printf("Position is forbidden, since it will cause a "
+                RED_TEXT(HIGHLIGHT_TEXT("Four and Four Ban")) ".\n");
+            break;
+        }
+        case INPUT_ERROR_TYPE_BAN_LONG_RENJU:
+        {
+            printf("Position is forbidden, since it will cause a "
+                RED_TEXT(HIGHLIGHT_TEXT("Long Renju Ban")) ".\n");
             break;
         }
         default:

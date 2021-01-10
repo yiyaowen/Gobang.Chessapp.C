@@ -7,6 +7,4 @@
 
 bool isCoreBoardFull(const CoreBoard board);
 
-CorePoint getMaxScorePointInCoreScoreBoard(CoreScoreBoard board);
-
 #endif // CORE_BOARD_H

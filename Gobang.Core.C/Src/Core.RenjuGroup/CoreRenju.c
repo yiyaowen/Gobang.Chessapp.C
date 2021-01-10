@@ -6,7 +6,7 @@
 Renju* getNewRenju()
 {
     Renju* renju = (Renju*)malloc(sizeof(Renju));
-    renju->blackPattern = renju->whitePattern = RENJU_PATTERN_EMPTY;
+    renju->blackPattern = renju->whitePattern = renju->banPattern = RENJU_PATTERN_EMPTY;
     return renju;
 }
 

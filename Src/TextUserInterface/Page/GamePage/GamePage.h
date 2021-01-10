@@ -53,6 +53,10 @@ typedef int InputErrorType;
 #define INPUT_ERROR_TYPE_OUT_OF_BOARD       1
 #define INPUT_ERROR_TYPE_OVERLAPPED         2
 #define INPUT_ERROR_TYPE_BAD_FORMAT         3
+#define INPUT_ERROR_TYPE_BAN_EMPTY              4
+#define INPUT_ERROR_TYPE_BAN_THREE_AND_THREE    5
+#define INPUT_ERROR_TYPE_BAN_FOUR_AND_FOUR      6
+#define INPUT_ERROR_TYPE_BAN_LONG_RENJU         7
 
 InputErrorType getErrorTypeOfMovePoint(Point point, GamePageData* data);
 

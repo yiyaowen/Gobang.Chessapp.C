@@ -41,10 +41,12 @@ void addNewBlackPieceToRenjuRange(int indexInStartRenju, RenjuRange range)
 {
     if (!range.isValid) return;
     for (int i = 0; i <= range.offset; ++i) {
+        Renju* tmpRenju = *(range.start + i);
         addNewPieceToRenjuPatternAtIndex(
-            (*(range.start+i))->blackPattern,
-            indexInStartRenju--
+            (*(range.start + i))->blackPattern,
+            indexInStartRenju - i
         );
+        tmpRenju = *(range.start + i);
     }
 }
 
@@ -53,19 +55,31 @@ void addNewWhitePieceToRenjuRange(int indexInStartRenju, RenjuRange range)
     if (!range.isValid) return;
     for (int i = 0; i <= range.offset; ++i) {
         addNewPieceToRenjuPatternAtIndex(
-            (*(range.start+i))->whitePattern,
-            indexInStartRenju--
+            (*(range.start + i))->whitePattern,
+            indexInStartRenju - i
         );
     }
 }
 
-void addNewPieceToRenjuRange(CoreSide whichSide, int indexInStartRenju, RenjuRange range)
+void addNewBlackBanToRenjuRange(int indexInStartRenju, RenjuRange range)
 {
-    if (isCoreSideBlack(whichSide)) {
-        addNewBlackPieceToRenjuRange(indexInStartRenju, range);
+    if (!range.isValid) return;
+    for (int i = 0; i <= range.offset; ++i) {
+        addNewBanToRenjuPatternAtIndex(
+            (*(range.start + i))->banPattern,
+            indexInStartRenju - i
+        );
     }
-    else {
-        addNewWhitePieceToRenjuRange(indexInStartRenju, range);
+}
+
+void removeOldBlackBanFromRenjuRange(int indexInStartRenju, RenjuRange range)
+{
+    if (!range.isValid) return;
+    for (int i = 0; i <= range.offset; ++i) {
+        removeOldBanFromRenjuPatternAtIndex(
+            (*(range.start + i))->banPattern,
+            indexInStartRenju - i
+        );
     }
 }
 

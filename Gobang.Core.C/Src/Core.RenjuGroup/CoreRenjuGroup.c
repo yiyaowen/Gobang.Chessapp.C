@@ -58,12 +58,14 @@ int calculateIndexInStartRenjuInColumnRenjuGroupOfPoint(CorePoint point)
 
 int calculateIndexInStartRenjuInBDiagonalRenjuGroupOfPoint(CorePoint point)
 {
-    return minInt(SINGLE_PATTERN_SEAT_COUNT - 1, minInt(CORE_BOARD_SIZE - point.i, point.j));
+    return minInt(SINGLE_PATTERN_SEAT_COUNT - 1,
+        minInt(CORE_BOARD_SIZE - point.i - 1, point.j));
 }
 
 int calculateIndexInStartRenjuInFDiagonalRenjuGroupOfPoint(CorePoint point)
 {
-    return minInt(SINGLE_PATTERN_SEAT_COUNT - 1, minInt(CORE_BOARD_SIZE - point.i, CORE_BOARD_SIZE - point.j));
+    return minInt(SINGLE_PATTERN_SEAT_COUNT - 1,
+        minInt(CORE_BOARD_SIZE - point.i - 1, CORE_BOARD_SIZE - point.j - 1));
 }
 
 void allocRenjuGroupNewRenjusWithCount(RenjuGroup* group, int count)

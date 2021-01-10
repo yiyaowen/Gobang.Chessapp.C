@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     readGlobalConfigFromConfigFile(configFilePath);
     enableConsoleDoubleBuffer();
     enableVirtualTerminalSequences();
-    enableGlobalTuiPageStack();
+    initializeGlobalTuiPageStack();
     initializeGobangCore();
 
     Page* homePage = getNewHomePage();
@@ -20,6 +20,7 @@ int main(int argc, char* argv[])
     routeFromMain = startRoutine(getGlobalTuiPageStack(), homePage, routeFromMain);
 
     releaseGobangCore();
+    releaseGlobalTuiPageStack();
     writeGlobalConfigToConfigFile(configFilePath);
     return routeFromMain->exitStatus;
 }

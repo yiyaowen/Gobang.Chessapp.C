@@ -8,6 +8,7 @@ typedef struct type_RenjuGroupList {
     int renjuGroupCount;
     RenjuGroup** renjuGroups;
     CoreBoard gameBoard;
+    CoreBanBoard banBoard;
     CoreScoreBoard scoreBoard;
 } RenjuGroupList;
 
@@ -18,12 +19,21 @@ RenjuGroupList* getNewRenjuGroupList(CoreSide favors);
 #define getBDiagonalRenjuGroupInRenjuGroupList(LIST)    ((LIST)->renjuGroups[2])
 #define getFDiagonalRenjuGroupInRenjuGroupList(LIST)    ((LIST)->renjuGroups[3])
 
+void changeRenjuRangeInRenjuGroupListOfPoint(RenjuGroupList* list, CorePoint point, RenjuRangeOperateFunc operateFunc);
+
 void addBlackPieceNewPointToRenjuGroupList(CorePoint point, RenjuGroupList* list);
+
 void addWhitePieceNewPointToRenjuGroupList(CorePoint point, RenjuGroupList* list);
+
+void addBlackBanNewPointToRenjuGroupList(CorePoint point, RenjuGroupList* list);
+
+void removeBlackBanOldPointFromRenjuGroupList(CorePoint point, RenjuGroupList* list);
 
 void addNewMoveToRenjuGroupList(CoreSide moveSide, CorePoint movePoint, RenjuGroupList* list);
 
 CoreSide getWinnerInRenjuGroupList(RenjuGroupList* list);
+
+CoreBanReason getPoinBanReasonInRenjuGroupList(CorePoint point, RenjuGroupList* list);
 
 typedef struct type_TaggedRenjuGroupList {
     CoreGameTag tag;

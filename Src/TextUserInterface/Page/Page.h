@@ -45,7 +45,7 @@ typedef struct type_PageStack {
 extern PageStack* globalTuiPageStack;
 #define getGlobalTuiPageStack() (globalTuiPageStack)
 
-#define enableGlobalTuiPageStack() do { \
+#define initializeGlobalTuiPageStack() do { \
     globalTuiPageStack = getNewPageStack(); \
 } while (0)
 
@@ -58,5 +58,9 @@ Route* handleTopPageInPageStack(PageStack* stack, Route* route);
 Page* popPageFromPageStack(PageStack* stack);
 
 void releasePageStack(PageStack** stack);
+
+#define releaseGlobalTuiPageStack() do { \
+    releasePageStack(&globalTuiPageStack); \
+} while (0)
 
 #endif // PAGE_H

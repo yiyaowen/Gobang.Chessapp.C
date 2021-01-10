@@ -6,6 +6,7 @@
 typedef struct type_Renju {
     RenjuPattern blackPattern;
     RenjuPattern whitePattern;
+    RenjuPattern banPattern;
 } Renju;
 
 Renju* getNewRenju();

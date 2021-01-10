@@ -11,6 +11,14 @@ typedef struct type_RenjuRangeGroup {
 
 RenjuRangeGroup* getNewDefaultRenjuRangeGroupInRenjuGroupListOfPoint(RenjuGroupList* list, CorePoint point);
 
+CoreBanReason getBanReasonOfPointWithRenjuRangeGroup(CorePoint point, RenjuRangeGroup* rangeGroup);
+
+bool isPointWithRenjuRangeGroupThreeAndThreeBan(CorePoint point, RenjuRangeGroup* rangeGroup);
+
+bool isPointWithRenjuRangeGroupFourAndFourBan(CorePoint point, RenjuRangeGroup* rangeGroup);
+
+bool isPointWithRenjuRangeGroupLongRenjuBan(CorePoint point, RenjuRangeGroup* rangeGroup);
+
 void releaseRenjuRangeGroup(RenjuRangeGroup** rangeGroup);
 
 #endif // RENJU_RANGE_GROUP_H

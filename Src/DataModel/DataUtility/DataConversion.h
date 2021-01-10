@@ -5,6 +5,7 @@
 #include "Location.h"
 
 Point makePointFromLocation(Location location);
+
 Location makeLocationFromPoint(Point point);
 
 #endif // DATA_CONVERSION_H

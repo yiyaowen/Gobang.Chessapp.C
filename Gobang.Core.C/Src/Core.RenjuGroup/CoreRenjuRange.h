@@ -12,13 +12,18 @@ typedef struct type_RenjuRange {
     int offset;
 } RenjuRange;
 
+// void func(int indexInStartRenju, RenjuRange range);
+typedef void RenjuRangeOperateFunc(int, RenjuRange);
+
 int calculateScoreOfRenjuRangeForSide(const RenjuRange* range, CoreSide side);
 
-void addNewBlackPieceToRenjuRange(int indexInStartRenju, RenjuRange range);
+RenjuRangeOperateFunc addNewBlackPieceToRenjuRange;
 
-void addNewWhitePieceToRenjuRange(int indexInStartRenju, RenjuRange range);
+RenjuRangeOperateFunc addNewWhitePieceToRenjuRange;
 
-void addNewPieceToRenjuRange(CoreSide whichSide, int indexInStartRenju, RenjuRange range);
+RenjuRangeOperateFunc addNewBlackBanToRenjuRange;
+
+RenjuRangeOperateFunc removeOldBlackBanFromRenjuRange;
 
 typedef struct type_CorePointList {
     int totalPointCount;
