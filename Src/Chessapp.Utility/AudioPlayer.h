@@ -35,6 +35,10 @@ bool IS_GLOBAL_AUDIO_ENABLED;
         PlaySound(TEXT(NAME), NULL, SND_RESOURCE | SND_ASYNC); \
 } while (0)
 
+#define playBanSound() do { \
+    playSoundResource("BanWarning"); \
+} while (0)
+
 #define playButtonSound() do { \
     playSoundResource("ChangeOption"); \
 } while (0)

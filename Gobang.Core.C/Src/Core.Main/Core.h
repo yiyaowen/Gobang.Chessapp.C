@@ -72,7 +72,7 @@ void createNewCoreGameWithTag(CoreGameTag tag, CoreSide favors);
  *
  * @return The best move point for the specific prefab configuration.
  */
- CorePoint  getCorePointFromCoreAlgorithm(const CorePrefabConfig* config, CoreGameTag tag);
+ CorePoint  getCorePointFromCoreAlgorithm(CorePrefabConfig* config, CoreGameTag tag);
 
  /**
  * Get winner side in the specific gobang game if it is over.

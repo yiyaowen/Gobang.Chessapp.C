@@ -3,6 +3,8 @@
 #include "CoreBoard.h"
 #include "CoreRandom.h"
 #include "CoreRenjuGroupList.h"
+#include "CoreRandomUtility.h"
+#include "CorePointField.h"
 
 #include <stdlib.h>
 
@@ -40,12 +42,20 @@ void removeCoreGameWithTag(CoreGameTag tag)
     removeTaggedRenjuGroupListInTaggedRenjuGroupListPool(tag, pool);
 }
 
-CorePoint getCorePointFromCoreAlgorithm(const CorePrefabConfig* config, CoreGameTag tag)
+#define getCoreLevelFromValidRandomInteger(VALID_INT) \
+    ((VALID_INT) == 0 ? CORE_LEVEL_DRUNK : \
+    (VALID_INT) == 1 ? CORE_LEVEL_LOW : \
+    (VALID_INT) == 2 ? CORE_LEVEL_MIDDLE : \
+    CORE_LEVEL_HIGH)
+
+CorePoint getCorePointFromCoreAlgorithm(CorePrefabConfig* config, CoreGameTag tag)
 {
     CorePoint point = { -1, -1 };
+    CoreLevel gameLevel = config->level;
     RenjuGroupList* list = getRenjuGroupListInTaggedRenjuGroupListPoolWithTag(pool, tag);
     if (list == NULL || isCoreBoardFull(list->gameBoard)) return point;
-    switch (config->level)
+choose_game_level:
+    switch (gameLevel)
     {
         case CORE_LEVEL_DRUNK:
         {
@@ -53,7 +63,7 @@ CorePoint getCorePointFromCoreAlgorithm(const CorePrefabConfig* config, CoreGame
         }
         case CORE_LEVEL_LOW:
         {
-            // TODO
+            point = getCorePointFromPointFieldAlgorithm(list);
             return point;
         }
         case CORE_LEVEL_MIDDLE:
@@ -63,13 +73,14 @@ CorePoint getCorePointFromCoreAlgorithm(const CorePrefabConfig* config, CoreGame
         }
         case CORE_LEVEL_HIGH:
         {
-            // TODO
+            point = getCorePointFromRenjuGroupAlgorithm(list);
             return point;
         }
         case CORE_LEVEL_RANDOM:
         {
-            // TODO
-            return point;
+            gameLevel = getCoreLevelFromValidRandomInteger(
+                getRandomIntFromLeftInclusiveRange(0, 4));
+            goto choose_game_level;
         }
         default:
         {

@@ -150,6 +150,9 @@
     <ClInclude Include="Src\TextUserInterface\TuiUtility.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Gobang.Core.C\Src\Core.PointField\CorePointField.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Gobang.Core.C\Src\Core.Main\Core.c">
@@ -258,6 +261,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Src\TextUserInterface\TuiUserInteraction.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Gobang.Core.C\Src\Core.PointField\CorePointField.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

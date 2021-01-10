@@ -1,3 +1,4 @@
+BanWarning		WAVE	"BlackMoveBanWarning.wav"
 MachineWin		WAVE	"MachineWinGame(KO).wav"
 MovePiece		WAVE	"NewPieceMovedOnBoard.wav"
 ChangeOption	WAVE	"OptionEntryChanged.wav"

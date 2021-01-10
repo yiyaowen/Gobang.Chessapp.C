@@ -308,6 +308,7 @@ InputErrorType getErrorTypeOfMovePoint(Point point, GamePageData* data)
         (errorType = getInputErrorTypeFromBanReason(getPointBanReasonInCoreGameWithTag(
         makeCorePointFromPoint(point), DEFAULT_CORE_GAME_TAG))) != INPUT_ERROR_TYPE_BAN_EMPTY)
     {
+        playBanSound();
         return errorType;
     }
     else {
@@ -337,19 +338,19 @@ void printInputErrorHint(InputErrorType errorType)
         case INPUT_ERROR_TYPE_BAN_THREE_AND_THREE:
         {
             printf("Position is forbidden, since it will cause a "
-                RED_TEXT(HIGHLIGHT_TEXT("Three and Three Ban")) ".\n");
+                YELLOW_TEXT(HIGHLIGHT_TEXT("Three and Three Ban")) ".\n");
             break;
         }
         case INPUT_ERROR_TYPE_BAN_FOUR_AND_FOUR:
         {
             printf("Position is forbidden, since it will cause a "
-                RED_TEXT(HIGHLIGHT_TEXT("Four and Four Ban")) ".\n");
+                YELLOW_TEXT(HIGHLIGHT_TEXT("Four and Four Ban")) ".\n");
             break;
         }
         case INPUT_ERROR_TYPE_BAN_LONG_RENJU:
         {
             printf("Position is forbidden, since it will cause a "
-                RED_TEXT(HIGHLIGHT_TEXT("Long Renju Ban")) ".\n");
+                YELLOW_TEXT(HIGHLIGHT_TEXT("Long Renju Ban")) ".\n");
             break;
         }
         default:

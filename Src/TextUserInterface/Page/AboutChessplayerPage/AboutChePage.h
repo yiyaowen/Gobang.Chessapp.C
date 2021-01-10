@@ -16,13 +16,13 @@ Page* getNewAboutChePage();
 void printAboutChePageContent();
 
 #define ABOUT_CHESSPLAYER_CONTENT \
-    "   `Chessplayer` is the core of this gobang game program, i.e. 'C' in 'PvC'.        " "\n" \
-    "   There are six game levels of `Chessplayer` in total: [Drunk], [Low], [Middle],   " "\n" \
-    " [High], [Invincible] and [Random]. [Drunk] means that `Chessplayer` will choose its" "\n" \
-    " position randomly, just like a drunkard. From [Low] to [Invincible], the game will " "\n" \
-    " be more and more difficult to win. [Random] doesn't mean that `Chessplayer` will   " "\n" \
-    " choose position randomly. Instead, the core program will choose a level randomly   " "\n" \
-    " for you. That's kind of interesting since you don't know the true game level.      " "\n" \
+    "   " HIGHLIGHT_TEXT(UNDERLINE_TEXT("`Chessplayer`")) " is the core of this gobang game program, i.e. 'C' in 'PvC'." "\n\n" \
+    "   There are total 6 gobang game levels: " GREEN_TEXT(HIGHLIGHT_TEXT("[Drunk]")) ", " GREEN_TEXT(HIGHLIGHT_TEXT("[Low]")) \
+    ", " GREEN_TEXT(HIGHLIGHT_TEXT("[Middle]")) ", " GREEN_TEXT(HIGHLIGHT_TEXT("[High]")) ", " GREEN_TEXT(HIGHLIGHT_TEXT("[Random]")) "." "\n\n" \
+    " " GREEN_TEXT(HIGHLIGHT_TEXT("[Drunk]")) ": `Chessplayer` will choose its move position randomly just like a drunkard." "\n\n" \
+    " " GREEN_TEXT(HIGHLIGHT_TEXT("[Low] - [High]")) ": The game will be more and more difficult to win.                   " "\n\n" \
+    " " GREEN_TEXT(HIGHLIGHT_TEXT("[Random]")) ": This doesn't mean the machine will choose position randomly. Instead, the" "\n" \
+    " core program will choose a game level randomly for you. That's kind of interesting." "\n\n" \
     "   Enjoy yourself! Why not have a try right now.                                    " "\n"
 
 #endif // ABOUT_CHE_PAGE_H
