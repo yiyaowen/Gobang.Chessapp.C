@@ -13,7 +13,7 @@ Page* getNewAboutProPage()
     aboutPro->updateFunc = updateAboutProPage;
     aboutPro->releaseFunc = releaseAboutProPage;
 
-    AboutProPageData* rawData = malloc(sizeof(AboutProPageData));
+    AboutProPageData* rawData = noNullMalloc(sizeof(AboutProPageData));
     rawData->selectedOption = ABOUTPRO_PAGE_OPTION_ID_NORMAL;
     aboutPro->data = getNewPageData();
     aboutPro->data->masterPageId = aboutPro->id;

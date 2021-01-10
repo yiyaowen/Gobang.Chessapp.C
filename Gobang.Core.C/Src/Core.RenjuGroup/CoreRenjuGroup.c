@@ -6,7 +6,7 @@
 
 RenjuGroup* getNewRenjuGroup()
 {
-    RenjuGroup* renjuGroup = (RenjuGroup*)malloc(sizeof(RenjuGroup));
+    RenjuGroup* renjuGroup = (RenjuGroup*)coreNoNullMalloc(sizeof(RenjuGroup));
     return renjuGroup;
 }
 
@@ -71,7 +71,7 @@ int calculateIndexInStartRenjuInFDiagonalRenjuGroupOfPoint(CorePoint point)
 void allocRenjuGroupNewRenjusWithCount(RenjuGroup* group, int count)
 {
     group->renjuCount = count;
-    group->renjus = (Renju**)malloc(sizeof(Renju*)*count);
+    group->renjus = (Renju**)coreNoNullMalloc(sizeof(Renju*)*count);
     for (int i = 0; i < count; ++i) {
         (group->renjus)[i] = getNewRenju();
     }

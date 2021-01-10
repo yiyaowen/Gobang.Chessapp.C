@@ -4,10 +4,10 @@
 
 GameRecordTable* getNewGameRecordTable()
 {
-    GameRecordTable* table = (GameRecordTable*)malloc(sizeof(GameRecordTable));
+    GameRecordTable* table = (GameRecordTable*)noNullMalloc(sizeof(GameRecordTable));
     table->maxRecordStepCount = BOARD_SIZE * BOARD_SIZE;
     table->totalMoveCount = 0;
-    table->moveHistoryArray = (Point*)malloc(sizeof(Point)*table->maxRecordStepCount);
+    table->moveHistoryArray = (Point*)noNullMalloc(sizeof(Point)*table->maxRecordStepCount);
     return table;
 }
 

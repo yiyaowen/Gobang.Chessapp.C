@@ -81,7 +81,9 @@
     <ClCompile Include="Gobang.Core.C\Src\Core.Utility\CorePair.c" />
     <ClCompile Include="Src\Chessapp.Main\ChessappDispatch.c" />
     <ClCompile Include="Src\Chessapp.Main\ChessappGlobalConfig.c" />
-    <ClCompile Include="Src\Chessapp.Main\ChessappMain.c" />
+    <ClCompile Include="Src\Chessapp.Main\ChessappMain.c">
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface\win32;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface\Route;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface\Page;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\Point;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\Pair;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\Location;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\GameData;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\DataUtility;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\AttributedString;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\Chessapp.Utility;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\Chessapp.Main;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.Utility;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.RenjuGroup;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.Random;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.PointField;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.Main;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
     <ClCompile Include="Src\Chessapp.Utility\AudioPlayer.c" />
     <ClCompile Include="Src\Chessapp.Utility\NetworkManager.c" />
     <ClCompile Include="Src\DataModel\AttributedString\AttributedString.c" />
@@ -221,6 +223,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface\win32;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface\Route;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface\Page;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\TextUserInterface;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\Point;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\Pair;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\Location;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\GameData;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\DataUtility;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\DataModel\AttributedString;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\Chessapp.Utility;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Src\Chessapp.Main;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.Utility;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.RenjuGroup;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.Random;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.PointField;C:\Users\wenyi\Desktop\Gobang.Chessplayer.C\Gobang.Core.C\Src\Core.Main;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

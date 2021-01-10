@@ -2,6 +2,8 @@
 #include "CoreBoard.h"
 #include "CoreMathUtils.h"
 
+#include <stdio.h>
+
 bool isCoreBoardFull(const CoreBoard board)
 {
     for (int i = 0; i < CORE_BOARD_SIZE; ++i) {
@@ -10,4 +12,13 @@ bool isCoreBoardFull(const CoreBoard board)
         }
     }
     return true;
+}
+
+void* coreNoNullMalloc(size_t blockSize)
+{
+    void* target = malloc(blockSize);
+    if (target)
+        return target;
+    printf("malloc null error.\n");
+    exit(EXIT_FAILURE);
 }

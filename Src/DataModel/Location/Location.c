@@ -1,4 +1,5 @@
 ﻿#include "Location.h"
+#include "ChessappDefinitions.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -13,7 +14,7 @@ Location makeLocation(char x, int y)
 
 char* makeDescriptionStringFromLocation(Location location)
 {
-    char* desc = (char*)malloc(sizeof(char)*(CHAR_COUNT_PER_LOCATION_DESC + 1));
+    char* desc = (char*)noNullMalloc(sizeof(char)*(CHAR_COUNT_PER_LOCATION_DESC + 1));
     sprintf(desc, "%c,%2d", location.x, location.y);
     return desc;
 }

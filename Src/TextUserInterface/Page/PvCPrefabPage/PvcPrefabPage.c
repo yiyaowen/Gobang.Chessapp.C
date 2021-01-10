@@ -18,7 +18,7 @@ Page* getNewPvcPrefabPage()
     pvcPrefab->updateFunc = updatePvcPrefabPage;
     pvcPrefab->releaseFunc = releasePvcPrefabPage;
 
-    PvcPrefabPageData * rawData = malloc(sizeof(PvcPrefabPageData));
+    PvcPrefabPageData * rawData = noNullMalloc(sizeof(PvcPrefabPageData));
     rawData->totalOptionCount = PVCPREFAB_OPTION_NUM;
     rawData->selectedOption = PVCPREFAB_PAGE_OPTION_ID_PREVIOUS;
     rawData->selectedOrderOption = PVCPREFAB_PAGE_OPTION_ID_PLAYER_FIRST;

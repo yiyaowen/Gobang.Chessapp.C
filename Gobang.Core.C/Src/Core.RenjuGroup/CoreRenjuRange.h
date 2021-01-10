@@ -21,6 +21,8 @@ RenjuRangeOperateFunc addNewBlackPieceToRenjuRange;
 
 RenjuRangeOperateFunc addNewWhitePieceToRenjuRange;
 
+RenjuRangeOperateFunc removeOldBlackPieceFromRenjuRange;
+
 RenjuRangeOperateFunc addNewBlackBanToRenjuRange;
 
 RenjuRangeOperateFunc removeOldBlackBanFromRenjuRange;

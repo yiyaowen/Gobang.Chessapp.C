@@ -1,4 +1,5 @@
 ﻿#include "AudioPlayer.h"
+#include "ChessappDefinitions.h"
 
 #include <stdlib.h>
 
@@ -9,14 +10,14 @@ void initializeGlobalAudioConfig(const AudioConfig* config)
 
 AudioConfig* getNewDefaultAudioConfig()
 {
-    AudioConfig* config = (AudioConfig*)malloc(sizeof(AudioConfig));
+    AudioConfig* config = (AudioConfig*)noNullMalloc(sizeof(AudioConfig));
     config->isGlobalAudioEnabled = true;
     return config;
 }
 
 AudioConfig* getNewAudioConfigFromCurrentAudioStatus()
 {
-    AudioConfig* config = (AudioConfig*)malloc(sizeof(AudioConfig));
+    AudioConfig* config = (AudioConfig*)noNullMalloc(sizeof(AudioConfig));
     config->isGlobalAudioEnabled = IS_GLOBAL_AUDIO_ENABLED;
     return config;
 }

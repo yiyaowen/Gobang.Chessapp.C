@@ -4,7 +4,7 @@
 
 GamePrefabConfig* getGamePrefabConfig(GameMode mode, GameOrder order, GameLevel level)
 {
-    GamePrefabConfig* config = (GamePrefabConfig*)malloc(sizeof(GamePrefabConfig));
+    GamePrefabConfig* config = (GamePrefabConfig*)noNullMalloc(sizeof(GamePrefabConfig));
     config->mode = mode;
     config->order = order;
     config->level = level;

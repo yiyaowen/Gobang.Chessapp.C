@@ -18,6 +18,8 @@
 
 typedef size_t Size;
 
+void* noNullMalloc(Size blockSize);
+
 typedef int Side;
 #define SIDE_BLACK  -1
 #define SIDE_EMPTY  0

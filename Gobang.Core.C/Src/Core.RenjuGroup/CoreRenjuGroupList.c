@@ -7,10 +7,10 @@
 
 RenjuGroupList* getNewRenjuGroupList(CoreSide favors)
 {
-    RenjuGroupList* renjuGroupList = (RenjuGroupList*)malloc(sizeof(RenjuGroupList));
+    RenjuGroupList* renjuGroupList = (RenjuGroupList*)coreNoNullMalloc(sizeof(RenjuGroupList));
     renjuGroupList->favors = favors;
     renjuGroupList->renjuGroupCount = 4;
-    renjuGroupList->renjuGroups = (RenjuGroup**)malloc(sizeof(RenjuGroup*)*4);
+    renjuGroupList->renjuGroups = (RenjuGroup**)coreNoNullMalloc(sizeof(RenjuGroup*)*4);
     renjuGroupList->renjuGroups[0] = getNewRowRenjuGroup();
     renjuGroupList->renjuGroups[1] = getNewColumnRenjuGroup();
     renjuGroupList->renjuGroups[2] = getNewBDiagonalRenjuGroup();
@@ -67,6 +67,11 @@ void addWhitePieceNewPointToRenjuGroupList(CorePoint point, RenjuGroupList* list
     changeRenjuRangeInRenjuGroupListOfPoint(list, point, addNewWhitePieceToRenjuRange);
 }
 
+void removeBlackPieceOldPointFromRenjuGroupList(CorePoint point, RenjuGroupList* list)
+{
+    changeRenjuRangeInRenjuGroupListOfPoint(list, point, removeOldBlackPieceFromRenjuRange);
+}
+
 void addBlackBanNewPointToRenjuGroupList(CorePoint point, RenjuGroupList* list)
 {
     changeRenjuRangeInRenjuGroupListOfPoint(list, point, addNewBlackBanToRenjuRange);
@@ -90,7 +95,6 @@ void addNewMoveToRenjuGroupList(CoreSide moveSide, CorePoint movePoint, RenjuGro
     list->scoreBoard[movePoint.i][movePoint.j] = RENJU_PATTERN_INVALID_SCORE;
     CorePointList* pointList = getNewRelatedPointListOfPoint(movePoint);
     for (int i = 0; i < pointList->totalPointCount; ++i) {
-        CorePoint debugPoint = pointList->points[i];
         if (list->gameBoard[pointList->points[i].i][pointList->points[i].j] != CORE_SIDE_EMPTY)
             continue;
         RenjuRangeGroup* tmpRangeGroup =
@@ -135,14 +139,36 @@ CoreSide getWinnerInRenjuGroupList(RenjuGroupList* list)
     return CORE_SIDE_EMPTY;
 }
 
+bool isBlackTrueFiveRenjuExistsInRenjuGroupList(RenjuGroupList* list)
+{
+    for (int i = 0; i < list->renjuGroupCount; ++i) {
+        RenjuGroup* group = list->renjuGroups[i];
+        int fiveRenjuCountPerRenjuRange = 0;
+        for (int j = 0; j < group->renjuCount - 1; ++j) {
+            Renju* renju = group->renjus[j];
+            if (isRenjuPatternFilledWithPieces(renju->blackPattern)) {
+                ++fiveRenjuCountPerRenjuRange;
+            }
+        }
+        if (fiveRenjuCountPerRenjuRange == 1) {
+            return true;
+        }
+    }
+    return false;
+}
+
 CoreBanReason getPoinBanReasonInRenjuGroupList(CorePoint point, RenjuGroupList* list)
 {
+    addBlackPieceNewPointToRenjuGroupList(point, list);
+    if (isBlackTrueFiveRenjuExistsInRenjuGroupList(list))
+        return CORE_BAN_REASON_EMPTY;
+    removeBlackPieceOldPointFromRenjuGroupList(point, list);
     return list->banBoard[point.i][point.j];
 }
 
 TaggedRenjuGroupList* getNewTaggedRenjuGroupList(CoreGameTag tag, CoreSide favors)
 {
-    TaggedRenjuGroupList* taggedList = (TaggedRenjuGroupList*)malloc(sizeof(TaggedRenjuGroupList));
+    TaggedRenjuGroupList* taggedList = (TaggedRenjuGroupList*)coreNoNullMalloc(sizeof(TaggedRenjuGroupList));
     taggedList->tag = tag;
     taggedList->list = getNewRenjuGroupList(favors);
     return taggedList;
@@ -150,10 +176,10 @@ TaggedRenjuGroupList* getNewTaggedRenjuGroupList(CoreGameTag tag, CoreSide favor
 
 TaggedRenjuGroupListPool* getNewTaggedRenjuGroupListPool(int maxListCount)
 {
-    TaggedRenjuGroupListPool* pool = (TaggedRenjuGroupListPool*)malloc(sizeof(TaggedRenjuGroupListPool));
+    TaggedRenjuGroupListPool* pool = (TaggedRenjuGroupListPool*)coreNoNullMalloc(sizeof(TaggedRenjuGroupListPool));
     pool->maxListCount = maxListCount;
     pool->currentListCount = 0;
-    pool->lists = (TaggedRenjuGroupList**)malloc(sizeof(TaggedRenjuGroupList*)*maxListCount);
+    pool->lists = (TaggedRenjuGroupList**)coreNoNullMalloc(sizeof(TaggedRenjuGroupList*)*maxListCount);
     for (int i = 0; i < pool->maxListCount; ++i) {
         pool->lists[i] = NULL;
     }

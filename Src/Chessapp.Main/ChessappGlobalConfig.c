@@ -5,7 +5,7 @@
 
 GlobalConfig* getNewDefaultGlobalConfig()
 {
-    GlobalConfig* config = (GlobalConfig*)malloc(sizeof(GlobalConfig));
+    GlobalConfig* config = (GlobalConfig*)noNullMalloc(sizeof(GlobalConfig));
     config->audio = getNewDefaultAudioConfig();
     config->network = getNewDefaultNetworkConfig();
     return config;
@@ -13,7 +13,7 @@ GlobalConfig* getNewDefaultGlobalConfig()
 
 GlobalConfig* getNewGlobalConfigFromCurrentGlobalStatus()
 {
-    GlobalConfig* config = (GlobalConfig*)malloc(sizeof(GlobalConfig));
+    GlobalConfig* config = (GlobalConfig*)noNullMalloc(sizeof(GlobalConfig));
     config->audio = getNewAudioConfigFromCurrentAudioStatus();
     config->network = getNewNetworkConfigFromCurrentNetworkStatus();
     return config;

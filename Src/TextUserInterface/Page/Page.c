@@ -6,7 +6,7 @@
 
 PageData* getNewPageData()
 {
-    PageData* data = malloc(sizeof(PageData));
+    PageData* data = noNullMalloc(sizeof(PageData));
     data->masterPageId = PAGE_ID_DEFAULT;
     data->rawData = NULL;
     return data;
@@ -14,7 +14,7 @@ PageData* getNewPageData()
 
 Page* getNewDefaultPage()
 {
-    Page* page = malloc(sizeof(Page));
+    Page* page = noNullMalloc(sizeof(Page));
     page->id = PAGE_ID_DEFAULT;
     page->name = NULL;
     page->desc = NULL;
@@ -36,10 +36,10 @@ PageStack* globalTuiPageStack;
 
 PageStack* getNewPageStack()
 {
-    PageStack* stack = malloc(sizeof(PageStack));
+    PageStack* stack = noNullMalloc(sizeof(PageStack));
     stack->count = 0;
     stack->capacity = PAGE_STACK_CAPACITY;
-    stack->pages = (Page**)malloc(sizeof(Page*)*(stack->capacity));
+    stack->pages = (Page**)noNullMalloc(sizeof(Page*)*(stack->capacity));
     stack->topPage = NULL;
     return stack;
 }

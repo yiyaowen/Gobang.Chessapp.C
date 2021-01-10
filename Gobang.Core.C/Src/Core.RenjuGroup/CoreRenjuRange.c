@@ -61,6 +61,17 @@ void addNewWhitePieceToRenjuRange(int indexInStartRenju, RenjuRange range)
     }
 }
 
+void removeOldBlackPieceFromRenjuRange(int indexInStartRenju, RenjuRange range)
+{
+    if (!range.isValid) return;
+    for (int i = 0; i <= range.offset; ++i) {
+        removeOldPieceFromRenjuPatternAtIndex(
+            (*(range.start + i))->blackPattern,
+            indexInStartRenju - i
+        );
+    }
+}
+
 void addNewBlackBanToRenjuRange(int indexInStartRenju, RenjuRange range)
 {
     if (!range.isValid) return;
@@ -85,7 +96,7 @@ void removeOldBlackBanFromRenjuRange(int indexInStartRenju, RenjuRange range)
 
 CorePointList* getNewRelatedPointListOfPoint(CorePoint point)
 {
-    CorePointList* list = (CorePointList*)malloc(sizeof(CorePointList));
+    CorePointList* list = (CorePointList*)coreNoNullMalloc(sizeof(CorePointList));
     int topLimitCount = minInt(4, point.i),
         bottomLimitCount = minInt(4, CORE_BOARD_SIZE - point.i - 1),
         leftLimitCount = minInt(4, point.j),
@@ -96,7 +107,7 @@ CorePointList* getNewRelatedPointListOfPoint(CorePoint point)
         bottomRightLimitCount = minInt(bottomLimitCount, rightLimitCount);
     list->totalPointCount = topLimitCount + bottomLimitCount + leftLimitCount + rightLimitCount +
         + topLeftLimitCount + topRightLimitCount + bottomLeftLimitCount + bottomRightLimitCount;
-    list->points = (CorePoint*)malloc(sizeof(CorePoint)*list->totalPointCount);
+    list->points = (CorePoint*)coreNoNullMalloc(sizeof(CorePoint)*list->totalPointCount);
     int offsetInList = 0;
     for (int i = 0; i < topLimitCount; ++i) {
         list->points[offsetInList + i].i = point.i - i - 1;

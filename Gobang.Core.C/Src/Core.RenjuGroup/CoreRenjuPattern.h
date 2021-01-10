@@ -10,11 +10,14 @@ typedef unsigned RenjuPattern;
 #define addNewPieceToRenjuPatternAtIndex(pattern, index) \
     ((pattern) |= (1 << (SINGLE_PATTERN_SEAT_COUNT - (index) - 1)))
 
+#define removeOldPieceFromRenjuPatternAtIndex(pattern, index) \
+    ((pattern) &= (~(1 << (SINGLE_PATTERN_SEAT_COUNT - (index) - 1))))
+
 #define addNewBanToRenjuPatternAtIndex(pattern, index) \
     addNewPieceToRenjuPatternAtIndex(pattern, index) 
 
 #define removeOldBanFromRenjuPatternAtIndex(pattern, index) \
-    ((pattern) &= (~(1 << (SINGLE_PATTERN_SEAT_COUNT - (index) - 1))))
+    removeOldPieceFromRenjuPatternAtIndex(pattern, index)
 
 #define isRenjuPatternOccupiedAtIndex(pattern, index) \
     ((pattern) & (1 << (SINGLE_PATTERN_SEAT_COUNT - (index) - 1)))

@@ -53,8 +53,8 @@
 #define printWithDoubleBuffer(PRINT_PROCESS) do { \
     DWORD cChars = 0; \
     DWORD cAttrs = 0; \
-    TCHAR* data = (TCHAR*)malloc(sizeof(TCHAR)*4000); \
-    WORD* attr = (WORD*)malloc(sizeof(WORD)*4000); \
+    TCHAR* data = (TCHAR*)noNullMalloc(sizeof(TCHAR)*4000); \
+    WORD* attr = (WORD*)noNullMalloc(sizeof(WORD)*4000); \
     PRINT_PROCESS; \
     fflush(stdout); \
     CONSOLE_SCREEN_BUFFER_INFO csbi; \

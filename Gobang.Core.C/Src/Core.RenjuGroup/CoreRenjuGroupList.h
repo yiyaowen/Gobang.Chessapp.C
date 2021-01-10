@@ -33,6 +33,8 @@ void addNewMoveToRenjuGroupList(CoreSide moveSide, CorePoint movePoint, RenjuGro
 
 CoreSide getWinnerInRenjuGroupList(RenjuGroupList* list);
 
+bool isBlackTrueFiveRenjuExistsInRenjuGroupList(RenjuGroupList* list);
+
 CoreBanReason getPoinBanReasonInRenjuGroupList(CorePoint point, RenjuGroupList* list);
 
 typedef struct type_TaggedRenjuGroupList {

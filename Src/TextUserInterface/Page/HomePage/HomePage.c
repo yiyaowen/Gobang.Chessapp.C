@@ -25,7 +25,7 @@ Page* getNewHomePage()
     home->updateFunc = updateHomePage;
     home->releaseFunc = releaseHomePage;
 
-    HomePageData* rawData = malloc(sizeof(HomePageData));
+    HomePageData* rawData = noNullMalloc(sizeof(HomePageData));
     rawData->totalOptionCount = HOME_PAGE_OPTION_NUM;
     rawData->selectedOption = HOME_PAGE_OPTION_ID_PVP;
     home->data = getNewPageData();

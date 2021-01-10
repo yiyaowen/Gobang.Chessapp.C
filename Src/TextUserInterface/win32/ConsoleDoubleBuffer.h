@@ -10,9 +10,10 @@ extern HANDLE hBackwardScreenBuffer;
 extern int CONSOLE_DOUBLE_BUFFER_PHASE;
 
 #define enableConsoleDoubleBuffer() do { \
+    system("title Gobang.Chessplayer.C"); \
     char windowSizeAdjustCmdString[50]; \
     sprintf(windowSizeAdjustCmdString, "mode con cols=%d lines=%d", \
-        HOME_PAGE_DASHBOARD_FRAME_WIDTH, HOME_PAGE_DASHBOARD_FRAME_HEIGHT); \
+        HOME_PAGE_DASHBOARD_FRAME_WIDTH, HOME_PAGE_HEIGHT); \
     system(windowSizeAdjustCmdString); \
     hForewardScreenBuffer = CreateConsoleScreenBuffer( \
         GENERIC_READ | GENERIC_WRITE, \

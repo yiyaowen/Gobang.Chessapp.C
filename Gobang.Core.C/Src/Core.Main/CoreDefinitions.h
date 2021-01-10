@@ -2,6 +2,7 @@
 #define CORE_DEFINITIONS_H
 
 #include "CoreMathUtils.h"
+#include <stdlib.h>
 
 #define CORE_BOARD_SIZE  15
 
@@ -56,5 +57,7 @@ typedef struct type_CorePrefabConfig {
     CoreSide side;
     CoreLevel level;
 } CorePrefabConfig;
+
+void* coreNoNullMalloc(size_t blockSize);
 
 #endif // CORE_DEFINITIONS_H

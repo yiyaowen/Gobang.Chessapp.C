@@ -17,7 +17,7 @@ Page* getNewPreAndSetPage()
     preAndSet->updateFunc = updatePreAndSetPage;
     preAndSet->releaseFunc = releasePreAndSetPage;
 
-    PreAndSetPageData* rawData = malloc(sizeof(PreAndSetPageData));
+    PreAndSetPageData* rawData = noNullMalloc(sizeof(PreAndSetPageData));
     rawData->totalOptionCount = PREANDSET_OPTION_NUM;
     rawData->selectedOption = PREANDSET_PAGE_OPTION_ID_PREVIOUS;
     preAndSet->data = getNewPageData();

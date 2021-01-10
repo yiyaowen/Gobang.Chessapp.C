@@ -72,8 +72,8 @@
 #define CYAN_BACK(originText)           "\033[46m" originText DEFAULT_B_ATTR
 #define WHITE_BACK(originText)          "\033[47m" originText DEFAULT_B_ATTR
 
+#define HOME_PAGE_HEIGHT    35
 #define HOME_PAGE_DASHBOARD_FRAME_WIDTH     85
-#define HOME_PAGE_DASHBOARD_FRAME_HEIGHT    35 
 #define HOME_PAGE_DASHBOARD_FRAME \
     "//========>>========>>========>>========>>========>>========>>========>>========>>\\\\" "\n" \
     "||  [Gobang News] Last Update: YYYY-MM-dd hh:mm                                   ||" "\n" \

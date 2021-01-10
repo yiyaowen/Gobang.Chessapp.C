@@ -123,7 +123,7 @@ void printInputErrorHint(InputErrorType errorType);
     for (int i = 0; i <= BOARD_SIZE; ++i) { \
         indexes[++k] = GAME_PAGE_SCENE_RAW_TEXT_WIDTH * 15 + 29 + i * 2; \
     } \
-    indexes[++k] = strlen(GAME_PAGE_SCENE_RAW_TEXT); \
+    indexes[++k] = (int)strlen(GAME_PAGE_SCENE_RAW_TEXT); \
 } while (0)
 
 #define calculateExtraOffsetFromRowNumber(ROW_NUM) \

@@ -1,4 +1,5 @@
 ﻿#include "NetworkManager.h"
+#include "ChessappDefinitions.h"
 
 #include <stdlib.h>
 
@@ -9,14 +10,14 @@ void initializeGlobalNetworkConfig(const NetworkConfig* config)
 
 NetworkConfig* getNewDefaultNetworkConfig()
 {
-    NetworkConfig* config = (NetworkConfig*)malloc(sizeof(NetworkConfig));
+    NetworkConfig* config = (NetworkConfig*)noNullMalloc(sizeof(NetworkConfig));
     config->isGlobalNetworkEnabled = false;
     return config;
 }
 
 NetworkConfig* getNewNetworkConfigFromCurrentNetworkStatus()
 {
-    NetworkConfig* config = (NetworkConfig*)malloc(sizeof(NetworkConfig));
+    NetworkConfig* config = (NetworkConfig*)noNullMalloc(sizeof(NetworkConfig));
     config->isGlobalNetworkEnabled = IS_GLOBAL_NETWORK_ENABLED;
     return config;
 }

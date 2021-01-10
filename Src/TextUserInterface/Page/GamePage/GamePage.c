@@ -12,11 +12,11 @@
 
 GamePageSceneTUi* getNewGamePageSceneTui()
 {
-    GamePageSceneTUi* tui = (GamePageSceneTUi*)malloc(sizeof(GamePageSceneTUi));
+    GamePageSceneTUi* tui = (GamePageSceneTUi*)noNullMalloc(sizeof(GamePageSceneTUi));
     AttributedString* string = getNewAttributedString(GAME_PAGE_SCENE_RAW_TEXT);
     int detachIndexCount = BOARD_SIZE * DETACH_INDEX_COUNT_PER_ROW_OF_BOARD +
         DETACH_INDEX_COUNT_OF_BOARD_BOTTOM_ROW + DETACH_INDEX_COUNT_OF_GAME_INFORMATION + 2;
-    int* indexes = (int*)malloc(sizeof(int) * detachIndexCount);
+    int* indexes = (int*)noNullMalloc(sizeof(int) * detachIndexCount);
     fillGamePageSceneDetachIndexes(indexes);
     detachNormalAttributedStringAtIndexes(&string, detachIndexCount, indexes);
     tui->string = string;
@@ -146,7 +146,7 @@ Page* getNewGamePage(GamePrefabConfig* prefabConfig)
     game->updateFunc = updateGamePage;
     game->releaseFunc = releaseGamePage;
 
-    GamePageData* rawData = (GamePageData*)malloc(sizeof(GamePageData));
+    GamePageData* rawData = (GamePageData*)noNullMalloc(sizeof(GamePageData));
     createNewCoreGameWithTag(DEFAULT_CORE_GAME_TAG, prefabConfig->machineSide);
     rawData->prefabConfig = prefabConfig;
     rawData->recordTable = getNewGameRecordTable();

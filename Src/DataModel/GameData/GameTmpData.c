@@ -4,7 +4,7 @@
 
 GameTmpData* getNewGameTmpData()
 {
-    GameTmpData* data = (GameTmpData*)malloc(sizeof(GameTmpData));
+    GameTmpData* data = (GameTmpData*)noNullMalloc(sizeof(GameTmpData));
     data->winner = SIDE_EMPTY;
     data->currentActiveSide = SIDE_BLACK;
     data->currentSelectedPoint = makeNullPoint();

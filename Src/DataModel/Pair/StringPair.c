@@ -6,9 +6,9 @@
 
 StringPair* getNewStringPair(const char* key, const char* value)
 {
-    StringPair* pair = (StringPair*)malloc(sizeof(StringPair));
-    pair->key = (char*)malloc(sizeof(char)*(strlen(key) + 1));
-    pair->value = (char*)malloc(sizeof(char)*(strlen(value) + 1));
+    StringPair* pair = (StringPair*)noNullMalloc(sizeof(StringPair));
+    pair->key = (char*)noNullMalloc(sizeof(char)*(strlen(key) + 1));
+    pair->value = (char*)noNullMalloc(sizeof(char)*(strlen(value) + 1));
     strcpy(pair->key, key);
     strcpy(pair->value, value);
     return pair;
@@ -21,8 +21,8 @@ StringPair* splitStringToNewStringPairWithToken(const char* string, const char* 
     if (stringLength < tokenLength) return NULL;
     for (int i = 0; i <= (stringLength - tokenLength); ++i) {
         if (strncmp(string + i, token, tokenLength) == 0) {
-            char* key = (char*)malloc(sizeof(char)*(i + 1));
-            char* value = (char*)malloc(sizeof(char)*(stringLength - tokenLength - i + 1));
+            char* key = (char*)noNullMalloc(sizeof(char)*(((Size)i) + 1));
+            char* value = (char*)noNullMalloc(sizeof(char)*(stringLength - tokenLength - i + 1));
             strncpy(key, string, i); key[i] = '\0';
             strcpy(value, string + i + tokenLength);
             StringPair* pair = getNewStringPair(key, value);
@@ -44,10 +44,10 @@ void releaseStringPair(StringPair** pair)
 
 StringPairList* getNewStringPairListWithCapacity(int capacity)
 {
-    StringPairList* list = (StringPairList*)malloc(sizeof(StringPairList));
+    StringPairList* list = (StringPairList*)noNullMalloc(sizeof(StringPairList));
     list->maxItemCount = capacity;
     list->totalItemCount = 0;
-    list->items = (StringPair**)malloc(sizeof(StringPair*)*capacity);
+    list->items = (StringPair**)noNullMalloc(sizeof(StringPair*)*capacity);
     for (int i = 0; i < capacity; ++i) list->items[i] = NULL;
     return list;
 }

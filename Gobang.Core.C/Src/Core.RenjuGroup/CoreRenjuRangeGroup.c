@@ -4,9 +4,9 @@
 
 RenjuRangeGroup* getNewDefaultRenjuRangeGroupInRenjuGroupListOfPoint(RenjuGroupList* list, CorePoint point)
 {
-    RenjuRangeGroup* rangeGroup = (RenjuRangeGroup*)malloc(sizeof(RenjuRangeGroup));
+    RenjuRangeGroup* rangeGroup = (RenjuRangeGroup*)coreNoNullMalloc(sizeof(RenjuRangeGroup));
     rangeGroup->renjuRangeCount = 4;
-    rangeGroup->renjuRanges = (RenjuRange*)malloc(sizeof(RenjuRange)*4);
+    rangeGroup->renjuRanges = (RenjuRange*)coreNoNullMalloc(sizeof(RenjuRange)*4);
     rangeGroup->renjuRanges[0] = getRenjuRangeInRowRenjuGroupOfPoint(getRowRenjuGroupInRenjuGroupList(list), point);
     rangeGroup->renjuRanges[1] = getRenjuRangeInColumnRenjuGroupOfPoint(getColumnRenjuGroupInRenjuGroupList(list), point);
     rangeGroup->renjuRanges[2] = getRenjuRangeInBDiagonalRenjuGroupOfPoint(getBDiagonalRenjuGroupInRenjuGroupList(list), point);

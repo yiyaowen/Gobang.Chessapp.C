@@ -3,6 +3,7 @@
 
 #include "Page.h"
 #include "Route.h"
+#include "ChessappDefinitions.h"
 
 Route* startRoutine(PageStack* stack, Page* page, Route* route);
 

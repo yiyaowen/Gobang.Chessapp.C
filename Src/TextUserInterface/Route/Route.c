@@ -1,8 +1,9 @@
 ﻿#include "Route.h"
+#include "ChessappDefinitions.h"
 
 Route* getNewDefaultRoute()
 {
-    Route* route = malloc(sizeof(Route));
+    Route* route = noNullMalloc(sizeof(Route));
     route->status = ROUTE_CONTINUE;
     route->exitStatus = ROUTE_EXIT_SUCCESS;
     return route;

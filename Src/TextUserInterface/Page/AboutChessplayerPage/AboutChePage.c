@@ -13,7 +13,7 @@ Page* getNewAboutChePage()
     aboutChe->updateFunc = updateAboutChePage;
     aboutChe->releaseFunc = releaseAboutChePage;
 
-    AboutChePageData* rawData = malloc(sizeof(AboutChePageData));
+    AboutChePageData* rawData = noNullMalloc(sizeof(AboutChePageData));
     rawData->reserved = NULL;
     aboutChe->data = getNewPageData();
     aboutChe->data->masterPageId = aboutChe->id;

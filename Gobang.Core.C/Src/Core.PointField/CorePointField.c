@@ -52,9 +52,9 @@ CorePoint getCorePointFromPointFieldAlgorithm(RenjuGroupList* list)
 
 CorePointList* getNewEncapsulatedPointListOfPoint(CorePoint point)
 {
-	CorePointList* list = (CorePointList*)malloc(sizeof(CorePointList));
+	CorePointList* list = (CorePointList*)coreNoNullMalloc(sizeof(CorePointList));
 	list->totalPointCount = 8;
-	list->points = (CorePoint*)malloc(sizeof(CorePoint) * 8);
+	list->points = (CorePoint*)coreNoNullMalloc(sizeof(CorePoint) * 8);
 	list->points[0].i = list->points[1].i = list->points[2].i = point.i - 1;
 	list->points[3].i = list->points[4].i = point.i;
 	list->points[5].i = list->points[6].i =  list->points[7].i = point.i + 1;
